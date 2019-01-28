@@ -1,21 +1,17 @@
 <script>
 	export default {
 		onLaunch: function () {
+            if (wx.canIUse && wx.canIUse("getUpdateManager")) {
+                let updateManager = wx.getUpdateManager();
+                updateManager.onUpdateReady(function() {
+                    updateManager.applyUpdate();
+                });
+            }
 			this.login().then(res => {
 				const { code } = res
 				console.log(code);
-				uni.request({
-					url: 'http://127.0.0.1:7001/api/WXLogin',
-					method: 'GET',
-					data: {
-						code,
-					},
-					success(res) {
-						console.log(res);
-					},
-					fail(e) {
-						console.log(e);
-					}
+				this.$ajax('/api/WXLogin', {
+					code
 				})
 			})
 		},

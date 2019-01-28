@@ -6,15 +6,15 @@
 				<view class="ui-dialog__title">{{titleModal}}</view>
 			</view>
 			<view class="ui-dialog__bd">
-                <view>
-                    <slot name="content">{{contentModal}}</slot>
-                </view>
-            </view>
+				<view>
+					<slot name="content">{{contentModal}}</slot>
+				</view>
+			</view>
 			<view class="ui-dialog__ft">
 				<view v-if="cancelTextModal" class="ui-dialog__btn ui-dialog__btn_default" @tap="hide(true)">
 					<text>{{cancelTextModal}}</text>
 				</view>
-				<view class="ui-dialog__btn ui-dialog__btn_primary"  @tap="confirm">
+				<view class="ui-dialog__btn ui-dialog__btn_primary" @tap="confirm">
 					<slot name="footer">{{confirmTextModal}}</slot>
 				</view>
 			</view>
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 	export default {
 		name: 'modal',
 		props: {
@@ -47,34 +46,34 @@
 					return ''
 				}
 			}
-        },
-        data() {
-            return {
-                isShow: false,
-                titleModal: '',
-                contentModal: '',
-                cancelTextModal: '',
-                confirmTextModal: '',
-                defer: null
-            }
-        },
+		},
+		data() {
+			return {
+				isShow: false,
+				titleModal: '',
+				contentModal: '',
+				cancelTextModal: '',
+				confirmTextModal: '',
+				defer: null
+			}
+		},
 		methods: {
-            show(cfg) {
+			show(cfg) {
 				this.isShow = true
-                if (cfg.title) {
-                    this.titleModal = cfg.title
-                }
-                if (cfg.content) {
-                    this.contentModal = cfg.content
-                }
-                if (cfg.cancelText) {
-                    this.cancelTextModal = cfg.cancelText
-                }
-                if (cfg.confirmText) {
-                    this.confirmTextModal = cfg.confirmText
-                }
-                this.successFun = cfg.success || null
-                this.failFun = cfg.fail || null
+				if (cfg.title) {
+					this.titleModal = cfg.title
+				}
+				if (cfg.content) {
+					this.contentModal = cfg.content
+				}
+				if (cfg.cancelText) {
+					this.cancelTextModal = cfg.cancelText
+				}
+				if (cfg.confirmText) {
+					this.confirmTextModal = cfg.confirmText
+				}
+				this.successFun = cfg.success || null
+				this.failFun = cfg.fail || null
 			},
 			hide(boolean) {
 				this.isShow = false;
@@ -82,9 +81,9 @@
 				this.failFun && this.failFun(boolean)
 			},
 			confirm() {
-                this.isShow = false;
+				this.isShow = false;
 				this.failFun && this.failFun(boolean)
-                // this.defer && this.defer.resolve(() => {
+				// this.defer && this.defer.resolve(() => {
 				// 	this.isShow = true;
 				// })
 			}
@@ -92,8 +91,7 @@
 	}
 </script>
 
-<style>
-
+<style lang="scss">
 	.ui-dialog {
 		position: fixed;
 		z-index: 5000;
@@ -103,95 +101,95 @@
 		left: 50%;
 		-webkit-transform: translate(-50%, -50%);
 		transform: translate(-50%, -50%);
-		background-color: #FFFFFF;
+		background-color: $uni-bg-color;
 		text-align: center;
 		border-radius: 6upx;
 		overflow: hidden;
 		font-size: 32upx;
-	}
 
-	.ui-dialog__hd {
-		padding: 1.3em 1.6em 0.5em;
-	}
+		&__hd {
+			padding: 1.3em 1.6em 0.5em;
+		}
 
-	.ui-dialog__title {
-		line-height: 1.6;
-		font-weight: 400;
-		font-size: 36upx;
-	}
+		&__title {
+			line-height: 1.6;
+			font-weight: 400;
+			font-size: 36upx;
+		}
 
-	.ui-dialog__bd {
-		padding: 0 1.6em 0.8em;
-		min-height: 80upx;
-		max-height: 700upx;
-		overflow: auto;
-		font-size: 30upx;
-		line-height: 1.3;
-		word-wrap: break-word;
-		word-break: break-all;
-		color: #808080;
-	}
+		&__bd {
+			padding: 0 1.6em 0.8em;
+			min-height: 80upx;
+			max-height: 700upx;
+			overflow: auto;
+			font-size: 30upx;
+			line-height: 1.3;
+			word-wrap: break-word;
+			word-break: break-all;
+			color: $uni-text-color-placeholder;
+		}
 
-	.ui-dialog__bd:first-child {
-		padding: 2.7em 40upx 1.7em;
-		color: #353535;
-	}
+		&__bd:first-child {
+			padding: 2.7em 40upx 1.7em;
+			color: #353535;
+		}
 
-	.ui-dialog__ft {
-		position: relative;
-		line-height: 96upx;
-		font-size: 36upx;
-		display: -webkit-box;
-		display: -webkit-flex;
-		display: flex;
-	}
+		&__ft {
+			position: relative;
+			line-height: 96upx;
+			font-size: 36upx;
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+		}
 
-	.ui-dialog__ft:after {
-		content: " ";
-		position: absolute;
-		left: 0;
-		top: 0;
-		right: 0;
-		height: 1upx;
-		border-top: 1upx solid #D5D5D6;
-		color: #D5D5D6;
-	}
+		&__ft:after {
+			content: " ";
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			height: 1upx;
+			border-top: 1upx solid $uni-border-color;
+			color: $uni-border-color;
+		}
 
-	.ui-dialog__btn {
-		display: block;
-		-webkit-box-flex: 1;
-		-webkit-flex: 1;
-		flex: 1;
-		color: #09BB07;
-		text-decoration: none;
-		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-		position: relative;
-	}
+		&__btn {
+			display: block;
+			-webkit-box-flex: 1;
+			-webkit-flex: 1;
+			flex: 1;
+			color: #09BB07;
+			text-decoration: none;
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			position: relative;
+		}
 
-	.ui-dialog__btn:active {
-		background-color: #EEEEEE;
-	}
+		&__btn:active {
+			background-color: $uni-bg-color-hover;
+		}
 
-	.ui-dialog__btn:after {
-		content: " ";
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 1upx;
-		bottom: 0;
-		border-left: 1upx solid #D5D5D6;
-		color: #D5D5D6;
-	}
+		&__btn:after {
+			content: " ";
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 1upx;
+			bottom: 0;
+			border-left: 1upx solid $uni-border-color;
+			color: $uni-border-color;
+		}
 
-	.ui-dialog__btn:first-child:after {
-		display: none;
-	}
+		&__btn:first-child:after {
+			display: none;
+		}
 
-	.ui-dialog__btn_default {
-		color: #353535;
-	}
+		&__btn_default {
+			color: #353535;
+		}
 
-	.ui-dialog__btn_primary {
-		color: #09BB07;
+		&__btn_primary {
+			color: $uni-color-primary;
+		}
 	}
 </style>

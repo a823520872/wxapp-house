@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import App from './App';
 
-import { ajax } from './common/ajax.js';
+// import { ajax } from './common/ajax.js';
+import api from '/common/api.js';
 
-import vMask from './component/mask.vue';
-import vModal from './component/modal.vue';
+import vMask from './components/mask.vue';
+import vModal from './components/modal.vue';
 Vue.component('vMask', vMask);
 Vue.component('vModal', vModal);
 
@@ -16,7 +17,8 @@ Vue.component('vModal', vModal);
 //     }
 // });
 
-Vue.prototype.$ajax = ajax;
+// Vue.prototype.$ajax = ajax;
+Vue.prototype.$request = api;
 
 Vue.config.productionTip = false;
 

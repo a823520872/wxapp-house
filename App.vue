@@ -1,35 +1,51 @@
 <script>
 	export default {
-		onLaunch: function () {
-            if (wx.canIUse && wx.canIUse("getUpdateManager")) {
-                let updateManager = wx.getUpdateManager();
-                updateManager.onUpdateReady(function() {
-                    updateManager.applyUpdate();
-                });
-            }
-			this.login().then(res => {
-				const { code } = res
-				console.log(code);
-				this.$ajax('/api/WXLogin', {
-					code
-				})
-			})
+		onLaunch: function() {
+			if (wx.canIUse && wx.canIUse("getUpdateManager")) {
+				let updateManager = wx.getUpdateManager();
+				updateManager.onUpdateReady(function() {
+					updateManager.applyUpdate();
+				});
+			}
+			this.init()
 		},
-		onShow: function () {
+		onShow: function() {
 			console.log('App Show')
 		},
-		onHide: function () {
+		onHide: function() {
 			console.log('App Hide')
 		},
 		methods: {
-			login() {
-				return new Promise((resolve, reject) => {
-					uni.login({
-						success: resolve
-					})
+			init() {
+				const vm = this
+				this.check({
+					success() {
+						console.log('已登录');
+					},
+					fail: vm.login
 				})
 			},
-			
+			check(o) {
+				uni.checkSession({
+					success: o.success,
+					fail: o.fail
+				})
+			},
+			login() {
+				const vm = this
+				uni.login({
+					success: vm.getSession
+				})
+			},
+			getSession(res) {
+				console.log(res);
+				const { code } = res
+				this.$request.wxLogin({
+					code
+				}).then(r => {
+					console.log(r);
+				})
+			}
 		}
 	}
 </script>

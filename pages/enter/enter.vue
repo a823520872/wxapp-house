@@ -1,6 +1,6 @@
 <template>
-	<view class="content">
-        index
+	<view>
+		enter
 	</view>
 </template>
 
@@ -8,18 +8,12 @@
 	export default {
 		data() {
 			return {
-				title: 'Hello'
-			}
-		},
-		onLoad() {
-			console.log('index');
-		},
-		methods: {
-
+				
+			};
 		}
 	}
 </script>
 
 <style lang="scss">
-	
+
 </style>

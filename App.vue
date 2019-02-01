@@ -1,18 +1,18 @@
 <script>
 	export default {
-		onLaunch: function() {
+		onLaunch: function () {
 			if (wx.canIUse && wx.canIUse("getUpdateManager")) {
 				let updateManager = wx.getUpdateManager();
-				updateManager.onUpdateReady(function() {
+				updateManager.onUpdateReady(function () {
 					updateManager.applyUpdate();
 				});
 			}
 			this.init()
 		},
-		onShow: function() {
+		onShow: function () {
 			console.log('App Show')
 		},
-		onHide: function() {
+		onHide: function () {
 			console.log('App Hide')
 		},
 		methods: {
@@ -50,6 +50,81 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	/*每个页面公共css */
+	page {
+	    // height: 100%;
+	    background-color: $uni-bg-color-grey;
+	}
+	body,
+	div,
+	dl,
+	dt,
+	dd,
+	ul,
+	ol,
+	li,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	pre,
+	code,
+	form,
+	fieldset,
+	legend,
+	button,
+	p,
+	blockquote,
+	th,
+	td {
+	    margin: 0;
+	    padding: 0;
+	    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	}
+	.content {
+		// height: 100%;
+		font-size: 32upx;
+		color: $uni-text-color;
+	}
+	.m_flex {
+	    display: flex;
+	}
+	.m_flex_left {
+	    display: flex;
+	    justify-content: flex-start;
+	}
+	.m_flex_center {
+	    display: flex;
+	    justify-content: center;
+	}
+	.m_flex_right {
+	    display: flex;
+	    justify-content: flex-end;
+	}
+	.m_flex_top {
+	    display: flex;
+	    align-items: flex-start;
+	}
+	.m_flex_middle {
+	    display: flex;
+	    align-items: center;
+	}
+	.m_flex_bottom {
+	    display: flex;
+	    align-items: flex-end;
+	}
+	.m_flex_column {
+	    display: flex;
+	    flex-direction: column;
+	}
+	.m_flex_wrap {
+	    display: flex;
+	    flex-wrap: wrap;
+	}
+	.m_flex_item {
+	    flex: 1;
+	}
 </style>

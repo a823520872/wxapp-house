@@ -1,4 +1,4 @@
-import {ajax} from '/common/ajax.js'
+import {ajax} from '../common/ajax.js'
 
 export default {
 	wxLogin(data) {

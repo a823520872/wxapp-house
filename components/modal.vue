@@ -7,7 +7,9 @@
 			</view>
 			<view class="ui-dialog__bd">
 				<view>
-					<slot name="content">{{contentModal}}</slot>
+					<slot name="content">
+						{{contentModal}}
+					</slot>
 				</view>
 			</view>
 			<view class="ui-dialog__ft">
@@ -82,10 +84,7 @@
 			},
 			confirm() {
 				this.isShow = false;
-				this.failFun && this.failFun(boolean)
-				// this.defer && this.defer.resolve(() => {
-				// 	this.isShow = true;
-				// })
+				this.successFun && this.successFun()
 			}
 		}
 	}
@@ -190,6 +189,7 @@
 
 		&__btn_primary {
 			color: $uni-color-primary;
+			background-color: #fff;
 		}
 	}
 </style>

@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	state: {
-		loading: true
+		loading: true,
+		userInfo: null,
 	},
 	getters: {
 		
@@ -13,6 +14,9 @@ const store = new Vuex.Store({
 	mutations: {
 		setLoading(state, bl) {
 			state.loading = bl
+		},
+		setUserInfo(state, userInfo) {
+			state.userInfo = userInfo
 		}
 	},
 	actions: {

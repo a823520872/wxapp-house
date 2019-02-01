@@ -2,7 +2,8 @@ import Vue from 'vue';
 import App from './App';
 
 // import { ajax } from './common/ajax.js';
-import api from '/common/api.js';
+import store from './store/index.js';
+import api from './api/index.js';
 
 import vMask from './components/mask.vue';
 import vModal from './components/modal.vue';
@@ -19,6 +20,7 @@ Vue.component('vModal', vModal);
 
 // Vue.prototype.$ajax = ajax;
 Vue.prototype.$request = api;
+Vue.prototype.$store = store;
 
 Vue.config.productionTip = false;
 

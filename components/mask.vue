@@ -1,6 +1,5 @@
 <template>
-	<view class="ui-mask"
-	      @tap="hide"></view>
+	<view class="ui-mask" @tap="hide"></view>
 </template>
 
 <script>
@@ -15,12 +14,12 @@
 
 <style lang="scss">
 	.ui-mask {
-	  position: fixed;
-	  z-index: 100;
-	  top: var(--window-top);
-	  right: 0;
-	  left: 0;
-	  bottom: 0;
-	  background: $uni-bg-color-mask;
+		position: fixed;
+		z-index: 100;
+		top: var(--window-top);
+		right: 0;
+		left: 0;
+		bottom: 0;
+		background: $uni-bg-color-mask;
 	}
 </style>

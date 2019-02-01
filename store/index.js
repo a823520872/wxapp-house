@@ -5,22 +5,25 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	state: {
-		loading: true,
 		userInfo: null,
+		initFn: null
 	},
 	getters: {
 		
 	},
 	mutations: {
-		setLoading(state, bl) {
-			state.loading = bl
+		setInitFn(state, fn) {
+			state.initFn = fn
 		},
 		setUserInfo(state, userInfo) {
 			state.userInfo = userInfo
 		}
 	},
 	actions: {
-		
+		goPage(context, url) {
+			if (!url) return
+			uni.navigateTo({url})
+		}
 	}
 })
 

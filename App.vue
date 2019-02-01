@@ -1,5 +1,9 @@
 <script>
+	import { mapState } from 'vuex'
 	export default {
+		computed: {
+			...mapState(['initFn'])
+		},
 		onLaunch: function () {
 			if (wx.canIUse && wx.canIUse("getUpdateManager")) {
 				let updateManager = wx.getUpdateManager();
@@ -21,6 +25,7 @@
 				this.check({
 					success() {
 						console.log('已登录');
+						vm.initFn && vm.initFn()
 					},
 					fail: vm.login
 				})
@@ -38,12 +43,13 @@
 				})
 			},
 			getSession(res) {
-				console.log(res);
 				const { code } = res
+				const vm = this
 				this.$request.wxLogin({
 					code
 				}).then(r => {
 					console.log(r);
+					vm.initFn && vm.initFn()
 				})
 			}
 		}
@@ -85,9 +91,9 @@
 	    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	}
 	.content {
-		// height: 100%;
-		font-size: 32upx;
-		color: $uni-text-color;
+	    // height: 100%;
+	    font-size: 32upx;
+	    color: $uni-text-color;
 	}
 	.m_flex {
 	    display: flex;
@@ -103,6 +109,10 @@
 	.m_flex_right {
 	    display: flex;
 	    justify-content: flex-end;
+	}
+	.m_flex_justify {
+		display: flex;
+		justify-content: space-between;
 	}
 	.m_flex_top {
 	    display: flex;
@@ -126,5 +136,24 @@
 	}
 	.m_flex_item {
 	    flex: 1;
+	}
+	.m_button {
+	    font-size: 32upx;
+
+	    &[type='primary'] {
+	        color: $uni-color-success;
+	    }
+	    &.plain {
+	        background-color: transparent;
+
+	        &::after {
+	            border: none;
+	        }
+	    }
+	}
+	.m_textover {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 </style>

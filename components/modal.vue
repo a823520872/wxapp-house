@@ -30,6 +30,9 @@
 		props: {
 			title: {
 				type: String,
+				default () {
+					return ''
+				}
 			},
 			content: {
 				type: String,
@@ -56,24 +59,20 @@
 				contentModal: '',
 				cancelTextModal: '',
 				confirmTextModal: '',
-				defer: null
 			}
 		},
 		methods: {
 			show(cfg) {
 				this.isShow = true
-				if (cfg.title) {
-					this.titleModal = cfg.title
-				}
-				if (cfg.content) {
-					this.contentModal = cfg.content
-				}
-				if (cfg.cancelText) {
-					this.cancelTextModal = cfg.cancelText
-				}
-				if (cfg.confirmText) {
-					this.confirmTextModal = cfg.confirmText
-				}
+
+				this.titleModal = cfg.title || this.title
+
+				this.contentModal = cfg.content || this.content
+
+				this.cancelTextModal = cfg.cancelText || this.cancelText
+
+				this.confirmTextModal = cfg.confirmText || this.confirmText
+
 				this.successFun = cfg.success || null
 				this.failFun = cfg.fail || null
 			},
@@ -162,6 +161,11 @@
 			text-decoration: none;
 			-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 			position: relative;
+
+			button {
+				line-height: 96upx;
+				font-size: 36upx;
+			}
 		}
 
 		&__btn:active {

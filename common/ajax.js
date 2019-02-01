@@ -18,9 +18,9 @@ const ajax = (url, data, options = {}) => {
                 'content-type': 'application/json'
             },
             success(res) {
-                console.log(res);
+                console.log(res.data);
                 options.loading && uni.hideLoading();
-                resolve(res);
+                resolve(res.data);
             },
             fail(e) {
                 console.log(e);

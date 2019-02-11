@@ -4,55 +4,49 @@
 			<view class="m_flex_middle" @tap="getAuth">
 				<view class="avatar"></view>
 				<block>
-					<view v-if="userInfo" class="name">李志强</view>
+					<view v-if="userInfo" class="name">{{userInfo.nickName}}</view>
 					<view v-else>
-						<button class="no_auth" type="primary" plain open-type="getUserInfo" @getuserinfo="getUserInfo">点击授权</button>
+						<button class="no_auth" type="primary" plain open-type="getUserInfo" @getuserinfo="getUserInfo">
+							点击授权
+						</button>
 					</view>
 				</block>
 			</view>
 		</view>
 		<view class="bd">
-			<view class="cell m_flex" @tap="goPage('/pages/me/collection')">
-				<view class="title">我的收藏</view>
-			</view>
-			<view class="cell m_flex">
-				<view class="title">我的发布</view>
-			</view>
-			<view class="cell m_flex">
-				<view class="title">推荐好友</view>
-			</view>
+			<view class="cell m_flex" @tap="goPage('/pages/me/collection')"><view class="title">我的收藏</view></view>
+			<view class="cell m_flex" @tap="goPage('/pages/me/publish')"><view class="title">我的发布</view></view>
+			<!-- <view class="cell m_flex"><view class="title">推荐好友</view></view> -->
 		</view>
 		<v-auth ref="auth"></v-auth>
 	</view>
 </template>
 
 <script>
-	import { mapState, mapMutations, mapActions } from 'vuex'
-	import VAuth from '../../components/auth.vue'
-	export default {
-		components: {
-			VAuth
-		},
-		computed: {
-			...mapState(['userInfo'])
-		},
-		data() {
-			return {
-
-			};
-		},
-		onReady() {
-			if (!this.userInfo) {
-				this.getUserInfo()
-			}
-		},
-		methods: {
-			...mapActions(['goPage']),
-			getUserInfo(e) {
-				this.$refs.auth.getUserInfo(e)
-			}
+import { mapState, mapMutations, mapActions } from 'vuex';
+import VAuth from '../../components/auth.vue';
+export default {
+	components: {
+		VAuth
+	},
+	computed: {
+		...mapState(['userInfo'])
+	},
+	data() {
+		return {};
+	},
+	onReady() {
+		if (!this.userInfo) {
+			this.getUserInfo();
+		}
+	},
+	methods: {
+		...mapActions(['goPage']),
+		getUserInfo(e) {
+			this.$refs.auth.getUserInfo(e);
 		}
 	}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -72,7 +66,7 @@
 		overflow: hidden;
 		box-shadow: 4upx 4upx 10upx $uni-border-color, -4upx -4upx 10upx $uni-border-color;
 	}
-	
+
 	.no_auth {
 		border: none;
 		font-size: 32upx;

@@ -1,50 +1,44 @@
 <template>
-    <view>
-        <house-list :list.sync="list"></house-list>
-    </view>
+	<view><house-list :list.sync="list"></house-list></view>
 </template>
 
 <script>
-import HouseList from '../components/house-list'
+import HouseList from '../components/house-list';
 export default {
-    components: {
-        HouseList
-    },
+	components: {
+		HouseList
+	},
 	data() {
 		return {
-            list: [1, 2],
+			list: [1, 2],
 			page: 1,
-            hasMore: false
-		}
+			hasMore: false
+		};
 	},
 	onPullDownRefresh() {
-		this.reload()
+		this.reload();
 	},
 	onReachBottom() {
-		this.next()
+		this.next();
 	},
-    onLoad(res) {
-
-    },
-    onReady() {
-        this.getData()
-    },
-    methods: {
-        getData(n) {
-            const data = []
-            this.list = n === 1 ? [...data] : [...this.list, ...data]
-            this.page = n
-        },
-        reload() {
-            this.getData(1)
-        },
-        next() {
-            this.getData(this.page + 1)
-        }
-    }
-}
+	onLoad(res) {},
+	onReady() {
+		this.getData();
+	},
+	methods: {
+		getData(n) {
+			const data = [];
+			this.list = n === 1 ? [...data] : [...this.list, ...data];
+			this.page = n;
+		},
+		reload() {
+			this.getData(1);
+		},
+		next() {
+			this.getData(this.page + 1);
+		}
+	}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -13,10 +13,10 @@
 				</view>
 			</view>
 			<view class="ui-dialog__ft">
-				<view v-if="cancelTextModal" class="ui-dialog__btn ui-dialog__btn_default" @tap="hide(true)">
+				<view v-if="cancelTextModal" class="ui-dialog__btn ui-dialog__btn_default" @tap.stop="hide(true)">
 					<text>{{cancelTextModal}}</text>
 				</view>
-				<view class="ui-dialog__btn ui-dialog__btn_primary" @tap="confirm">
+				<view class="ui-dialog__btn ui-dialog__btn_primary" @tap.stop="confirm">
 					<slot name="footer">{{confirmTextModal}}</slot>
 				</view>
 			</view>
@@ -134,6 +134,7 @@
 
 		&__ft {
 			position: relative;
+			height: 96upx;
 			line-height: 96upx;
 			font-size: 36upx;
 			display: -webkit-box;
@@ -165,6 +166,7 @@
 			button {
 				line-height: 96upx;
 				font-size: 36upx;
+				padding: 0;
 			}
 		}
 
@@ -192,7 +194,7 @@
 		}
 
 		&__btn_primary {
-			color: $uni-color-primary;
+			color: $uni-color-success;
 			background-color: #fff;
 		}
 	}

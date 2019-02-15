@@ -1,5 +1,5 @@
 <template>
-	<view class="ui-mask" @tap="hide"></view>
+	<view class="ui-mask" @tap.stop="hide"></view>
 </template>
 
 <script>

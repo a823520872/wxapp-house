@@ -4,13 +4,45 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "村里找房"
+				"navigationBarTitleText": "村里找房",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
-			"path": "pages/publish/publish",
+			"path": "pages/index/house",
+			"style": {
+				"navigationBarTitleText": "房源详情",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/publish/index",
 			"style": {
 				"navigationBarTitleText": "发布房源"
+			}
+		},
+		{
+			"path": "pages/publish/setteld",
+			"style": {
+				"navigationBarTitleText": "填写信息"
+			}
+		},
+		{
+			"path": "pages/publish/setteld_succ",
+			"style": {
+				"navigationBarTitleText": "提交成功"
+			}
+		},
+		{
+			"path": "pages/publish/house",
+			"style": {
+				"navigationBarTitleText": "房源信息"
+			}
+		},
+		{
+			"path": "pages/publish/publish_succ",
+			"style": {
+				"navigationBarTitleText": "发布成功"
 			}
 		},
 		{
@@ -32,6 +64,12 @@
 				"navigationBarTitleText": "我的发布",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/me/invitation",
+			"style": {
+				"navigationBarTitleText": "邀请入驻"
+			}
 		}
 	],
 	"tabBar": {
@@ -40,7 +78,7 @@
 				"text": "找房"
 			},
 			{
-				"pagePath": "pages/publish/publish",
+				"pagePath": "pages/publish/index",
 				"text": "发布房源"
 			},
 			{

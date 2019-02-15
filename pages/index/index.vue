@@ -1,25 +1,29 @@
 <template>
 	<view class="content">
-		index
+		<house-list :list.sync="list"></house-list>
 	</view>
 </template>
 
 <script>
 	import { mapState, mapMutations, mapActions } from 'vuex'
+	import HouseList from '../components/house-list';
 	export default {
-		// computed: {
-		// 	...mapState(['userInfo'])
-		// },
+		components: {
+			HouseList
+		},
 		data() {
 			return {
-				title: 'Hello'
+				list: [1, 2]
 			}
 		},
-		onLoad() {
-			console.log('index');
+		onLoad(res) {
+			console.log('onLoad');
 		},
-		onShow() {
-
+		onPullDownRefresh() {
+			console.log('onPullDownRefresh');
+		},
+		onReachBottom() {
+			console.log('onReachBottom');
 		},
 		onReady() {
 			this.setInitFn(this.getData)

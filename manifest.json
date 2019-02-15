@@ -5,8 +5,8 @@
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
-    "networkTimeout": {
-        "request": 10000
+    "networkTimeout" : {
+        "request" : 10000
     },
     "app-plus" : {
         /* 5+App特有相关 */
@@ -51,10 +51,14 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 小程序特有相关 */
-        "appid" : "wx09b76a08486e0060",
+        "appid" : "wx4c7fed9f6ee3e8a5",
         "setting" : {
             "urlCheck" : true
         },
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "为了方便您的使用，需要获取您的地理位置"
+            }
+        }
     }
 }

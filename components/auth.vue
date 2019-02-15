@@ -20,10 +20,9 @@ export default {
 	methods: {
 		...mapMutations(['setUserInfo']),
 		getUserInfoByBtn(e) {
-			console.log(e);
+			console.log(e.detail);
 			const { errMsg, encryptedData, iv, userInfo } = e.detail;
 			if (errMsg === 'getUserInfo:ok') {
-				console.log(e.detail);
 				this.setUserInfo(userInfo);
 			}
 		},
@@ -41,4 +40,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.m_button {
+	font-size: 36upx;
+	line-height: 96upx;
+	font-size: 36upx;
+	padding: 0;
+}
+</style>

@@ -1,67 +1,67 @@
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 export default {
-    computed: {
-        ...mapState(["initFn"])
-    },
-    onLaunch: function() {
-        if (wx.canIUse && wx.canIUse("getUpdateManager")) {
-            let updateManager = wx.getUpdateManager();
-            updateManager.onUpdateReady(function() {
-                updateManager.applyUpdate();
-            });
-        }
-        this.init();
-    },
-    onShow: function() {
-        console.log("App Show");
-    },
-    onHide: function() {
-        console.log("App Hide");
-    },
-    methods: {
-        init() {
-            const vm = this;
-            this.check({
-                success() {
-                    console.log("已登录");
-                    vm.initFn && vm.initFn();
-                },
-                fail: vm.login
-            });
-        },
-        check(o) {
-            uni.checkSession({
-                success: o.success,
-                fail: o.fail
-            });
-        },
-        login() {
-            const vm = this;
-            uni.login({
-                success: vm.getSession
-            });
-        },
-        getSession(res) {
-            const { code } = res;
-            const vm = this;
-            this.$request
-                .wxLogin({
-                    code
-                })
-                .then(r => {
-                    console.log(r);
-                    vm.initFn && vm.initFn();
-                });
-        }
-    }
+	computed: {
+		...mapState(['initFn'])
+	},
+	onLaunch: function() {
+		if (wx.canIUse && wx.canIUse('getUpdateManager')) {
+			let updateManager = wx.getUpdateManager();
+			updateManager.onUpdateReady(function() {
+				updateManager.applyUpdate();
+			});
+		}
+		this.init();
+	},
+	onShow: function() {
+		console.log('App Show');
+	},
+	onHide: function() {
+		console.log('App Hide');
+	},
+	methods: {
+		init() {
+			const vm = this;
+			this.check({
+				success() {
+					console.log('已登录');
+					vm.initFn && vm.initFn();
+				},
+				fail: vm.login
+			});
+		},
+		check(o) {
+			uni.checkSession({
+				success: o.success,
+				fail: o.fail
+			});
+		},
+		login() {
+			const vm = this;
+			uni.login({
+				success: vm.getSession
+			});
+		},
+		getSession(res) {
+			const { code } = res;
+			const vm = this;
+			this.$request
+				.wxLogin({
+					code
+				})
+				.then(r => {
+					console.log(r);
+					vm.initFn && vm.initFn();
+				});
+		}
+	}
 };
 </script>
 
 <style lang="scss">
 /*每个页面公共css */
 page {
-    background-color: $uni-bg-color-grey;
+	background-color: $uni-bg-color-grey;
 }
 body,
 div,
@@ -87,88 +87,87 @@ p,
 blockquote,
 th,
 td {
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	margin: 0;
+	padding: 0;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .content {
-    font-size: 32upx;
-    color: $uni-text-color;
+	font-size: 32upx;
+	color: $uni-text-color;
 }
 .m_flex {
-    display: flex;
+	display: flex;
 }
 .m_flex_left {
-    display: flex;
-    justify-content: flex-start;
+	display: flex;
+	justify-content: flex-start;
 }
 .m_flex_center {
-    display: flex;
-    justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 .m_flex_right {
-    display: flex;
-    justify-content: flex-end;
+	display: flex;
+	justify-content: flex-end;
 }
 .m_flex_justify {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 .m_flex_top {
-    display: flex;
-    align-items: flex-start;
+	display: flex;
+	align-items: flex-start;
 }
 .m_flex_middle {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 .m_flex_bottom {
-    display: flex;
-    align-items: flex-end;
+	display: flex;
+	align-items: flex-end;
 }
 .m_flex_column {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 .m_flex_wrap {
-    display: flex;
-    flex-wrap: wrap;
+	display: flex;
+	flex-wrap: wrap;
 }
 .m_flex_item {
-    flex: 1;
+	flex: 1;
 }
 .m_button {
-    padding: 10upx 14upx;
-    font-size: 28upx;
-    line-height: 1;
+	display: inline-block;
+	padding: 10upx 14upx;
+	font-size: 28upx;
+	line-height: 1;
+	box-sizing: border-box;
 
-    &.small {
-        padding: 6upx 10upx;
-        font-size: 24upx;
-    }
+	&[type='primary'] {
+		color: $uni-color-success;
+	}
 
-    &.large {
-        padding: 14upx 18upx;
-        font-size: 32upx;
-    }
+	&.primary {
+		background-color: $uni-color-success;
+		color: #fff;
+		border: none;
+	}
 
-    &[type="primary"] {
-        color: $uni-color-success;
-    }
-    &.plain {
-        background-color: transparent;
+	&.plain {
+		background-color: transparent;
 
-        &::after {
-            border: none;
-        }
-    }
+		&::after {
+			border: none;
+		}
+	}
 }
 .m_textover {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 .m_text_center {
-    text-align: center;
+	text-align: center;
 }
 </style>

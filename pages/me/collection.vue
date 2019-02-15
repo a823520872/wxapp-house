@@ -10,7 +10,7 @@ export default {
 	},
 	data() {
 		return {
-			list: [1, 2],
+			list: [1],
 			page: 1,
 			hasMore: false
 		};

@@ -1,5 +1,5 @@
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
 	computed: {
 		...mapState(['initFn'])
@@ -20,6 +20,7 @@ export default {
 		console.log('App Hide');
 	},
 	methods: {
+		...mapActions(['login']),
 		init() {
 			const vm = this;
 			this.check({
@@ -27,7 +28,13 @@ export default {
 					console.log('已登录');
 					vm.initFn && vm.initFn();
 				},
-				fail: vm.login
+				fail() {
+					vm.login.then(res => {
+						
+					}, e => {
+						
+					}).catch(e => console.log(e))
+				}
 			});
 		},
 		check(o) {
@@ -36,24 +43,6 @@ export default {
 				fail: o.fail
 			});
 		},
-		login() {
-			const vm = this;
-			uni.login({
-				success: vm.getSession
-			});
-		},
-		getSession(res) {
-			const { code } = res;
-			const vm = this;
-			this.$request
-				.wxLogin({
-					code
-				})
-				.then(r => {
-					console.log(r);
-					vm.initFn && vm.initFn();
-				});
-		}
 	}
 };
 </script>

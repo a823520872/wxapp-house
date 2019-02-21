@@ -4,7 +4,7 @@
 			<view class="cell m_flex">
 				<view class="label">姓名：</view>
 				<view class="model">
-					
+					<input type="text"></input>
 				</view>
 			</view>
 		</view>

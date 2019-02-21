@@ -16,7 +16,11 @@ export default {
 		return {};
 	},
 	methods: {
-		...mapActions(['goPage'])
+		...mapMutations(['setInitFn']),
+		...mapActions(['goPage']),
+		getData() {
+			this.setInitFn(null)
+		}
 	}
 };
 </script>

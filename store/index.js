@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import api from './api/index.js';
 
 Vue.use(Vuex)
 
@@ -9,7 +10,7 @@ const store = new Vuex.Store({
 		initFn: null
 	},
 	getters: {
-		
+
 	},
 	mutations: {
 		setInitFn(state, fn) {
@@ -20,9 +21,26 @@ const store = new Vuex.Store({
 		}
 	},
 	actions: {
+		login(context) {
+			return new Promise((resolve, reject) => {
+				uni.login({
+					success(res) {
+						const {
+							code
+						} = res
+						api
+							.wxLogin({code})
+							.then(resolve).catch(reject);
+					},
+					fail(reject)
+				});
+			})
+		},
 		goPage(context, url) {
 			if (!url) return
-			uni.navigateTo({url})
+			uni.navigateTo({
+				url
+			})
 		}
 	}
 })

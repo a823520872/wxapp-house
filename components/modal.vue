@@ -16,8 +16,10 @@
 				<view v-if="cancelTextModal" class="ui-dialog__btn ui-dialog__btn_default" @tap.stop="hide(true)">
 					<text>{{cancelTextModal}}</text>
 				</view>
-				<view class="ui-dialog__btn ui-dialog__btn_primary" @tap.stop="confirm">
-					<slot name="footer">{{confirmTextModal}}</slot>
+				<view class="ui-dialog__btn ui-dialog__btn_primary">
+					<slot name="footer">
+						<view @tap.stop="confirm">{{confirmTextModal}}</view>
+					</slot>
 				</view>
 			</view>
 		</view>

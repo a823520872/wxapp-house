@@ -21,7 +21,8 @@ export default {
 		...mapMutations(['setUserInfo']),
 		getUserInfoByBtn(e) {
 			console.log(e.detail);
-			const { errMsg, encryptedData, iv, userInfo } = e.detail;
+			const { errMsg, encryptedData, iv, signature, userInfo } = e.detail;
+			this.$refs.user_modal.hide();
 			if (errMsg === 'getUserInfo:ok') {
 				this.setUserInfo(userInfo);
 			}
@@ -42,6 +43,7 @@ export default {
 
 <style lang="scss" scoped>
 .m_button {
+	width: 100%;
 	font-size: 36upx;
 	line-height: 96upx;
 	font-size: 36upx;

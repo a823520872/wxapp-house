@@ -9,10 +9,7 @@ const store = new Vuex.Store({
 		userInfo: null,
 		initFn: null
 	},
-	getters: {
-
-	},
-	mutation: {
+	mutations: {
 		setInitFn(state, fn) {
 			state.initFn = fn
 		},
@@ -20,7 +17,7 @@ const store = new Vuex.Store({
 			state.userInfo = userInfo
 		}
 	},
-	action: {
+	actions: {
 		login(context) {
 			return new Promise((resolve, reject) => {
 				uni.login({

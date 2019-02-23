@@ -11,10 +11,10 @@ export default {
 				updateManager.applyUpdate();
 			});
 		}
-		this.init();
 	},
 	onShow: function() {
 		console.log('App Show');
+		this.init();
 	},
 	onHide: function() {
 		console.log('App Hide');

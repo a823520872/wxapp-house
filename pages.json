@@ -73,16 +73,25 @@
 		}
 	],
 	"tabBar": {
+		"color": "#a8a8a8",
+		"selectedColor": "#4ce6e8",
+		"backgroundColor": "#FFFFFF",
 		"list": [{
 				"pagePath": "pages/index/index",
+				"iconPath": "static/image/tab/index.png",
+				"selectedIconPath": "static/image/tab/index_active.png",
 				"text": "找房"
 			},
 			{
 				"pagePath": "pages/publish/index",
+				"iconPath": "static/image/tab/publish.png",
+				"selectedIconPath": "static/image/tab/publish_active.png",
 				"text": "发布房源"
 			},
 			{
 				"pagePath": "pages/me/me",
+				"iconPath": "static/image/tab/me.png",
+				"selectedIconPath": "static/image/tab/me_active.png",
 				"text": "我的"
 			}
 		]

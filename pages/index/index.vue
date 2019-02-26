@@ -1,5 +1,14 @@
 <template>
-	<view class="content"><house-list :list.sync="list"></house-list></view>
+	<view class="content">
+        <swiper class="swiper" :indicator-dots="true" indicator-color="#6d7271" indicator-active-color="#4ce6e8" :autoplay="true" :interval="3000" :duration="1000">
+        	<swiper-item>
+        		<view class="swiper-item">
+                    <image src="/static/image/index/banner.png" mode="aspectFit"></image>
+                </view>
+        	</swiper-item>
+        </swiper>
+		<house-list :list.sync="list"></house-list>
+	</view>
 </template>
 
 <script>
@@ -36,4 +45,15 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+    .swiper {
+        height: 398upx;
+        padding: 0 30upx;
+        &-item {
+            image {
+                width: 690upx;
+                height: 398upx;
+            }
+        }
+    }
+</style>

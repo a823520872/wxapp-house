@@ -1,49 +1,51 @@
 <script>
-import { mapState, mapActions } from 'vuex';
+// import { mapState, mapActions } from 'vuex';
 export default {
-	computed: {
-		...mapState(['initFn'])
-	},
+// 	computed: {
+// 		...mapState(['initFn'])
+// 	},
 	onLaunch: function() {
+        // #ifdef MP-WEIXIN
 		if (wx.canIUse && wx.canIUse('getUpdateManager')) {
 			let updateManager = wx.getUpdateManager();
 			updateManager.onUpdateReady(function() {
 				updateManager.applyUpdate();
 			});
 		}
+        // #endif
 	},
 	onShow: function() {
 		console.log('App Show');
-		this.init();
+		// this.init();
 	},
 	onHide: function() {
 		console.log('App Hide');
 	},
-	methods: {
-		...mapActions(['login']),
-		init() {
-			const vm = this;
-			this.check({
-				success() {
-					console.log('已登录');
-					vm.initFn && vm.initFn();
-				},
-				fail() {
-					vm.login.then(res => {
-						
-					}, e => {
-						
-					}).catch(e => console.log(e))
-				}
-			});
-		},
-		check(o) {
-			uni.checkSession({
-				success: o.success,
-				fail: o.fail
-			});
-		},
-	}
+// 	methods: {
+// 		...mapActions(['login']),
+// 		init() {
+// 			const vm = this;
+// 			this.check({
+// 				success() {
+// 					console.log('已登录');
+// 					vm.initFn && vm.initFn();
+// 				},
+// 				fail() {
+// 					vm.login.then(res => {
+// 						
+// 					}, e => {
+// 						
+// 					}).catch(e => console.log(e))
+// 				}
+// 			});
+// 		},
+// 		check(o) {
+// 			uni.checkSession({
+// 				success: o.success,
+// 				fail: o.fail
+// 			});
+// 		},
+// 	}
 };
 </script>
 
@@ -82,7 +84,7 @@ td {
 }
 .content {
 	font-size: 32upx;
-	color: $uni-text-color;
+	color: $text-color;
 }
 .m_flex {
 	display: flex;
@@ -132,23 +134,32 @@ td {
 	font-size: 28upx;
 	line-height: 1;
 	box-sizing: border-box;
-
-	&[type='primary'] {
-		color: $uni-color-success;
-	}
+	color: $text-color;
 
 	&.primary {
-		background-color: $uni-color-success;
+		background-color: $primary-color;
+		border: 1upx solid $primary-color;
 		color: #fff;
-		border: none;
+	}
+    
+    &.main {
+        background-color: $main-color;
+		border: 1upx solid $main-color;
+        color: #fff;
 	}
 
 	&.plain {
 		background-color: transparent;
-
-		&::after {
-			border: none;
-		}
+        &.primary {
+            color: $primary-color;
+        }
+        &.main {
+            color: $main-color;
+        }
+	}
+	
+	&::after {
+		border: none;
 	}
 }
 .m_textover {

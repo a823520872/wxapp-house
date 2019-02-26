@@ -5,41 +5,67 @@ import api from '../api/index.js';
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-	state: {
-		userInfo: null,
-		initFn: null
-	},
-	mutations: {
-		setInitFn(state, fn) {
-			state.initFn = fn
-		},
-		setUserInfo(state, userInfo) {
-			state.userInfo = userInfo
-		}
-	},
-	actions: {
-		login(context) {
-			return new Promise((resolve, reject) => {
-				uni.login({
-					success(res) {
-						const {
-							code
-						} = res
-						api
-							.wxLogin({code})
-							.then(resolve).catch(reject);
-					},
-					fail: reject
-				});
-			})
-		},
-		goPage(context, url) {
-			if (!url) return
-			uni.navigateTo({
-				url
-			})
-		}
-	}
+    state: {
+        logined: false,
+        userInfo: null,
+        initFn: null
+    },
+    mutations: {
+        setLogin(state, bl) {
+            state.logined = bl
+        },
+        setInitFn(state, fn) {
+            state.initFn = fn
+        },
+        setUserInfo(state, userInfo) {
+            state.userInfo = userInfo
+        }
+    },
+    actions: {
+        login(context) {
+            return new Promise((resolve, reject) => {
+                let token = uni.getStorageSync('tk')
+                if (token) {
+                    resolve(token)
+                } else {
+                    uni.login({
+                        success(res) {
+                            const {
+                                code
+                            } = res
+                            api
+                                .wxLogin({
+                                    code
+                                })
+                                .then(res => {
+                                    token = res.data.token
+                                    context.commit('setLogin', true)
+                                    uni.setStorageSync('tk', token)
+                                    resolve(token)
+                                }).catch(e => {
+                                    uni.removeStorageSync('tk')
+                                    reject(e)
+                                });
+                        },
+                        fail(e) {
+                            const pages = getCurrentPages()
+                            const page = pages[pages.length - 1]
+                            setTimeout(() => {
+                                uni.reLaunch({
+                                    url: `/${page.route}`
+                                })
+                            }, 2000)
+                            uni.showToast({
+                            	title: '登录失败',
+                                icon: 'none',
+                                duration: 2000
+                            })
+                        }
+                    });
+                }
+            })
+        }
+    }
 })
 
 export default store

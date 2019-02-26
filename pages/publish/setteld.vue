@@ -11,6 +11,29 @@
 					<input type="number" />
 				</view>
 			</view>
+			<view class="cell m_flex">
+				<view class="label">验证码：</view>
+				<view class="model">
+					<input type="number" />
+				</view>
+				<view class="btn">
+					<button class="m_button plain">获取验证码</button>
+				</view>
+			</view>
+			<view class="cell m_flex">
+				<view class="label">房源数量：</view>
+				<view class="model">
+					<input type="number" />
+				</view>
+			</view>
+			<view class="cell m_flex">
+				<view class="label">房源数量：</view>
+				<view class="model">
+					<picker @change="pickerChange" :range="[]" :value="[]">
+						view{}
+					</picker>
+				</view>
+			</view>
 		</view>
 		<button class="m_button primary" plain @tap="confirm">提交</button>
 	</view>

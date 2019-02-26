@@ -2,7 +2,7 @@
 	<view>
 		<v-modal ref="user_modal">
 			<block slot="footer">
-				<button type="primary" class="m_button plain" open-type="getUserInfo" @getuserinfo="getUserInfoByBtn">
+				<button class="m_button" open-type="getUserInfo" @getuserinfo="getUserInfoByBtn">
 					去授权
 				</button>
 			</block>
@@ -48,5 +48,6 @@ export default {
 	line-height: 96upx;
 	font-size: 36upx;
 	padding: 0;
+    color: $uni-color-success;
 }
 </style>

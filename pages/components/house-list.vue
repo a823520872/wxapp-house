@@ -6,7 +6,7 @@
 					<view class="m_flex_justify">
 						<view class="title m_textover">单间</view>
 						<view class="price">¥1000/月</view>
-						<button class="m_button ghost" type="primary" plain @tap.stop="linkLandlord">联系房东</button>
+						<button class="m_button main plain" @tap.stop="linkLandlord">联系房东</button>
 					</view>
 					<view class="time">前天 18:00</view>
 					<view class="intro">
@@ -32,11 +32,11 @@
 			<view slot="content">
 				<view class="link m_flex_justify">
 					<view>手机号：13123456789</view>
-					<button class="m_button primary" plain @tap="call">拨打</button>
+					<button class="m_button main" plain @tap="call">拨打</button>
 				</view>
 				<view class="link m_flex_justify">
 					<view>微信号：13123456789</view>
-					<button class="m_button primary" plain @tap="copy">复制</button>
+					<button class="m_button main" plain @tap="copy">复制</button>
 				</view>
 			</view>
 		</v-modal>

@@ -114,6 +114,10 @@
 				"path": "pages/publish/settled"
 			},
 			{
+				"name": "发布房源",
+				"path": "pages/publish/house"
+			},
+			{
 				"name": "我的",
 				"path": "pages/me/me"
 			},
@@ -122,7 +126,7 @@
 				"path": "pages/me/collection"
 			},
 			{
-				"name": "发布",
+				"name": "我的发布",
 				"path": "pages/me/publish"
 			}
 		]

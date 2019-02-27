@@ -140,10 +140,8 @@ export default {
     .btn {
         &_code {
             min-width: 140upx;
-			height: 44upx;
 			margin-left: 20upx;
-            padding: 0 28upx;
-            line-height: 44upx;
+            padding: 8upx 28upx;
             border-radius: 22upx;
             text-align: center;
         }

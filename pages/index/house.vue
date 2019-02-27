@@ -1,13 +1,11 @@
 <template>
-    <view>房源详情</view>
+	<view class="content">
+	</view>
 </template>
 
 <script>
-export default {
-
-}
+	export default {};
 </script>
 
-<style>
-
+<style lang="scss" scoped>
 </style>

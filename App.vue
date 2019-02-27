@@ -1,58 +1,29 @@
 <script>
-// import { mapState, mapActions } from 'vuex';
 export default {
-// 	computed: {
-// 		...mapState(['initFn'])
-// 	},
-	onLaunch: function() {
+    onLaunch: function() {
         // #ifdef MP-WEIXIN
-		if (wx.canIUse && wx.canIUse('getUpdateManager')) {
-			let updateManager = wx.getUpdateManager();
-			updateManager.onUpdateReady(function() {
-				updateManager.applyUpdate();
-			});
-		}
+        if (wx.canIUse && wx.canIUse('getUpdateManager')) {
+            let updateManager = wx.getUpdateManager();
+            updateManager.onUpdateReady(function() {
+                updateManager.applyUpdate();
+            });
+        }
         // #endif
-	},
-	onShow: function() {
-		console.log('App Show');
-		// this.init();
-	},
-	onHide: function() {
-		console.log('App Hide');
-	},
-// 	methods: {
-// 		...mapActions(['login']),
-// 		init() {
-// 			const vm = this;
-// 			this.check({
-// 				success() {
-// 					console.log('已登录');
-// 					vm.initFn && vm.initFn();
-// 				},
-// 				fail() {
-// 					vm.login.then(res => {
-// 						
-// 					}, e => {
-// 						
-// 					}).catch(e => console.log(e))
-// 				}
-// 			});
-// 		},
-// 		check(o) {
-// 			uni.checkSession({
-// 				success: o.success,
-// 				fail: o.fail
-// 			});
-// 		},
-// 	}
+    },
+    onShow: function() {
+        console.log('App Show');
+        // this.init();
+    },
+    onHide: function() {
+        console.log('App Hide');
+    }
 };
 </script>
 
 <style lang="scss">
 /*每个页面公共css */
 page {
-	background-color: $uni-bg-color-grey;
+    background-color: #eee;
 }
 body,
 div,
@@ -78,96 +49,122 @@ p,
 blockquote,
 th,
 td {
-	margin: 0;
-	padding: 0;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+image {
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
 }
 .content {
-	font-size: 32upx;
-	color: $text-color;
+    font-size: 25upx;
+    color: $text-color;
 }
 .m_flex {
-	display: flex;
-}
-.m_flex_left {
-	display: flex;
-	justify-content: flex-start;
-}
-.m_flex_center {
-	display: flex;
-	justify-content: center;
-}
-.m_flex_right {
-	display: flex;
-	justify-content: flex-end;
-}
-.m_flex_justify {
-	display: flex;
-	justify-content: space-between;
-}
-.m_flex_top {
-	display: flex;
-	align-items: flex-start;
-}
-.m_flex_middle {
-	display: flex;
-	align-items: center;
-}
-.m_flex_bottom {
-	display: flex;
-	align-items: flex-end;
-}
-.m_flex_column {
-	display: flex;
-	flex-direction: column;
-}
-.m_flex_wrap {
-	display: flex;
-	flex-wrap: wrap;
-}
-.m_flex_item {
-	flex: 1;
+    display: flex;
+    &_left {
+        display: flex;
+        justify-content: flex-start;
+    }
+    &_center {
+        display: flex;
+        justify-content: center;
+    }
+    &_right {
+        display: flex;
+        justify-content: flex-end;
+    }
+    &_justify {
+        display: flex;
+        justify-content: space-between;
+    }
+    &_top {
+        display: flex;
+        align-items: flex-start;
+    }
+    &_middle {
+        display: flex;
+        align-items: center;
+    }
+    &_bottom {
+        display: flex;
+        align-items: flex-end;
+    }
+    &_column {
+        display: flex;
+        flex-direction: column;
+    }
+    &_wrap {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    &_item {
+        flex: 1;
+    }
 }
 .m_button {
-	display: inline-block;
-	padding: 10upx 14upx;
-	font-size: 28upx;
-	line-height: 1;
-	box-sizing: border-box;
-	color: $text-color;
+    display: inline-block;
+    padding: 10upx 14upx;
+    font-size: 28upx;
+    line-height: 1;
+    border-radius: none;
+    box-sizing: border-box;
+    color: $text-color;
 
-	&.primary {
-		background-color: $primary-color;
-		border: 1upx solid $primary-color;
-		color: #fff;
-	}
-    
+    &.primary {
+        background-color: $primary-color;
+        border: 1upx solid $primary-color;
+        color: #fff;
+    }
+
     &.main {
         background-color: $main-color;
-		border: 1upx solid $main-color;
+        border: 1upx solid $main-color;
         color: #fff;
-	}
+    }
 
-	&.plain {
-		background-color: transparent;
+    &.plain {
+        background-color: transparent;
         &.primary {
             color: $primary-color;
         }
         &.main {
             color: $main-color;
         }
-	}
-	
-	&::after {
-		border: none;
-	}
+    }
+
+    &::after {
+        border: none;
+    }
 }
+
 .m_textover {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
+
 .m_text_center {
-	text-align: center;
+    text-align: center;
+}
+
+.bottom_icon {
+    display: inline-block;
+    width: 14upx;
+    height: 14upx;
+    border-left: 2upx solid $text-color;
+    border-bottom: 2upx solid $text-color;
+    transform: rotate(-45deg);
+    vertical-align: 6upx;
+}
+
+.right_icon {
+    width: 20upx;
+    height: 20upx;
+    border-right: 4upx solid $text-color;
+    border-bottom: 4upx solid $text-color;
+    transform: rotate(-45deg);
 }
 </style>

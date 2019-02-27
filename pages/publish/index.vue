@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<button class="m_button primary" plain @tap="goPage(`/pages/publish/setteld`)">
+		<button class="m_button primary" plain @tap="goPage(`/pages/publish/settled`)">
 			入驻村里
 		</button>
 		<button class="m_button primary" plain @tap="goPage(`/pages/publish/house`)">

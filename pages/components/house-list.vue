@@ -5,27 +5,29 @@
 				<view class="hd">
 					<view class="m_flex_justify">
 						<view class="title m_textover">单间</view>
-						<view class="price">¥1000/月</view>
+						<view class="price">
+							<text class="num">1000</text>
+							<text class="unit">元/月</text>
+						</view>
 						<button class="m_button main plain" @tap.stop="linkLandlord">联系房东</button>
 					</view>
-					<view class="time">前天 18:00</view>
 					<view class="intro">
 						<view class="intro_cell m_textover">楼层：【6楼】</view>
 						<view class="intro_cell m_textover">地址：【上社】【荷光路】【大利家】【路边第3栋】</view>
 						<view class="intro_cell m_textover">亮点：【洗衣机】【空调】【有阳台】【光线好】【大】</view>
-						<view class="intro_cell m_textover">备注：光线很好，房间很大</view>
 					</view>
 				</view>
 				<view class="bd m_flex_justify">
-					<view class="img_box"></view>
-					<view class="img_box"></view>
-					<view class="img_box"></view>
+					<view class="img_box">
+						<image src="/static/image/index/banner.png" mode="aspectFill"></image>
+					</view>
+					<view class="img_box">
+						<image src="/static/image/index/banner.png" mode="aspectFill"></image>
+					</view>
+					<view class="img_box last">
+						<image src="/static/image/index/banner.png" mode="aspectFill"></image>
+					</view>
 				</view>
-				<!-- <view class="fd m_flex">
-					<view class="m_flex_item">阅读量：500</view>
-					<view class="m_flex_item">信息描述：1</view>
-					<view class="m_flex_item">收藏</view>
-				</view> -->
 			</view>
 		</view>
 		<v-modal ref="modal">
@@ -44,104 +46,121 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-export default {
-	props: {
-		list: {
-			type: Array,
-			default() {
-				return [];
+	import { mapActions } from "vuex";
+	export default {
+		props: {
+			list: {
+				type: Array,
+				default() {
+					return [];
+				}
+			}
+		},
+		methods: {
+			...mapActions(["goPage"]),
+			linkLandlord() {
+				this.$refs.modal.show({
+					title: "联系方式",
+					confirmText: "确定",
+					success() {}
+				});
+			},
+			collect() {},
+			call() {
+				uni.makePhoneCall({
+					phoneNumber: "114"
+				});
+			},
+			copy() {
+				uni.setClipboardData({
+					data: "hello",
+					success() {
+						uni.showToast({
+							title: "复制成功",
+							icon: "success"
+						});
+					}
+				});
 			}
 		}
-	},
-	methods: {
-		...mapActions(['goPage']),
-		linkLandlord() {
-			this.$refs.modal.show({
-				title: '联系方式',
-				confirmText: '确定'
-			});
-		},
-		collect() {},
-		call() {
-			uni.makePhoneCall({
-				phoneNumber: '114'
-			});
-		},
-		copy() {
-			uni.setClipboardData({
-				data: 'hello',
-				success() {
-					uni.showToast({
-						title: '复制成功',
-						icon: 'success'
-					});
-				}
-			});
-		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.list {
-	.cell {
-		padding: 20upx 30upx 10upx;
-		margin-bottom: 24upx;
-		background-color: #fff;
-	}
+	.list {
+		.cell {
+			padding: 10upx 30upx;
+			margin-bottom: 18upx;
+			background-color: #fff;
+		}
 
-	.title {
-		max-width: 50%;
-		font-size: 28upx;
-	}
+		.hd {
+			padding-top: 12upx;
+		}
 
-	.time {
-		font-size: 24upx;
-		color: $uni-text-color-grey;
-	}
+		.title {
+			max-width: 40%;
+			font-size: 33upx;
+		}
 
-	.price {
-		font-size: 24upx;
-		color: $uni-color-error;
-	}
+		.price {
+			align-self: flex-end;
+			color: $primary-color;
+		}
 
-	.intro {
+		.num {
+			font-size: 25upx;
+		}
+
+		.unit {
+			font-size: 15upx;
+		}
+
+		.m_button {
+			width: 200upx;
+			height: 56upx;
+			padding: 0 7upx;
+			line-height: 54upx;
+		}
+
+		.intro {
+			padding: 17upx 0 0;
+			font-size: 24upx;
+			line-height: 42upx;
+			color: $text-color-inverse;
+		}
+
+		.bd {
+			padding-top: 16upx;
+			padding-bottom: 24upx;
+		}
+
+		.img_box {
+			width: 222upx;
+			height: 174upx;
+			background-color: $uni-bg-color-grey;
+		}
+
+		.last {
+			position: relative;
+
+			&::after {
+				content: "更多";
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: flex;
+				width: 100%;
+				height: 100%;
+				justify-content: center;
+				align-items: center;
+				background-color: rgba(76, 230, 232, 0.4);
+				font-size: 25upx;
+				color: #fff;
+			}
+		}
+	}
+	.link {
 		padding: 10upx 0;
-		font-size: 24upx;
-
-		.intro_cell {
-			padding: 4upx 0;
-		}
 	}
-
-	.bd {
-		padding-top: 10upx;
-		padding-bottom: 10upx;
-	}
-
-	.img_box {
-		width: 210upx;
-		height: 210upx;
-		background-color: $uni-bg-color-grey;
-
-		image {
-			width: 100%;
-			height: 100%;
-		}
-	}
-
-	.fd {
-		height: 48upx;
-		line-height: 48upx;
-		font-size: 24upx;
-
-		.m_flex_item {
-			padding: 0 24upx;
-		}
-	}
-}
-.link {
-	padding: 10upx 0;
-}
 </style>

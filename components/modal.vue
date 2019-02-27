@@ -1,7 +1,7 @@
 <template>
 	<view v-if="isShow">
 		<v-mask @click="hide"></v-mask>
-		<view class="ui-dialog">
+		<view class="ui-dialog ui-dialog-ani">
 			<view v-if="titleModal" class="ui-dialog__hd">
 				<view class="ui-dialog__title">{{titleModal}}</view>
 			</view>
@@ -99,13 +99,21 @@
 		max-width: 600upx;
 		top: 50%;
 		left: 50%;
-		-webkit-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
+		transform: translate3d(-50%, -50%, 0);
 		background-color: $uni-bg-color;
 		text-align: center;
 		border-radius: 6upx;
 		overflow: hidden;
 		font-size: 32upx;
+
+		&-ani {
+			animation: aniDialog 0.3s forwards ease-in 0s 1 normal;
+		}
+
+		@keyframes aniDialog {
+			0% { opacity: 0; }
+			100% { opacity: 1; }
+		}
 
 		&__hd {
 			padding: 1.3em 1.6em 0.5em;

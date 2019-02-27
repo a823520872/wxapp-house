@@ -22,13 +22,13 @@
 			}
 		},
 		{
-			"path": "pages/publish/setteld",
+			"path": "pages/publish/settled",
 			"style": {
 				"navigationBarTitleText": "填写信息"
 			}
 		},
 		{
-			"path": "pages/publish/setteld_succ",
+			"path": "pages/publish/settled_succ",
 			"style": {
 				"navigationBarTitleText": "提交成功"
 			}
@@ -76,6 +76,7 @@
 		"color": "#a8a8a8",
 		"selectedColor": "#4ce6e8",
 		"backgroundColor": "#FFFFFF",
+		"borderStyle": "white",
 		"list": [{
 				"pagePath": "pages/index/index",
 				"iconPath": "static/image/tab/index.png",
@@ -107,6 +108,10 @@
 		"list": [{
 				"name": "首页",
 				"path": "pages/index/index"
+			},
+			{
+				"name": "入驻",
+				"path": "pages/publish/settled"
 			},
 			{
 				"name": "我的",

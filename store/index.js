@@ -64,6 +64,21 @@ const store = new Vuex.Store({
                     });
                 }
             })
+        },
+        goPage(context, value) {
+            if (typeof value === 'string') {
+                uni.navigateTo({
+                    url: value
+                });
+            } else if (value.replace) {
+                uni.redirectTo({
+                    url: value.path
+                })
+            } else {
+                uni.navigateTo({
+                    url: value.path
+                });
+            }
         }
     }
 })

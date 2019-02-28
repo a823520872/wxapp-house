@@ -10,29 +10,78 @@
 		<view class="bd">
 			<view class="cells">
 				<view class="cell">
-
+					<view class="house_name m_flex_justify">
+						<view class="title">单间·天河区·上社</view>
+						<button class="share m_button plain m_flex_middle" open-type="share">
+							<image src="/static/image/index/share.png" mode="aspectFit"></image>
+							<text>分享</text>
+						</button>
+					</view>
+					<view class="m_flex_middle m_flex_justify">
+						<view class="price">
+							<text class="num">1000</text>
+							<text>元/月</text>
+						</view>
+						<view class="time m_flex_middle">
+	                        <image src="/static/image/index/time.png" mode="aspectFit"></image>
+							<text>3天前发布</text>
+						</view>
+					</view>
 				</view>
 			</view>
 			<view class="cells">
-				<view class="cell">
-
+				<view class="cells_title title">房源信息</view>
+				<view class="cell intro">
+					<view class="intro_cell m_textover">
+						<text class="intro_hd">楼层：</text>
+						<text class="intro_bd">【6楼】</text>
+					</view>
+					<view class="intro_cell m_textover">
+						<text class="intro_hd">地址：</text>
+						<text class="intro_bd">【上社】【荷光路】【大利家】【路边第3栋】</text>
+					</view>
+					<view class="intro_cell m_textover">
+						<text class="intro_hd">亮点：</text>
+						<text class="intro_bd">【洗衣机】【空调】【有阳台】【光线好】【大】</text>
+					</view>
+					<view class="intro_cell m_textover">
+						<text class="intro_hd">具体地址：</text>
+						<text class="intro_bd">广州上社乐泰路大街9号</text>
+					</view>
+					<view class="intro_cell m_textover">
+						<text class="intro_hd">备注：</text>
+						<text class="intro_bd">光线很好，房间很大</text>
+					</view>
+				</view>
+			</view>
+			<view class="cells">
+				<view class="cell m_flex_middle">
+                    <view class="avatar">
+                        <image src="/static/image/index/time.png" mode="aspectFit"></image>
+                    </view>
+					<view class="user m_flex_item">
+						<view class="name">房东微信昵称</view>
+						<view class="m_flex_middle">
+                        	<image src="/static/image/index/auth.png" mode="aspectFit"></image>
+							<text>实名认证</text>
+						</view>
+					</view>
+					<view class="has">TA还有XX套空房</view>
 				</view>
 			</view>
 			<view class="cells">
 				<view class="cells_title title">房源位置<text class="intro">（房源在定位附件）</text></view>
 				<view class="cell map">
-
+                    <image src="/static/image/index/map.png" mode="aspectFill"></image>
 				</view>
 			</view>
 			<view class="cells">
-				<view class="cell">
-					<view class="other m_flex_middle">
-						<view class="title m_flex_item">客观描述</view>
-						<view>阅读量：500</view>
-						<view class="praise m_flex_middle">
-							点赞：
-							<image src="/static/image/index/praise.png" mode="aspectFit"></image>
-						</view>
+				<view class="cell other m_flex_middle">
+					<view class="title m_flex_item">客观描述</view>
+					<view>阅读量：500</view>
+					<view class="praise m_flex_middle">
+						点赞：
+						<image src="/static/image/index/praise.png" mode="aspectFit"></image>
 					</view>
 				</view>
 			</view>
@@ -112,10 +161,99 @@
 			& + .cells {
 				margin-top: 18upx;
 			}
+
+			&_title {
+				padding-left: 30upx;
+				padding-right: 30upx;
+				line-height: 90upx;
+				font-size: 33upx;
+
+				&::before {
+                    content: ' ';
+                    display: inline-block;
+                    width: 5upx;
+                    height: 22upx;
+                    margin-right: 7upx;
+                    background-color: $main-color;
+				}
+
+				.intro {
+					font-size: 25upx;
+				}
+			}
+		}
+		.cell {
+			padding: 0 30upx;
+		}
+		.house_name {
+			padding-top: 20upx;
+			padding-bottom: 12upx;
+		}
+		.share {
+			image {
+				width: 25upx;
+				height: 28upx;
+				padding-right: 10upx;
+			}
+		}
+		.price {
+			padding-bottom: 24upx;
+			color: $primary-color;
+			.num {
+				font-size: 33upx;
+			}
+		}
+		.time {
+			padding-bottom: 24upx;
+			image {
+				width: 22upx;
+				height: 22upx;
+				padding-right: 10upx;
+			}
+		}
+		.intro {
+			line-height: 37upx;
+			padding-bottom: 18upx;
+
+			&_cell {
+				padding: 5upx 0;
+			}
+			
+			&_hd {
+				color: $text-color-inverse;
+			}
+		}
+		.avatar {
+			width: 140upx;
+			height: 140upx;
+			margin-top: 28upx;
+			margin-right: 24upx;
+			margin-bottom: 28upx;
+			border-radius: 50%;
+			overflow: hidden;
+		}
+		.user {
+			color: $text-color-inverse;
+			image {
+				width: 32upx;
+				height: 18upx;
+				padding-right: 16upx;
+			}
+		}
+		.name {
+			padding-bottom: 10upx;
+			color: $text-color;
+		}
+		.has {
+			color: $primary-color;
+		}
+		.map {
+			width: 750upx;
+			height: 321upx;
+			padding: 0;
 		}
 		.other {
 			height: 100upx;
-			padding: 0 30upx;
 			image {
 				width: 40upx;
 				height: 40upx;

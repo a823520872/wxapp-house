@@ -167,6 +167,9 @@ image {
     border-bottom: 4upx solid $text-color;
     transform: rotate(-45deg);
 }
+.empty {
+    height: 100upx;
+}
 .modal {
     .link {
         padding: 10upx 0;

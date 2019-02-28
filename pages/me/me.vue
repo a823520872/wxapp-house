@@ -45,7 +45,7 @@
 			</view>
 		</view>
 		<v-auth ref="auth"></v-auth>
-		<v-modal ref="modal">
+		<v-modal class="modal" ref="modal">
 			<view slot="content">
 				<view class="link m_flex_justify">
 					<view>手机号：13123456789</view>

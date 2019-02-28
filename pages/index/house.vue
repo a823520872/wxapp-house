@@ -118,6 +118,12 @@
 
 <script>
 	export default {
+		onShareAppMessage(obj) {
+			return {
+				title: '房源详情',
+				path: '/pages/index/house'
+			}
+		},
 		methods: {
 			linkLandlord() {
 				this.$refs.modal.show({

@@ -30,15 +30,17 @@
 				</view>
 			</view>
 		</view>
-		<v-modal class="modal" ref="modal">
+		<v-modal ref="modal">
 			<view slot="content">
-				<view class="link m_flex_justify">
-					<view>手机号：13123456789</view>
-					<button class="m_button main" plain @tap="call">拨打</button>
-				</view>
-				<view class="link m_flex_justify">
-					<view>微信号：13123456789</view>
-					<button class="m_button main" plain @tap="copy">复制</button>
+				<view class="modal">
+					<view class="link m_flex_justify">
+						<view>手机号：13123456789</view>
+						<button class="m_button main" plain @tap="call">拨打</button>
+					</view>
+					<view class="link m_flex_justify">
+						<view>微信号：13123456789</view>
+						<button class="m_button main" plain @tap="copy">复制</button>
+					</view>
 				</view>
 			</view>
 		</v-modal>

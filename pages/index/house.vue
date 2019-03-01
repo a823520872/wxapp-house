@@ -23,7 +23,7 @@
 							<text>元/月</text>
 						</view>
 						<view class="time m_flex_middle">
-	                        <image src="/static/image/index/time.png" mode="aspectFit"></image>
+							<image src="/static/image/index/time.png" mode="aspectFit"></image>
 							<text>3天前发布</text>
 						</view>
 					</view>
@@ -56,13 +56,13 @@
 			</view>
 			<view class="cells">
 				<view class="cell m_flex_middle">
-                    <view class="avatar">
-                        <image src="/static/image/index/time.png" mode="aspectFit"></image>
-                    </view>
+					<view class="avatar">
+						<image src="/static/image/index/time.png" mode="aspectFit"></image>
+					</view>
 					<view class="user m_flex_item">
 						<view class="name">房东微信昵称</view>
 						<view class="m_flex_middle">
-                        	<image src="/static/image/index/auth.png" mode="aspectFit"></image>
+							<image src="/static/image/index/auth.png" mode="aspectFit"></image>
 							<text>实名认证</text>
 						</view>
 					</view>
@@ -72,7 +72,7 @@
 			<view class="cells">
 				<view class="cells_title title">房源位置<text class="intro">（房源在定位附件）</text></view>
 				<view class="cell map">
-                    <image src="/static/image/index/map.png" mode="aspectFill"></image>
+					<image src="/static/image/index/map.png" mode="aspectFill"></image>
 				</view>
 			</view>
 			<view class="cells">
@@ -101,15 +101,17 @@
 				<text>联系房东</text>
 			</view>
 		</view>
-		<v-modal class="modal" ref="modal">
+		<v-modal ref="modal">
 			<view slot="content">
-				<view class="link m_flex_justify">
-					<view>手机号：13123456789</view>
-					<button class="m_button main" plain @tap="call">拨打</button>
-				</view>
-				<view class="link m_flex_justify">
-					<view>微信号：13123456789</view>
-					<button class="m_button main" plain @tap="copy">复制</button>
+				<view class="modal">
+					<view class="link m_flex_justify">
+						<view>手机号：13123456789</view>
+						<button class="m_button main" plain @tap="call">拨打</button>
+					</view>
+					<view class="link m_flex_justify">
+						<view>微信号：13123456789</view>
+						<button class="m_button main" plain @tap="copy">复制</button>
+					</view>
 				</view>
 			</view>
 		</v-modal>
@@ -120,9 +122,9 @@
 	export default {
 		onShareAppMessage(obj) {
 			return {
-				title: '房源详情',
-				path: '/pages/index/house'
-			}
+				title: "房源详情",
+				path: "/pages/index/house"
+			};
 		},
 		methods: {
 			linkLandlord() {
@@ -175,12 +177,12 @@
 				font-size: 33upx;
 
 				&::before {
-                    content: ' ';
-                    display: inline-block;
-                    width: 5upx;
-                    height: 22upx;
-                    margin-right: 7upx;
-                    background-color: $main-color;
+					content: " ";
+					display: inline-block;
+					width: 5upx;
+					height: 22upx;
+					margin-right: 7upx;
+					background-color: $main-color;
 				}
 
 				.intro {
@@ -224,7 +226,7 @@
 			&_cell {
 				padding: 5upx 0;
 			}
-			
+
 			&_hd {
 				color: $text-color-inverse;
 			}

@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view class="content content_bg_ff">
 		<view class="hd">
 			<view class="avatar" @tap="getAuth">
 				<image v-if="userInfo" :src="userInfo.avatarUrl" mode="aspectFit"></image>
@@ -113,14 +113,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.content {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		background-color: #fff;
-	}
 	.hd {
 		background-color: $main-color;
 		font-size: 28upx;

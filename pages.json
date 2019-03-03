@@ -40,6 +40,12 @@
 			}
 		},
 		{
+			"path": "pages/publish/img",
+			"style": {
+				"navigationBarTitleText": "编辑照片"
+			}
+		},
+		{
 			"path": "pages/publish/publish_succ",
 			"style": {
 				"navigationBarTitleText": "发布成功"

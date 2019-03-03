@@ -1,102 +1,158 @@
 <template>
-	<view class="content">
-		<view class="hd">
-			<view class="bg"><image src="/static/image/publish/house_bg.png" mode="aspectFit"></image></view>
-			<view class="warn">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
-			<view class="main m_flex_column m_flex_middle">
-				<view class="photo_box m_flex_column m_flex_middle m_flex_center" @tap="chooseImg">
-					<image class="photo" src="/static/image/publish/photo.png" mode="aspectFit"></image>
-					<text>上传照片</text>
+	<view class="content content_bg_ff">
+		<view class="step_one" v-if="step === 0">
+			<view class="hd">
+				<view class="bg"><image src="/static/image/publish/house_bg.png" mode="aspectFit"></image></view>
+				<view class="warn">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
+				<view class="main m_flex_column m_flex_middle">
+					<view class="photo_box m_flex_column m_flex_middle m_flex_center" @tap="chooseImg">
+						<image class="photo" src="/static/image/publish/photo.png" mode="aspectFit"></image>
+						<text>上传照片</text>
+					</view>
+					<view class="tips">上传房间、厨房、厕所、阳台、楼照租房率更高哦~</view>
 				</view>
-				<view class="tips">上传房间、厨房、厕所、阳台、楼照租房率更高哦~</view>
 			</view>
+			<view class="bd">
+				<view class="cells">
+					<view class="cells_title m_flex_middle">基本信息</view>
+					<view class="cell m_flex_center m_flex_middle">
+						<picker class="m_flex_item" :range="[]" @change="">
+							<view class="cell_box m_flex_item">
+								<view class="cell_hd">租金</view>
+								<view class="cell_bd">请输入房源租金</view>
+							</view>
+						</picker>
+					</view>
+					<view class="cell m_flex_center m_flex_middle">
+						<picker class="m_flex_item" :range="[]" @change="">
+							<view class="cell_box m_flex_item">
+								<view class="cell_hd">地址</view>
+								<view class="cell_bd">请选择</view>
+							</view>
+						</picker>
+						<picker class="m_flex_item" :range="[]" @change="">
+							<view class="cell_box m_flex_item">
+								<view class="cell_hd">标志建筑</view>
+								<view class="cell_bd">请选择</view>
+							</view>
+						</picker>
+						<picker class="m_flex_item" :range="[]" @change="">
+							<view class="cell_box m_flex_item">
+								<view class="cell_hd">路边距离</view>
+								<view class="cell_bd">请选择</view>
+							</view>
+						</picker>
+					</view>
+					<view class="cell m_flex_center m_flex_middle">
+						<view class="cell_box m_flex_item">
+							<view class="cell_hd">具体地址</view>
+							<input class="cell_bd" type="text" value="" placeholder="请输入具体地址"/>
+							<!-- <view class="cell_bd">请输入具体地址</view> -->
+						</view>
+					</view>
+					<view class="cell m_flex_center m_flex_middle">
+						<picker class="m_flex_item" :range="[]" @change="">
+							<view class="cell_box m_flex_item">
+								<view class="cell_hd">房型</view>
+								<view class="cell_bd">请选择</view>
+							</view>
+						</picker>
+						<picker class="m_flex_item" :range="[]" @change="">
+							<view class="cell_box m_flex_item">
+								<view class="cell_hd">楼层</view>
+								<view class="cell_bd">请选择</view>
+							</view>
+						</picker>
+					</view>
+				</view>
+				<view class="cells">
+					<view class="cells_title m_flex_middle">联系方式</view>
+					<view class="cell m_flex_middle">
+						<view class="cell_box m_flex_item">
+							<view class="cell_hd">联系电话</view>
+							<view class="cell_bd">18922125666</view>
+						</view>
+					</view>
+					<view class="cell m_flex_middle">
+						<view class="cell_box m_flex_item">
+							<view class="cell_hd">微信号</view>
+							<view class="cell_bd">18922125666</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="fd" @tap="next">下一步</view>
 		</view>
-		<view class="bd">
+		<view class="step_two next" v-else-if="step === 1">
 			<view class="cells">
-				<view class="cells_title m_flex_middle">基本信息</view>
-				<view class="cell m_flex_center m_flex_middle">
-					<picker class="m_flex_item" :range="[]" @change="">
-						<view class="cell_box m_flex_item">
-							<view class="cell_hd">租金</view>
-							<view class="cell_bd">请输入房源租金</view>
-						</view>
-					</picker>
+				<view class="cells_title">
+					一般配置
 				</view>
-				<view class="cell m_flex_center m_flex_middle">
-					<picker class="m_flex_item" :range="[]" @change="">
-						<view class="cell_box m_flex_item">
-							<view class="cell_hd">地址</view>
-							<view class="cell_bd">请选择</view>
-						</view>
-					</picker>
-					<picker class="m_flex_item" :range="[]" @change="">
-						<view class="cell_box m_flex_item">
-							<view class="cell_hd">标志建筑</view>
-							<view class="cell_bd">请选择</view>
-						</view>
-					</picker>
-					<picker class="m_flex_item" :range="[]" @change="">
-						<view class="cell_box m_flex_item">
-							<view class="cell_hd">路边距离</view>
-							<view class="cell_bd">请选择</view>
-						</view>
-					</picker>
-				</view>
-				<view class="cell m_flex_center m_flex_middle">
-					<picker class="m_flex_item" :range="[]" @change="">
-						<view class="cell_box m_flex_item">
-							<view class="cell_hd">房型</view>
-							<view class="cell_bd">请选择</view>
-						</view>
-					</picker>
-					<picker class="m_flex_item" :range="[]" @change="">
-						<view class="cell_box m_flex_item">
-							<view class="cell_hd">楼层</view>
-							<view class="cell_bd">请选择</view>
-						</view>
-					</picker>
+				<view class="cell m_flex_wrap">
+					<view class="info_item">床</view>
+					<view class="info_item">衣柜</view>
+					<view class="info_item">桌椅</view>
+					<view class="info_item">热水器</view>
 				</view>
 			</view>
 			<view class="cells">
-				<view class="cells_title m_flex_middle">联系方式</view>
-				<view class="cell m_flex_middle">
-					<view class="cell_box m_flex_item">
-						<view class="cell_hd">联系电话</view>
-						<view class="cell_bd">18922125666</view>
-					</view>
+				<view class="cells_title">
+					房屋亮点
 				</view>
-				<view class="cell m_flex_middle">
-					<view class="cell_box m_flex_item">
-						<view class="cell_hd">微信号</view>
-						<view class="cell_bd">18922125666</view>
-					</view>
+				<view class="cell m_flex_wrap">
+					<view class="info_item">空调</view>
+					<view class="info_item">洗衣机</view>
+					<view class="info_item">冰箱</view>
+					<view class="info_item">阳台</view>
+					<view class="info_item">沙发</view>
+					<view class="info_item">茶几</view>
+					<view class="info_item">电梯</view>
+					<view class="info_item">光线好</view>
+					<view class="info_item">房大</view>
 				</view>
 			</view>
+			<view class="cells">
+				<view class="cells_title">
+					补充说明（选填）
+				</view>
+				<view class="cell">
+					<textarea placeholder="详细的介绍会加大租房率" />
+				</view>
+			</view>
+			<view class="fd" @tap="confirm">确认发布</view>
 		</view>
 		<view class="empty"></view>
-		<view class="fd" @tap="confirm">下一步</view>
 	</view>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 export default {
+	data() {
+		return {
+			step: 0
+		}
+	},
 	methods: {
 		...mapActions(['goPage']),
 		chooseImg() {
-			uni.chooseImage({
-				sourceType: 'album',
-				success(e) {
-					console.log(e);
-					if (e.errMsg === 'chooseImage:ok') {
-						console.log(e.tempFilePaths);
-						console.log(e.tempFiles);
-					}
-				}
-			});
+			this.goPage(`/pages/publish/img`);
+// 			uni.chooseImage({
+// 				sourceType: 'album',
+// 				success(e) {
+// 					console.log(e);
+// 					if (e.errMsg === 'chooseImage:ok') {
+// 						console.log(e.tempFilePaths);
+// 						console.log(e.tempFiles);
+// 					}
+// 				}
+// 			});
+		},
+		next() {
+			this.step = 1
 		},
 		confirm() {
-			this.goPage(`/pages/publish/publish_succ`);
+			this.goPage({path: `/pages/publish/publish_succ`, replace: true});
 		}
 	}
 };
@@ -217,5 +273,48 @@ export default {
 	font-size: 33upx;
 	background-color: $main-color;
 	color: #fff;
+}
+
+.next {
+	padding-top: 30upx;
+	.cells {
+		padding: 0 30upx;
+		&_title {
+			padding-bottom: 30upx;
+			font-size: 33upx;
+		}
+	}
+	.cell {
+		&.m_flex_wrap {
+			margin-right: -26upx;
+		}
+	}
+	.info_item {
+		height: 56upx;
+		margin-right: 26upx;
+		margin-bottom: 30upx;
+		padding: 0 30upx;
+		min-width: 80upx;
+		line-height: 56upx;
+		background-color: #f5f5f5;
+		font-size: 25upx;
+		text-align: center;
+		color: $text-color-inverse;
+		&.active {
+			background-color: $primary-color;
+			color: #fff;
+		}
+	}
+	textarea {
+		width: 100%;
+		padding: 10upx 16upx;
+		border: 1upx solid $border-color;
+		font-size: 33upx;
+		box-sizing: border-box;
+		line-height: 1.2;
+	}
+	.fd {
+		background-color: $primary-color;
+	}
 }
 </style>

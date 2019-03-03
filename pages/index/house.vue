@@ -1,14 +1,14 @@
 <template>
 	<view class="content">
-		<swiper class="swiper" :indicator-dots="true" indicator-color="#6d7271" indicator-active-color="#4ce6e8" :autoplay="true" :interval="3000" :duration="1000">
+		<!-- <swiper class="swiper" :indicator-dots="true" indicator-color="#6d7271" indicator-active-color="#4ce6e8" :autoplay="true" :interval="3000" :duration="1000">
 			<swiper-item>
 				<view class="swiper-item">
 					<image src="/static/image/index/house_banner.png" mode="aspectFill"></image>
 				</view>
 			</swiper-item>
-		</swiper>
+		</swiper> -->
 		<view class="bd">
-			<view class="cells">
+			<!-- <view class="cells">
 				<view class="cell">
 					<view class="house_name m_flex_justify">
 						<view class="title">单间·天河区·上社</view>
@@ -28,17 +28,33 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<view class="cells">
-				<view class="cells_title title">房源信息</view>
-				<view class="cell intro">
+				<!-- <view class="cells_title title">房源信息</view> -->
+				<view class="cell intro m_flex_wrap">
+					<view class="house_name m_flex_justify">
+						<view class="title">单间·天河区·上社</view>
+						<button class="share m_button plain m_flex_middle" open-type="share">
+							<image src="/static/image/index/share.png" mode="aspectFit"></image>
+							<text>分享</text>
+						</button>
+					</view>
+					<view class="intro_cell m_textover">
+						<text class="intro_hd">租金：</text>
+						<text class="intro_bd">
+							<text class="price">
+								<text class="num">1000 </text>
+								<text>元/月</text>
+							</text>
+						</text>
+					</view>
 					<view class="intro_cell m_textover">
 						<text class="intro_hd">楼层：</text>
 						<text class="intro_bd">【6楼】</text>
 					</view>
 					<view class="intro_cell m_textover">
 						<text class="intro_hd">地址：</text>
-						<text class="intro_bd">【上社】【荷光路】【大利家】【路边第3栋】</text>
+						<text class="intro_bd">【上社】【荷光路】【大利家】【路边第3栋】【上社】【荷光路】【大利家】【路边第3栋】</text>
 					</view>
 					<view class="intro_cell m_textover">
 						<text class="intro_hd">亮点：</text>
@@ -62,11 +78,29 @@
 					<view class="user m_flex_item">
 						<view class="name">房东微信昵称</view>
 						<view class="m_flex_middle">
-							<image src="/static/image/index/auth.png" mode="aspectFit"></image>
-							<text>实名认证</text>
+							<!-- <image src="/static/image/index/auth.png" mode="aspectFit"></image> -->
+							<text>阅读量：500</text>
 						</view>
 					</view>
-					<view class="has">TA还有XX套空房</view>
+					<!-- <view class="has">TA还有XX套空房</view> -->
+					<view class="user">
+						<view>2019.02.15</view>
+						<view>18:02 发布</view>
+					</view>
+				</view>
+			</view>
+			<view class="cells">
+				<view class="cells_title title">房源图片</view>
+				<view class="cell">
+					<view class="house_img">
+						<image src="/static/image/index/house_banner.png" mode="aspectFill"></image>
+					</view>
+					<view class="house_img">
+						<image src="/static/image/index/house_banner.png" mode="aspectFill"></image>
+					</view>
+					<view class="house_img">
+						<image src="/static/image/index/house_banner.png" mode="aspectFill"></image>
+					</view>
 				</view>
 			</view>
 			<view class="cells">
@@ -75,7 +109,7 @@
 					<image src="/static/image/index/map.png" mode="aspectFill"></image>
 				</view>
 			</view>
-			<view class="cells">
+			<!-- <view class="cells">
 				<view class="cell other m_flex_middle">
 					<view class="title m_flex_item">客观描述</view>
 					<view>阅读量：500</view>
@@ -84,7 +118,7 @@
 						<image src="/static/image/index/praise.png" mode="aspectFit"></image>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="empty"></view>
 		<view class="fd m_flex">
@@ -194,7 +228,8 @@
 			padding: 0 30upx;
 		}
 		.house_name {
-			padding-top: 20upx;
+			width: 100%;
+			padding-top: 30upx;
 			padding-bottom: 12upx;
 		}
 		.share {
@@ -208,7 +243,8 @@
 			padding-bottom: 24upx;
 			color: $primary-color;
 			.num {
-				font-size: 33upx;
+				// font-size: 33upx;
+				font-weight: bold;
 			}
 		}
 		.time {
@@ -225,6 +261,7 @@
 
 			&_cell {
 				padding: 5upx 0;
+				min-width: 50%;
 			}
 
 			&_hd {
@@ -250,15 +287,24 @@
 		}
 		.name {
 			padding-bottom: 10upx;
+			font-size: 30upx;
 			color: $text-color;
 		}
 		.has {
 			color: $primary-color;
 		}
+		.house_img {
+			height: 374upx;
+			padding-bottom: 18upx;
+			&:last-of-type {
+				padding-bottom: 30upx;
+			}
+		}
 		.map {
 			width: 750upx;
 			height: 321upx;
 			padding: 0;
+			padding-bottom: 18upx;
 		}
 		.other {
 			height: 100upx;

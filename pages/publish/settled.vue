@@ -94,11 +94,6 @@ export default {
 
 <style lang="scss" scoped>
 .content {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     background-color: #e9f9f9;
 }
 .hd {

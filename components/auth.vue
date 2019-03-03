@@ -20,7 +20,6 @@ export default {
 	methods: {
 		...mapMutations(['setUserInfo']),
 		getUserInfoByBtn(e) {
-			console.log(e.detail);
 			const { errMsg, encryptedData, iv, signature, userInfo } = e.detail;
 			this.$refs.user_modal.hide();
 			if (errMsg === 'getUserInfo:ok') {

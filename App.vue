@@ -62,6 +62,14 @@ image {
     font-size: 25upx;
     color: $text-color;
 }
+.content_bg_ff {
+    position: absolute;
+    top: 0;
+	right: 0;
+    bottom: 0;
+    left: 0;
+	background-color: #fff;
+}
 .m_flex {
     display: flex;
     &_left {

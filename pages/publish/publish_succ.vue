@@ -14,46 +14,46 @@
 </template>
 
 <script>
-export default {};
+	export default {};
 </script>
 
 <style lang="scss" scoped>
-.hd {
-	text-align: center;
-	font-size: 33upx;
-	.icon {
-		width: 198upx;
-		height: 198upx;
-		margin: 132upx auto 26upx;
+	.hd {
+		text-align: center;
+		font-size: 33upx;
+		.icon {
+			width: 198upx;
+			height: 198upx;
+			margin: 132upx auto 26upx;
+		}
 	}
-}
-.bd {
-	position: relative;
-	width: 450upx;
-	margin: 140upx auto 0;
-	line-height: 40upx;
-	font-size: 30upx;
-	&::before {
-		content: ' ';
-		position: absolute;
-		top: 0;
-		left: 0;
-		margin-top: 16upx;
-		margin-left: -25upx;
-		width: 13upx;
-		height: 13upx;
-		border-radius: 50%;
-		background-color: $text-color-inverse;
+	.bd {
+		position: relative;
+		width: 450upx;
+		margin: 140upx auto 0;
+		line-height: 40upx;
+		font-size: 30upx;
+		&::before {
+			content: " ";
+			position: absolute;
+			top: 0;
+			left: 0;
+			margin-top: 16upx;
+			margin-left: -25upx;
+			width: 13upx;
+			height: 13upx;
+			border-radius: 50%;
+			background-color: $text-color-inverse;
+		}
 	}
-}
-.fd {
-	height: 100upx;
-	margin: 107upx 30upx;
-	line-height: 100upx;
-	background-color: $primary-color;
-	text-align: center;
-	font-size: 33upx;
-	border-radius: 8upx;
-	color: #fff;
-}
+	.fd {
+		height: 100upx;
+		margin: 107upx 30upx;
+		line-height: 100upx;
+		background-color: $primary-color;
+		text-align: center;
+		font-size: 33upx;
+		border-radius: 8upx;
+		color: #fff;
+	}
 </style>

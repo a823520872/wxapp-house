@@ -1,5 +1,5 @@
 <template>
-	<view>提交成功</view>
+    <view>提交成功</view>
 </template>
 
 <script>

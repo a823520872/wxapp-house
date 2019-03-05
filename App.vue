@@ -13,13 +13,6 @@ export default {
     onShow: function() {
         console.log('App Show');
         // this.init();
-        uni.request({
-        	url: 'http://127.0.0.1:3000/enterprise_integrated_services_m/policy/pageDate?pageSize=2&currentPage=1&params=%20',
-            method: 'get',
-            success(res) {
-            	console.log(res);
-            }
-        })
     },
     onHide: function() {
         console.log('App Hide');

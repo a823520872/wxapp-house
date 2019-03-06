@@ -1,58 +1,87 @@
-import store from '../store/index.js';
+import store from '../store/index.js'
 
 const ajax = async (path, data, options = {}) => {
+    const urlPrefix = 'https://house.zhiqiang.ink'
+    const url = urlPrefix + path
+    const hasLogin = store.state.hasLogin
     let token = uni.getStorageSync('tk')
-    if (!options.noToken && !token) {
-        try {
-            token = await store.dispatch('login');
-        } catch (e) {
-            return Promise.reject(e)
+    if (!options.noToken) {
+        if (!hasLogin) {
+            try {
+                token = await store.dispatch('login')
+            } catch (e) {
+                return Promise.reject(e)
+            }
         }
     }
-    const urlPrefix = 'http://127.0.0.1:7001';
-    url = urlPrefix + path;
-    options.type = options.type || 'get';
-    options.type = options.type.toUpperCase();
+    options.type = options.type || 'get'
+    options.type = options.type.toUpperCase()
     options.loading &&
         uni.showLoading({
             title: '加载中……',
             mask: options.mask
-        });
+        })
 
     function request() {
         return new Promise((resolve, reject) => {
-            let header = {
-                'content-type': 'application/json'
+            const success = res => {
+                options.loading && uni.hideLoading()
+                resolve(res.data)
+
+                if (res && res.statusCode == 200) {
+                    if (data.code == 0) {
+                        resolve(data)
+                    } else {
+                        uni.showToast({ title: data.msg, icon: 'none' })
+                        reject(data)
+                    }
+                } else {
+                    reject({ code: res.statusCode, msg: res.statusCode })
+                }
             }
-            if (!options.noToken) {
-                header['token'] = token
-            }
-            let obj = {
-                url,
-                method: options.type,
-                data,
-                header,
-                success(res) {
-                    console.log(res.data);
-                    options.loading && uni.hideLoading();
-                    resolve(res.data);
-                },
-                fail(e) {
-                    console.log(e);
-                    options.loading && uni.hideLoading();
-                    reject(e);
-                    if (e && e.errMsg === 'request:fail abort') return;
-                    !options.noAlert && uni.showToast({
+            const fail = e => {
+                console.log(e)
+                options.loading && uni.hideLoading()
+                reject(e)
+                if (e && e.errMsg === 'request:fail abort') return
+                !options.noAlert &&
+                    uni.showToast({
                         title: '网络异常',
                         icon: 'none'
                     })
+            }
+            if (options.upload) {
+                let obj = {
+                    url,
+                    files: data.files,
+                    filePath: data.files[0].uri,
+                    name: data.files[0].name,
+                    formData: data.params || {},
+                    success,
+                    fail
                 }
-            };
-            const requestTask = uni.request(obj);
-        });
+                uni.uploadFile(obj)
+            } else {
+                let header = {
+                    'content-type': 'application/json'
+                }
+                if (!options.noToken) {
+                    header['token'] = token
+                }
+                let obj = {
+                    url,
+                    method: options.type,
+                    data,
+                    header,
+                    success,
+                    fail
+                }
+                const requestTask = uni.request(obj)
+            }
+        })
     }
 
-    return request
-};
+    return request()
+}
 
-export default ajax;
+export default ajax

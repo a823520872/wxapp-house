@@ -7,15 +7,15 @@
             <view class="intro">首图</view>
         </view>
         <view class="bd m_flex_wrap">
-            <view class="item">
+            <view v-for="(li, i) in houseTempImg" :key="i" class="item">
                 <view class="img">
-                    <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                    <image :src="li" mode="aspectFill"></image>
                 </view>
-                <view class="close">
+                <view class="close" @tap="del(i)">
                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                 </view>
             </view>
-            <view class="item m_flex_center m_flex_middle">
+            <view v-if="houseTempImg.length < 8" class="item m_flex_center m_flex_middle" @tap="chooseImg">
                 <view class="photo">
                     <image src="/static/image/publish/photo_1.png" mode="aspectFit"></image>
                 </view>
@@ -27,12 +27,51 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 export default {
+    computed: {
+        ...mapState(["houseTempImg"])
+    },
     methods: {
-        confirm() {
-            uni.navigateBack({
-                delta: 1
+        ...mapMutations(["setHouseTempImg"]),
+        chooseImg() {
+            const self = this;
+            uni.chooseImage({
+                sourceType: "album",
+                success(e) {
+                    console.log(e);
+                    if (e.errMsg === "chooseImage:ok") {
+                        const list = [...self.houseTempImg, ...e.tempFilePaths];
+                        self.setHouseTempImg(list);
+                    }
+                }
             });
+        },
+        del(i) {
+            const list = [...this.houseTempImg];
+            list.splice(i, 1);
+            this.setHouseTempImg(list);
+        },
+        confirm() {
+            this.$request
+                .uploadImg({
+                    files: this.houseTempImg.map((item, i) => {
+                        return {
+                            name: `file-${new Date().getTime() + "-" + i}`,
+                            uri: item
+                        };
+                    })
+                })
+                .then(res => {
+                    console.log(res);
+                })
+                .fail(e => {
+                    console.log(e);
+                });
+
+            // uni.navigateBack({
+            //     delta: 1
+            // });
         }
     }
 };

@@ -9,7 +9,7 @@
                 <view class="main m_flex_column m_flex_middle">
                     <view class="photo_box m_flex_column m_flex_middle m_flex_center" @tap="chooseImg">
                         <image class="photo" src="/static/image/publish/photo.png" mode="aspectFit"></image>
-                        <text>上传照片</text>
+                        <text>{{houseTempImg && houseTempImg.length ? '编辑' : '上传'}}照片</text>
                     </view>
                     <view class="tips">上传房间、厨房、厕所、阳台、楼照租房率更高哦~</view>
                 </view>
@@ -128,27 +128,38 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
+    computed: {
+        ...mapState(["houseTempImg"])
+    },
     data() {
         return {
-            step: 0
+            step: 0,
+            form: {
+                images: []
+            }
         };
     },
     methods: {
+        ...mapMutations(["setHouseTempImg"]),
         ...mapActions(["goPage"]),
         chooseImg() {
-            this.goPage(`/pages/publish/img`);
-            // 			uni.chooseImage({
-            // 				sourceType: 'album',
-            // 				success(e) {
-            // 					console.log(e);
-            // 					if (e.errMsg === 'chooseImage:ok') {
-            // 						console.log(e.tempFilePaths);
-            // 						console.log(e.tempFiles);
-            // 					}
-            // 				}
-            // 			});
+            const self = this;
+            if (this.houseTempImg && this.houseTempImg.length) {
+                self.goPage(`/pages/publish/img`);
+            } else {
+                uni.chooseImage({
+                    sourceType: "album",
+                    success(e) {
+                        console.log(e);
+                        if (e.errMsg === "chooseImage:ok") {
+                            self.setHouseTempImg(e.tempFilePaths);
+                            self.goPage(`/pages/publish/img`);
+                        }
+                    }
+                });
+            }
         },
         next() {
             this.step = 1;

@@ -123,6 +123,10 @@
 				"name": "发布房源",
 				"path": "pages/publish/house"
 			},
+            {
+                "name": "上传图片",
+                "path": "pages/publish/img"
+            },
 			{
 				"name": "我的",
 				"path": "pages/me/me"

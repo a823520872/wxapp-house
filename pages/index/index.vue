@@ -70,6 +70,7 @@
             </view>
         </view>
         <house-list :list.sync="list"></house-list>
+        <v-page ref="page" :list.sync="list"></v-page>
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal">
@@ -109,23 +110,21 @@ export default {
     onLoad(res) {
         console.log("onLoad");
     },
+    onShow() {
+        this.$refs.page.init({
+            url: "getHouseList",
+            params: {},
+            fn: null
+        });
+    },
     onPullDownRefresh() {
-        console.log("onPullDownRefresh");
-        this.reload();
+        this.$refs.page.getData(1);
     },
     onReachBottom() {
-        console.log("onReachBottom");
-        this.next();
+        this.$refs.page.next();
     },
-    onReady() {
-        this.getData();
-    },
+    onReady() { },
     methods: {
-        reload() {},
-        next() {},
-        getData(n = 1) {
-            console.log("init");
-        },
         showModal(type, title) {
             if (type === 1) {
                 this.modalList = [this.category];
@@ -137,7 +136,7 @@ export default {
             this.$refs.modal.show({
                 title,
                 confirmText: "确定",
-                success() {}
+                success() { }
             });
         }
     }

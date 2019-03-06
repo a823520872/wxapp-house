@@ -1,26 +1,27 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import api from '../api/index.js';
+import api from '../api/index.js'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        logined: false,
+        hasLogin: false,
         userInfo: null,
-        initFn: null
+        houseTempImg: []
     },
     mutations: {
         setLogin(state, bl) {
-            state.logined = bl
-        },
-        setInitFn(state, fn) {
-            state.initFn = fn
+            state.hasLogin = bl
         },
         setUserInfo(state, userInfo) {
             state.userInfo = userInfo
+        },
+        setHouseTempImg(state, arr) {
+            state.houseTempImg = arr
         }
     },
+
     actions: {
         login(context) {
             return new Promise((resolve, reject) => {
@@ -30,22 +31,21 @@ const store = new Vuex.Store({
                 } else {
                     uni.login({
                         success(res) {
-                            const {
+                            const { code } = res
+                            api.getToken({
                                 code
-                            } = res
-                            api
-                                .wxLogin({
-                                    code
+                            })
+                                .then(json => {
+                                    console.log(json)
+                                    // token = json.data.token
+                                    // context.commit('setLogin', true)
+                                    // uni.setStorageSync('tk', token)
+                                    // resolve(token)
                                 })
-                                .then(res => {
-                                    token = res.data.token
-                                    context.commit('setLogin', true)
-                                    uni.setStorageSync('tk', token)
-                                    resolve(token)
-                                }).catch(e => {
+                                .catch(e => {
                                     uni.removeStorageSync('tk')
                                     reject(e)
-                                });
+                                })
                         },
                         fail(e) {
                             const pages = getCurrentPages()
@@ -56,12 +56,12 @@ const store = new Vuex.Store({
                                 })
                             }, 2000)
                             uni.showToast({
-                            	title: '登录失败',
+                                title: '登录失败',
                                 icon: 'none',
                                 duration: 2000
                             })
                         }
-                    });
+                    })
                 }
             })
         },
@@ -69,7 +69,7 @@ const store = new Vuex.Store({
             if (typeof value === 'string') {
                 uni.navigateTo({
                     url: value
-                });
+                })
             } else if (value.replace) {
                 uni.redirectTo({
                     url: value.path
@@ -77,7 +77,7 @@ const store = new Vuex.Store({
             } else {
                 uni.navigateTo({
                     url: value.path
-                });
+                })
             }
         }
     }

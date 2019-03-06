@@ -26,10 +26,11 @@ const ajax = async (path, data, options = {}) => {
         return new Promise((resolve, reject) => {
             const success = res => {
                 options.loading && uni.hideLoading()
-                resolve(res.data)
 
                 if (res && res.statusCode == 200) {
-                    if (data.code == 0) {
+					let data = res.data
+					console.log(data);
+                    if (data.code == 1) {
                         resolve(data)
                     } else {
                         uni.showToast({ title: data.msg, icon: 'none' })

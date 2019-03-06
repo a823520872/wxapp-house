@@ -110,20 +110,20 @@ export default {
     onLoad(res) {
         console.log("onLoad");
     },
-    onShow() {
-        this.$refs.page.init({
-            url: "getHouseList",
-            params: {},
-            fn: null
-        });
-    },
+    onShow() {},
     onPullDownRefresh() {
         this.$refs.page.getData(1);
     },
     onReachBottom() {
         this.$refs.page.next();
     },
-    onReady() { },
+    onReady() {
+        this.$refs.page.init({
+            url: "getHouseList",
+            params: {},
+            fn: null
+        });
+    },
     methods: {
         showModal(type, title) {
             if (type === 1) {
@@ -136,7 +136,7 @@ export default {
             this.$refs.modal.show({
                 title,
                 confirmText: "确定",
-                success() { }
+                success() {}
             });
         }
     }

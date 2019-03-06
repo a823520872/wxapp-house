@@ -30,8 +30,7 @@ export default {
         init(obj) {
             obj.fn = obj.fn || ((data = []) => data);
             this.obj = obj;
-            // return 
-            this.getData(obj.page ? obj.page : -1);
+            return this.getData(obj.page ? obj.page : -1);
         },
         reload(page) {
             return this.getData(page);
@@ -40,7 +39,7 @@ export default {
             if (this.page >= this.pages) {
                 return;
             }
-            this.getData(this.page + 1);
+            return this.getData(this.page + 1);
         },
         getData(page) {
             const page_size = this.obj.page_size || 10;
@@ -57,31 +56,24 @@ export default {
             }
             this.error = false;
 
-            const request = this.$request[this.obj.url]
-            // console.log(request());
+            const request = this.$request[this.obj.url];
 
-            // return 
-            request(obj)
+            return request(obj)
                 .then(res => {
-                    console.log(1);
                     const { data } = res;
                     if (data && data.data) {
                         let list = this.obj.fn(data.data);
-                        try {
-                            if (page <= -1) {
-                                list = [...list];
-                            } else {
-                                list = [...this.list, ...list];
-                            }
-                        } catch (error) {
-                            console.log(error);
+                        if (page <= -1) {
+                            list = [...list];
+                        } else {
+                            list = [...this.list, ...list];
                         }
                         this.$emit("update:list", list);
                         this.loading = false;
                         if (!data.page) {
                             this.hasMore = false;
                         } else {
-                            this.hasMore = this.page < this.pages;
+                            this.hasMore = data.page < data.pages;
                         }
                     }
                     uni.stopPullDownRefresh();

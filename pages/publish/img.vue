@@ -28,12 +28,39 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
+const qiniuUploader = require("../../common/qiniuUploader.js");
 export default {
     computed: {
         ...mapState(["houseTempImg"])
     },
+    data() {
+        return {
+            option: {
+                uptoken: "",
+                domain: "house.zhiqiang.ink"
+            }
+        };
+    },
+    onShow() {
+        this.getQiniuToken();
+    },
     methods: {
         ...mapMutations(["setHouseTempImg"]),
+        getQiniuToken() {
+            return this.$request
+                .getQiniuToken()
+                .then(res => {
+                    const {
+                        data: { token }
+                    } = res;
+                    this.option.uptoken = token;
+                }, e => {
+                    console.log(e);
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        },
         chooseImg() {
             const self = this;
             uni.chooseImage({
@@ -52,26 +79,42 @@ export default {
             list.splice(i, 1);
             this.setHouseTempImg(list);
         },
+        uploadImg(filePath) {
+            return new Promise((resolve, reject) => {
+                qiniuUploader.upload(
+                    filePath,
+                    res => {
+                        resolve(res);
+                    },
+                    e => {
+                        reject(e);
+                    },
+                    this.option
+                );
+            }).then(
+                res => { },
+                e => {
+                    return this.uploadImg(filePath);
+                }
+            );
+        },
         confirm() {
-            this.$request
-                .uploadImg({
-                    files: this.houseTempImg.map((item, i) => {
-                        return {
-                            name: `file-${new Date().getTime() + "-" + i}`,
-                            uri: item
-                        };
-                    })
-                })
-                .then(res => {
-                    console.log(res);
-                })
-                .fail(e => {
-                    console.log(e);
+            if (this.option.uptoken) {
+                const tasks = this.houseTempImg.map(item => {
+                    return this.uploadImg(item);
                 });
-
-            // uni.navigateBack({
-            //     delta: 1
-            // });
+                Promise.all(tasks)
+                    .then(res => {
+                        console.log(res);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            } else {
+                this.getQiniuToken().then(() => {
+                    this.confirm();
+                });
+            }
         }
     }
 };

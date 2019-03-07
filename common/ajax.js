@@ -26,10 +26,11 @@ const ajax = async (path, data, options = {}) => {
         return new Promise((resolve, reject) => {
             const success = res => {
                 options.loading && uni.hideLoading()
+                console.log(res)
 
                 if (res && res.statusCode == 200) {
                     let data = res.data
-                    if (data.code === 1) {
+                    if (data.code && data.code === 1) {
                         resolve(data)
                     } else {
                         uni.showToast({ title: data.msg, icon: 'none' })
@@ -49,34 +50,34 @@ const ajax = async (path, data, options = {}) => {
                         icon: 'none'
                     })
             }
-            if (options.upload) {
-                let obj = {
-                    url,
-                    files: data.files,
-                    filePath: data.files[0].uri,
-                    name: data.files[0].name,
-                    formData: data.params || {},
-                    success,
-                    fail
-                }
-                uni.uploadFile(obj)
-            } else {
-                let header = {
-                    'content-type': 'application/json'
-                }
-                if (!options.noToken) {
-                    header['token'] = token
-                }
-                let obj = {
-                    url,
-                    method: options.type,
-                    data,
-                    header,
-                    success,
-                    fail
-                }
-                const requestTask = uni.request(obj)
+            // if (options.upload) {
+            //     let obj = {
+            //         url,
+            //         files: data.files,
+            //         filePath: data.files[0].uri,
+            //         name: data.files[0].name,
+            //         formData: data.params || {},
+            //         success,
+            //         fail
+            //     }
+            //     uni.uploadFile(obj)
+            // } else {
+            let header = {
+                'content-type': 'application/json'
             }
+            if (!options.noToken) {
+                header['token'] = token
+            }
+            let obj = {
+                url,
+                method: options.type,
+                data,
+                header,
+                success,
+                fail
+            }
+            const requestTask = uni.request(obj)
+            // }
         })
     }
 

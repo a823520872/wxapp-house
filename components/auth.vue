@@ -7,6 +7,13 @@
                 </button>
             </block>
         </v-modal>
+        <v-modal ref="phone_modal">
+            <block slot="footer">
+                <button class="m_button" open-type="getUserInfo" @getuserinfo="getPhoneByBtn">
+                    去授权
+                </button>
+            </block>
+        </v-modal>
     </view>
 </template>
 
@@ -28,11 +35,25 @@ export default {
             }
         },
         getUserInfo(e) {
+            const self = this;
             if (e) {
                 this.getUserInfoByBtn(e);
             } else {
                 this.$refs.user_modal.show({
                     content: "为了更好的用户体验，需要获取您的个人信息",
+                    cancelText: "取消",
+                    success() {
+                        self.getPhone();
+                    }
+                });
+            }
+        },
+        getPhone(e) {
+            if (e) {
+                this.getPhoneByBtn(e);
+            } else {
+                this.$refs.phone_modal.show({
+                    content: "为了更好的用户体验，需要获取您的手机号码",
                     cancelText: "取消"
                 });
             }

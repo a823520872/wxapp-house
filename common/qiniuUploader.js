@@ -76,7 +76,7 @@
             token: config.qiniuUploadToken,
             key: fileName
         }
-        wx.uploadFile({
+        uni.uploadFile({
             url: url,
             filePath: filePath,
             name: 'file',
@@ -98,7 +98,7 @@
     }
 
     function getQiniuToken(callback) {
-        wx.request({
+        uni.request({
             url: config.qiniuUploadTokenURL,
             success: function(res) {
                 var token = res.data.uptoken

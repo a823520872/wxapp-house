@@ -4,8 +4,14 @@ export default {
     getToken(data = {}) {
         return ajax('/api/Wxapp/Wxapp/getAuthToken', data, { noToken: true })
     },
+    getQiniuToken(data = {}) {
+        return ajax('/api/upload/getUploadToken', data, { noToken: true })
+    },
     signUp(data = {}) {
         return ajax('/api/user/wxappRegister', data, { type: 'post' })
+    },
+    getUserInfo(data = {}) {
+        return ajax('/api/user/getRegisterInfo', data)
     },
     getHouseList(data = {}) {
         return ajax('/api/house_resource/getList', data, { noToken: true })
@@ -27,6 +33,15 @@ export default {
     },
     editLoandlord(data = {}) {
         return ajax('/api/landlord/edit', data, { type: 'post' })
+    },
+    collect(data = {}) {
+        return ajax('/api/user/collectionAdd', data, { type: 'post' })
+    },
+    getMyCollection(data = {}) {
+        return ajax('/api/user/collectionAdd', data)
+    },
+    getMyHouse(data = {}) {
+        return ajax('/api/user/houseResourceGetlist', data)
     },
     getConfig(data = { type: 'config_lightspot' }) {
         return ajax('/api/keyvalue/getAllList', data, { noToken: true })

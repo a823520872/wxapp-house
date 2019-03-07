@@ -93,7 +93,7 @@ export default {
     },
     data() {
         return {
-            list: [1, 2],
+            list: [],
             category: ["单间", "一房一厅", "两房一厅", "三房一厅"],
             price: [
                 "500以下",

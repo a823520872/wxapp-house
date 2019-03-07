@@ -28,9 +28,8 @@ const ajax = async (path, data, options = {}) => {
                 options.loading && uni.hideLoading()
 
                 if (res && res.statusCode == 200) {
-					let data = res.data
-					console.log(data);
-                    if (data.code == 1) {
+                    let data = res.data
+                    if (data.code === 1) {
                         resolve(data)
                     } else {
                         uni.showToast({ title: data.msg, icon: 'none' })
@@ -41,7 +40,6 @@ const ajax = async (path, data, options = {}) => {
                 }
             }
             const fail = e => {
-                console.log(e)
                 options.loading && uni.hideLoading()
                 reject(e)
                 if (e && e.errMsg === 'request:fail abort') return

@@ -4,12 +4,18 @@
             <view class="bd m_flex">
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
-            <view class="fd">
+            <view class="fd" @tap="showLink">
                 <text>咨询村长</text>
             </view>
-            <!-- <button class="m_button primary" plain @tap="goPage(`/pages/publish/settled`)">
-				入驻村里
-			</button> -->
+            <button class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="goPage(`/pages/publish/settled`)">
+                <view>申请</view>
+                <view>入驻</view>
+            </button>
+            <v-modal ref="modal">
+                <view slot="content">
+                    <link-modal :temp="temp"></link-modal>
+                </view>
+            </v-modal>
         </view>
         <view class="is_landlord" v-if="step === 1">
             <view class="hd">
@@ -55,15 +61,29 @@
 
 <script>
 import { mapActions } from "vuex";
+import linkModal from '../components/link-modal';
 export default {
+    components: {
+        linkModal
+    },
     data() {
         return {
-            step: 0
+            step: 0,
+            temp: {
+                contact_mobile: '',
+                wechat_number: ''
+            }
         };
     },
     methods: {
         ...mapActions(["goPage"]),
-        getData() {}
+        getData() { },
+        showLink() {
+            this.$refs.modal.show({
+                title: "联系方式",
+                confirmText: "确定",
+            });
+        }
     }
 };
 </script>
@@ -73,6 +93,7 @@ export default {
     .bd {
         width: 750upx;
         height: 2228upx;
+        padding-top: 90upx;
     }
 
     .fd {
@@ -81,6 +102,19 @@ export default {
         text-decoration: underline;
         text-align: center;
         color: #0404ff;
+    }
+    .btn_add {
+        display: flex;
+        position: fixed;
+        right: 20upx;
+        bottom: 100upx;
+        width: 120upx;
+        height: 120upx;
+        line-height: 1.2;
+        background-color: $main-color;
+        color: #fff;
+        border-radius: 50%;
+        overflow: hidden;
     }
 }
 .is_landlord {

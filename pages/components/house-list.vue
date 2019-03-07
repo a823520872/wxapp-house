@@ -33,18 +33,9 @@
                 </view>
             </view>
         </view>
-        <v-modal ref="modal" v-if="temp">
+        <v-modal ref="modal">
             <view slot="content">
-                <view class="modal">
-                    <view v-if="temp.contact_mobile" class="link m_flex_justify">
-                        <view>手机号：{{temp.contact_mobile}}</view>
-                        <button class="m_button main" plain @tap="call">拨打</button>
-                    </view>
-                    <view v-if="temp.wechat_number" class="link m_flex_justify">
-                        <view>微信号：{{temp.wechat_number}}</view>
-                        <button class="m_button main" plain @tap="copy">复制</button>
-                    </view>
-                </view>
+                <link-modal :temp="temp"></link-modal>
             </view>
         </v-modal>
     </view>
@@ -52,6 +43,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import linkModal from './link-modal';
 export default {
     props: {
         list: {
@@ -60,6 +52,9 @@ export default {
                 return [];
             }
         }
+    },
+    components: {
+        linkModal
     },
     data() {
         return {
@@ -74,49 +69,19 @@ export default {
                 contact_mobile: li.contact_mobile,
                 wechat_number: li.wechat_number
             };
-            console.log(this.temp);
-            // this.temp.contact_mobile = li.contact_mobile;
-            // this.temp.wechat_number = li.wechat_number;
             this.$nextTick(() => {
                 this.$refs.modal.show({
                     title: "联系方式",
                     confirmText: "确定",
                     success() {
-                        self.temp.contact_mobile = "";
-                        self.temp.wechat_number = "";
                         self.temp = null;
                     },
                     fail() {
-                        self.temp.contact_mobile = "";
-                        self.temp.wechat_number = "";
                         self.temp = null;
                     }
                 });
             });
         },
-        // collect() {},
-        call() {
-            const self = this;
-            if (self.contact_mobile) {
-                uni.makePhoneCall({
-                    phoneNumber: self.contact_mobile
-                });
-            }
-        },
-        copy() {
-            const self = this;
-            if (self.wechat_number) {
-                uni.setClipboardData({
-                    data: self.wechat_number,
-                    success() {
-                        uni.showToast({
-                            title: "复制成功",
-                            icon: "success"
-                        });
-                    }
-                });
-            }
-        }
     }
 };
 </script>

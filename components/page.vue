@@ -78,7 +78,7 @@ export default {
                     }
                     uni.stopPullDownRefresh();
                 })
-                .fail(e => {
+                .catch(e => {
                     console.log(e);
                     this.loading = false;
                     this.error = e.msg;

@@ -11,13 +11,12 @@ export default {
         return ajax('/api/house_resource/getList', data, { noToken: true })
     },
     addHouse(data = {}) {
-        return ajax('/api/House_resource/wxappAdd', data, { type: 'post' })
+        return ajax('/api/house_resource/wxappAdd', data, { type: 'post' })
     },
     editHouse(data = {}) {
         return ajax('/api/house_resource/wxappEdit', data, { type: 'post' })
     },
     getLandlordList(data = {}) {
-        console.log(data)
         return ajax('/api/landlord/getList', data, { noToken: true })
     },
     getLandlordDetail(data = {}) {

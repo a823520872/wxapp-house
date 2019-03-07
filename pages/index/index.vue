@@ -110,7 +110,7 @@ export default {
     onLoad(res) {
         console.log("onLoad");
     },
-    onShow() {},
+    onShow() { },
     onPullDownRefresh() {
         this.$refs.page.getData(1);
     },
@@ -136,7 +136,7 @@ export default {
             this.$refs.modal.show({
                 title,
                 confirmText: "确定",
-                success() {}
+                success() { }
             });
         }
     }

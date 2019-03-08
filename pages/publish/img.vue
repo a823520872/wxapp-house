@@ -37,7 +37,7 @@ export default {
         return {
             option: {
                 uptoken: "",
-				uploadURL: "https://house.zhiqiang.ink/api/upload/add",
+                uploadURL: "https://house.zhiqiang.ink/api/upload/add",
                 domain: "house.zhiqiang.ink"
             }
         };
@@ -51,14 +51,13 @@ export default {
             return this.$request
                 .getQiniuToken()
                 .then(res => {
-                    const {
-                        data: { token }
-                    } = res;
-                    this.option.uptoken = token;
+                    if (res.data && res.data.token) {
+                        this.option.uptoken = res.data.token;
+                    }
                 }, e => {
-					if (e.data && e.data.token) {
-						this.option.uptoken = e.data.token;
-					}
+                    if (e.data && e.data.token) {
+                        this.option.uptoken = e.data.token;
+                    }
                 })
                 .catch(e => {
                     console.log(e);
@@ -95,12 +94,12 @@ export default {
                     this.option
                 );
             })
-// 			.then(
-//                 res => { },
-//                 e => {
-//                     return this.uploadImg(filePath);
-//                 }
-//             );
+            // 			.then(
+            //                 res => { },
+            //                 e => {
+            //                     return this.uploadImg(filePath);
+            //                 }
+            //             );
         },
         confirm() {
             if (this.option.uptoken) {

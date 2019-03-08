@@ -18,14 +18,24 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
     props: {},
+    computed: {
+        ...mapState(['hasRigister'])
+    },
     data() {
         return {};
     },
     methods: {
         ...mapMutations(["setUserInfo"]),
+        signUp() {
+            this.$request.signUp().then(res => {
+                console.log(res);
+            }).catch(e => {
+                console.log(e);
+            })
+        },
         getUserInfoByBtn(e) {
             console.log(JSON.stringify(e.detail));
             const { errMsg, encryptedData, iv, signature, userInfo } = e.detail;
@@ -48,13 +58,28 @@ export default {
                 });
             }
         },
+        getPhoneByBtn(e) {
+            console.log(JSON.stringify(e.detail));
+            // const { errMsg, encryptedData, iv, signature, userInfo } = e.detail;
+            // this.$refs.user_modal.hide();
+            // if (errMsg === "getUserInfo:ok") {
+            //     this.setUserInfo(userInfo);
+            // }
+        },
         getPhone(e) {
+            const self = this;
             if (e) {
                 this.getPhoneByBtn(e);
             } else {
                 this.$refs.phone_modal.show({
                     content: "为了更好的用户体验，需要获取您的手机号码",
-                    cancelText: "取消"
+                    cancelText: "取消",
+                    success() {
+                        self.signUp()
+                    },
+                    fail() {
+                        self.signUp()
+                    }
                 });
             }
         }

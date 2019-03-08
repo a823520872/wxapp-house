@@ -9,12 +9,59 @@
         <view class="bd">
             生成定制海报，分享到朋友圈， 可大大增加租房率哦~
         </view>
-        <view class="fd">生成定制海报</view>
+        <view class="fd" @tap="showPoster">生成定制海报</view>
+        <poster ref="poster"></poster>
+        <canvas class="cvs_avatar" canvas-id="myAvatar"></canvas>
+        <canvas class="cvs" canvas-id="myCanvas"></canvas>
     </view>
 </template>
 
 <script>
-export default {};
+import { mapState } from 'vuex';
+import poster from '../components/poster.vue'
+export default {
+    computed: {
+        ...mapState(["userInfo"])
+    },
+    components: {
+        poster
+    },
+    onReady() {
+        this.createCanvas()
+    },
+    methods: {
+        getAvatar() {
+            return new Promise((resolve, reject) => {
+                const ctx = uni.createCanvasContext('myAvatar')
+                ctx.arc(40, 40, 40, 0, Math.PI * 2, false)
+                ctx.clip()
+                ctx.drawImage(this.userInfo.avatarUrl, 0, 0, 80, 80)
+                ctx.draw(true, () => {
+                    uni.canvasToTempFilePath({
+                        canvasId: 'myAvatar',
+                        success(res) {
+                            resolve(res.tempFilePath)
+                        },
+                        fail: reject
+                    })
+                })
+            })
+        },
+        async createCanvas() {
+            const tempFile = await this.getAvatar()
+            console.log(tempFile);
+            const ctx = uni.createCanvasContext('myCanvas')
+            ctx.drawImage('/static/image/publish/poster.png', 0, 0, 534, 948)
+            ctx.drawImage(tempFile, 40, 16, 80, 80)
+            ctx.draw(true, () => {
+
+            })
+        },
+        showPoster() {
+            this.$refs.poster.show()
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -55,5 +102,21 @@ export default {};
     font-size: 33upx;
     border-radius: 8upx;
     color: #fff;
+}
+
+.cvs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 534px;
+    height: 948px;
+}
+.cvs_avatar {
+    position: absolute;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
 }
 </style>

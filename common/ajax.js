@@ -49,18 +49,6 @@ const ajax = async (path, data, options = {}) => {
                         icon: 'none'
                     })
             }
-            // if (options.upload) {
-            //     let obj = {
-            //         url,
-            //         files: data.files,
-            //         filePath: data.files[0].uri,
-            //         name: data.files[0].name,
-            //         formData: data.params || {},
-            //         success,
-            //         fail
-            //     }
-            //     uni.uploadFile(obj)
-            // } else {
             let header = {
                 'content-type': 'application/json'
             }
@@ -76,6 +64,18 @@ const ajax = async (path, data, options = {}) => {
                 fail
             }
             const requestTask = uni.request(obj)
+            // if (options.upload) {
+            //     let obj = {
+            //         url,
+            //         files: data.files,
+            //         filePath: data.files[0].uri,
+            //         name: data.files[0].name,
+            //         formData: data.params || {},
+            //         success,
+            //         fail
+            //     }
+            //     uni.uploadFile(obj)
+            // } else {
             // }
         })
     }
@@ -93,20 +93,20 @@ function login() {
                 success(res) {
                     const { code } = res
                     console.log(code)
-                    // api.getToken({
-                    //     code
-                    // })
-                    //     .then(json => {
-                    //         console.log(json)
-                    //         // token = json.data.is_member
-                    //         // context.commit('setLogin', true)
-                    //         // uni.setStorageSync('tk', token)
-                    //         // resolve(token)
-                    //     })
-                    //     .catch(e => {
-                    //         uni.removeStorageSync('tk')
-                    //         reject(e)
-                    //     })
+                    api.getToken({
+                        code
+                    })
+                        .then(json => {
+                            console.log(json)
+                            // token = json.data.is_member
+                            // context.commit('setLogin', true)
+                            // uni.setStorageSync('tk', token)
+                            // resolve(token)
+                        })
+                        .catch(e => {
+                            uni.removeStorageSync('tk')
+                            reject(e)
+                        })
                 },
                 fail(e) {
                     const pages = getCurrentPages()

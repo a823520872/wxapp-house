@@ -1,20 +1,20 @@
 <script>
 export default {
-    onLaunch: function() {
+    onLaunch: function () {
         // #ifdef MP-WEIXIN
         if (wx.canIUse && wx.canIUse('getUpdateManager')) {
             let updateManager = wx.getUpdateManager();
-            updateManager.onUpdateReady(function() {
+            updateManager.onUpdateReady(function () {
                 updateManager.applyUpdate();
             });
         }
         // #endif
     },
-    onShow: function() {
+    onShow: function () {
         console.log('App Show');
         // this.init();
     },
-    onHide: function() {
+    onHide: function () {
         console.log('App Hide');
     }
 };
@@ -69,6 +69,7 @@ image {
     bottom: 0;
     left: 0;
 	background-color: #fff;
+    overflow: hidden;
 }
 .m_flex {
     display: flex;

@@ -26,14 +26,14 @@ const ajax = async (path, data, options = {}) => {
         return new Promise((resolve, reject) => {
             const success = res => {
                 options.loading && uni.hideLoading()
-                console.log(res)
 
                 if (res && res.statusCode == 200) {
                     let data = res.data
                     if (data.code && data.code === 1) {
                         resolve(data)
                     } else {
-                        uni.showToast({ title: data.msg, icon: 'none' })
+                        !options.noAlert &&
+                            uni.showToast({ title: data.msg, icon: 'none' })
                         reject(data)
                     }
                 } else {

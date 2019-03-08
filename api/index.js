@@ -5,7 +5,7 @@ export default {
         return ajax('/api/Wxapp/Wxapp/getAuthToken', data, { noToken: true })
     },
     getQiniuToken(data = {}) {
-        return ajax('/api/upload/getUploadToken', data, { noToken: true })
+        return ajax('/api/upload/getUploadToken', data, { noToken: true, noAlert: true })
     },
     signUp(data = {}) {
         return ajax('/api/user/wxappRegister', data, { type: 'post' })

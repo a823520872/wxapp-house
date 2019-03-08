@@ -81,7 +81,6 @@ export default {
         // }
     },
     methods: {
-        ...mapActions(["goPage"]),
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },
@@ -89,7 +88,7 @@ export default {
             this.$refs.modal.show({
                 title: "联系方式",
                 confirmText: "确定",
-                success() {}
+                success() { }
             });
         },
         call() {

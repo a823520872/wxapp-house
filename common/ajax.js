@@ -4,15 +4,20 @@ const ajax = async (path, data, options = {}) => {
     const urlPrefix = 'https://house.zhiqiang.ink'
     const url = urlPrefix + path
     const hasLogin = store.state.hasLogin
-    let token = uni.getStorageSync('tk')
-    if (!options.noToken) {
-        if (!hasLogin) {
-            try {
-                token = await login()
-            } catch (e) {
-                return Promise.reject(e)
-            }
+    const token = uni.getStorageSync('tk')
+    if (!hasLogin) {
+        try {
+            await login()
+        } catch (e) {
+            return Promise.reject(e)
         }
+    }
+    if (!options.noToken && !store.state.userInfo) {
+        uni.showToast({
+            title: '请先登录小程序',
+            icon: 'none'
+        })
+        return Promise.reject(e)
     }
     options.type = options.type || 'get'
     options.type = options.type.toUpperCase()
@@ -93,9 +98,7 @@ function login() {
                 success(res) {
                     const { code } = res
                     console.log(code)
-                    api.getToken({
-                        code
-                    })
+                    ajax('/api/Wxapp/Wxapp/getAuthToken', { code }, { noToken: true })
                         .then(json => {
                             console.log(json)
                             // token = json.data.is_member

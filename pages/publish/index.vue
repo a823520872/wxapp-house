@@ -76,7 +76,6 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["goPage"]),
         getData() { },
         showLink() {
             this.$refs.modal.show({

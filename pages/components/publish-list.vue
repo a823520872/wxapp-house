@@ -54,7 +54,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["goPage"]),
         edit() {
             this.goPage(`/pages/publish/house`);
         },
@@ -62,7 +61,7 @@ export default {
             this.$refs.modal.show({
                 title: "联系方式",
                 confirmText: "确定",
-                success() {}
+                success() { }
             });
         }
     }

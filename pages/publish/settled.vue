@@ -81,8 +81,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["goPage"]),
-        getCode() {},
+        getCode() { },
         confirm() {
             this.goPage(`/pages/publish/settled_succ`);
         }

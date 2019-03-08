@@ -11,7 +11,7 @@
                     <image src="/static/image/publish/close.png" mode="aspectFit"></image>
                 </view>
                 <view class="poster_box">
-                    <image @tap="showPoster" src="/static/image/publish/poster.png" mode="aspectFit"></image>
+                    <image @tap="showPoster" :src="uri" mode="aspectFit"></image>
                 </view>
             </view>
         </view>
@@ -20,6 +20,11 @@
 
 <script>
 export default {
+    props: {
+        uri: {
+            type: String,
+        }
+    },
     data() {
         return {
             isShow: false
@@ -34,7 +39,7 @@ export default {
         },
         showPoster() {
             uni.previewImage({
-                urls: ['/static/image/publish/poster.png']
+                urls: [uri]
             })
         }
     }

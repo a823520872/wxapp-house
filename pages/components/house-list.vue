@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
 import linkModal from './link-modal';
 export default {
     props: {
@@ -62,7 +61,6 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["goPage"]),
         linkLandlord(li) {
             const self = this;
             this.temp = {

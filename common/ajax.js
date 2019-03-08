@@ -8,7 +8,7 @@ const ajax = async (path, data, options = {}) => {
     if (!options.noToken) {
         if (!hasLogin) {
             try {
-                token = await store.dispatch('login')
+                token = await login()
             } catch (e) {
                 return Promise.reject(e)
             }
@@ -32,12 +32,11 @@ const ajax = async (path, data, options = {}) => {
                     if (data.code && data.code === 1) {
                         resolve(data)
                     } else {
-                        !options.noAlert &&
-                            uni.showToast({ title: data.msg, icon: 'none' })
+                        !options.noAlert && uni.showToast({ title: data.msg, icon: 'none' })
                         reject(data)
                     }
                 } else {
-                    reject({ code: res.statusCode, msg: res.statusCode })
+                    reject({ code: res.statusCode, msg: res.errMsg })
                 }
             }
             const fail = e => {
@@ -82,6 +81,50 @@ const ajax = async (path, data, options = {}) => {
     }
 
     return request()
+}
+
+function login() {
+    return new Promise((resolve, reject) => {
+        let token = uni.getStorageSync('tk')
+        if (token) {
+            resolve(token)
+        } else {
+            uni.login({
+                success(res) {
+                    const { code } = res
+                    console.log(code)
+                    // api.getToken({
+                    //     code
+                    // })
+                    //     .then(json => {
+                    //         console.log(json)
+                    //         // token = json.data.is_member
+                    //         // context.commit('setLogin', true)
+                    //         // uni.setStorageSync('tk', token)
+                    //         // resolve(token)
+                    //     })
+                    //     .catch(e => {
+                    //         uni.removeStorageSync('tk')
+                    //         reject(e)
+                    //     })
+                },
+                fail(e) {
+                    const pages = getCurrentPages()
+                    const page = pages[pages.length - 1]
+                    setTimeout(() => {
+                        uni.reLaunch({
+                            url: `/${page.route}`
+                        })
+                    }, 2000)
+                    uni.showToast({
+                        title: '登录失败',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                }
+            })
+        }
+    })
 }
 
 export default ajax

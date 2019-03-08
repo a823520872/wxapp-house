@@ -14,7 +14,7 @@ export default {
         return ajax('/api/user/getRegisterInfo', data)
     },
     getHouseList(data = {}) {
-        return ajax('/api/house_resource/getList', data, { noToken: true })
+        return ajax('/api/house_resource/getList', data)
     },
     addHouse(data = {}) {
         return ajax('/api/house_resource/wxappAdd', data, { type: 'post' })

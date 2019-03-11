@@ -2,7 +2,7 @@
     <view class="content">
         <view class="hd">
             <view class="banner">
-                <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
             </view>
             <view class="intro">首图</view>
         </view>
@@ -50,15 +50,18 @@ export default {
         getQiniuToken() {
             return this.$request
                 .getQiniuToken()
-                .then(res => {
-                    if (res.data && res.data.token) {
-                        this.option.uptoken = res.data.token;
+                .then(
+                    res => {
+                        if (res.data && res.data.token) {
+                            this.option.uptoken = res.data.token;
+                        }
+                    },
+                    e => {
+                        if (e.data && e.data.token) {
+                            this.option.uptoken = e.data.token;
+                        }
                     }
-                }, e => {
-                    if (e.data && e.data.token) {
-                        this.option.uptoken = e.data.token;
-                    }
-                })
+                )
                 .catch(e => {
                     console.log(e);
                 });
@@ -93,7 +96,7 @@ export default {
                     },
                     this.option
                 );
-            })
+            });
             // 			.then(
             //                 res => { },
             //                 e => {

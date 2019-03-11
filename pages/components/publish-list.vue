@@ -4,7 +4,7 @@
             <view class="item" v-for="(li, i) in list" :key="i" @tap="goPage(`/pages/index/house`)">
                 <view class="bd m_flex">
                     <view class="img">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                         <!-- <view class="rent m_textover">租金：¥1000/月</view> -->
                     </view>
                     <view class="intro m_flex_item">
@@ -61,7 +61,7 @@ export default {
             this.$refs.modal.show({
                 title: "联系方式",
                 confirmText: "确定",
-                success() { }
+                success() {}
             });
         }
     }

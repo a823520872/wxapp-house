@@ -3,7 +3,7 @@
         <swiper class="swiper" :indicator-dots="true" indicator-color="#6d7271" indicator-active-color="#4ce6e8" :autoplay="true" :interval="3000" :duration="1000">
             <swiper-item>
                 <view class="swiper-item">
-                    <image src="/static/image/index/banner.png" mode="aspectFit"></image>
+                    <image src="/static/image/index/banner.jpg" mode="aspectFit"></image>
                 </view>
             </swiper-item>
         </swiper>
@@ -56,7 +56,7 @@
                     <text class="bottom_icon"></text>
                 </view>
             </view>
-            <view class="cells_fd">
+            <!-- <view class="cells_fd">
                 <scroll-view class="scroll_view" :scroll-x="true">
                     <view class="m_flex">
                         <view class="category">
@@ -67,16 +67,16 @@
                         </view>
                     </view>
                 </scroll-view>
-            </view>
+            </view> -->
         </view>
         <house-list :list.sync="list"></house-list>
         <v-page ref="page" :list.sync="list"></v-page>
         <v-modal ref="modal">
             <view slot="content">
-                <view class="modal">
+                <view class="modal" v-if="modalList && modalList.length">
                     <view class="modal_list m_flex_wrap" v-for="(lis, i) in modalList" :key="i">
                         <view class="modal_item" v-for="(li, j) in lis" :key="j">
-                            <view class="m_button main plain">{{ li }}</view>
+                            <view class="m_button main plain">{{ li.value || li }}</view>
                         </view>
                     </view>
                 </view>
@@ -93,6 +93,7 @@ export default {
     },
     data() {
         return {
+            params: {},
             list: [],
             category: ["单间", "一房一厅", "两房一厅", "三房一厅"],
             price: [
@@ -103,14 +104,14 @@ export default {
                 "1200-1500",
                 "1500以上"
             ],
-            moreList: [["3楼以下", "3楼以上"], ["近路边"], ["光线好"]],
+            moreList: null,
             modalList: null
         };
     },
     onLoad(res) {
         console.log("onLoad");
     },
-    onShow() { },
+    onShow() {},
     onPullDownRefresh() {
         this.$refs.page.getData(1);
     },
@@ -118,14 +119,33 @@ export default {
         this.$refs.page.next();
     },
     onReady() {
-        this.$refs.page.init({
-            url: "getHouseList",
-            params: {},
-            fn: null
-        });
+        this.init();
+        this.getData();
     },
     methods: {
+        init() {
+            const self = this;
+            this.$refs.page.init({
+                url: "getHouseList",
+                params: self.params,
+                fn: null
+            });
+        },
+        getData() {
+            this.$request.getConfig().then(res => {
+                if (res.data) {
+                    this.moreList = [];
+                    this.moreList[0] = res.data.filter(
+                        item => item.type === "config_lightspot"
+                    );
+                    this.moreList[1] = res.data.filter(
+                        item => item.type === "config_base"
+                    );
+                }
+            });
+        },
         showModal(type, title) {
+            const self = this;
             if (type === 1) {
                 this.modalList = [this.category];
             } else if (type === 2) {
@@ -136,7 +156,9 @@ export default {
             this.$refs.modal.show({
                 title,
                 confirmText: "确定",
-                success() { }
+                success() {
+                    self.init();
+                }
             });
         }
     }

@@ -22,13 +22,13 @@
                 </view>
                 <view class="bd m_flex_justify">
                     <view class="img_box">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                     <view class="img_box">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                     <view class="img_box last">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                 </view>
             </view>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import linkModal from './link-modal';
+import linkModal from "./link-modal";
 export default {
     props: {
         list: {
@@ -79,7 +79,7 @@ export default {
                     }
                 });
             });
-        },
+        }
     }
 };
 </script>

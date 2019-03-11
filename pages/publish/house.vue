@@ -1,5 +1,5 @@
 <template>
-    <view class="content content_bg_ff">
+    <view class="content">
         <view class="step_one" v-if="step === 0">
             <view class="hd">
                 <view class="bg">
@@ -18,12 +18,10 @@
                 <view class="cells">
                     <view class="cells_title m_flex_middle">基本信息</view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <picker class="m_flex_item" :range="[]" @change="">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">租金</view>
-                                <view class="cell_bd">请输入房源租金</view>
-                            </view>
-                        </picker>
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">租金</view>
+                            <input class="cell_bd" type="text" v-model="form.rental" placeholder="请输入房源租金" />
+                        </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
                         <picker class="m_flex_item" :range="[]" @change="">
@@ -48,8 +46,7 @@
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">具体地址</view>
-                            <input class="cell_bd" type="text" value="" placeholder="请输入具体地址" />
-                            <!-- <view class="cell_bd">请输入具体地址</view> -->
+                            <input class="cell_bd" type="text" v-model="form.address_detail" placeholder="请输入具体地址" />
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
@@ -72,13 +69,13 @@
                     <view class="cell m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">联系电话</view>
-                            <view class="cell_bd">18922125666</view>
+                            <input class="cell_bd" type="text" v-model="form.contact_mobile" placeholder="请输入联系电话" />
                         </view>
                     </view>
                     <view class="cell m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">微信号</view>
-                            <view class="cell_bd">18922125666</view>
+                            <input class="cell_bd" type="text" v-model="form.wechat_number" placeholder="请输入微信号" />
                         </view>
                     </view>
                 </view>
@@ -118,7 +115,7 @@
                     补充说明（选填）
                 </view>
                 <view class="cell">
-                    <textarea placeholder="详细的介绍会加大租房率"></textarea>
+                    <textarea placeholder="详细的介绍会加大租房率" v-model="form.supplement"></textarea>
                 </view>
             </view>
             <view class="fd" @tap="confirm">确认发布</view>
@@ -137,13 +134,42 @@ export default {
         return {
             step: 0,
             form: {
-                images: []
-            }
+                images: [],
+                landlord_id: 15,
+                landlord_mobile: "18100001038",
+                rental: 1999,
+                address_street_id: 1969,
+                address_street: "上社15",
+                address_flag_id: 3752,
+                address_flag: "上社市场",
+                road_distance_id: 1,
+                road_distance: "第一栋",
+                address_detail: "二巷四号",
+                house_type_id: 10,
+                house_type: "一房一厅",
+                floor_number: 2,
+                contact_mobile: "19900010001",
+                wechat_number: "19900010001",
+                config_base_ids: "1,2",
+                config_base: "床,衣柜",
+                config_lightspot_ids: "1,2",
+                config_lightspot: "空调,洗衣机",
+                supplement: "非常好"
+            },
+            house_id: ""
         };
+    },
+    onLoad(res) {
+        if (res.id) {
+            this.house_id = res.id;
+        }
+    },
+    onReady() {
+        this.getData();
     },
     methods: {
         ...mapMutations(["setHouseTempImg"]),
-        ...mapActions(["goPage"]),
+        getData() {},
         chooseImg() {
             const self = this;
             if (this.houseTempImg && this.houseTempImg.length) {
@@ -164,6 +190,31 @@ export default {
         next() {
             this.step = 1;
         },
+        validate() {
+            return new Promise((resolve, reject) => {
+                if (!this.form.name) {
+                    reject({
+                        msg: "请输入姓名"
+                    });
+                }
+                if (!this.form.mobile) {
+                    reject({
+                        msg: "请输入手机号码"
+                    });
+                }
+                if (!this.testMobile(this.form.mobile)) {
+                    reject({
+                        msg: "手机号码不正确"
+                    });
+                }
+                if (!this.form.postion_street) {
+                    reject({
+                        msg: "请选择地址"
+                    });
+                }
+                resolve();
+            });
+        },
         confirm() {
             this.goPage({ path: `/pages/publish/publish_succ`, replace: true });
         }
@@ -172,6 +223,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.step_one,
+.step_two {
+    overflow: auto;
+}
 .hd {
     position: relative;
     .bg {

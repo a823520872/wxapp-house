@@ -3,7 +3,7 @@
         <!-- <swiper class="swiper" :indicator-dots="true" indicator-color="#6d7271" indicator-active-color="#4ce6e8" :autoplay="true" :interval="3000" :duration="1000">
 			<swiper-item>
 				<view class="swiper-item">
-					<image src="/static/image/index/banner.png" mode="aspectFill"></image>
+					<image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
 				</view>
 			</swiper-item>
 		</swiper> -->
@@ -93,20 +93,20 @@
                 <view class="cells_title title">房源图片</view>
                 <view class="cell">
                     <view class="house_img">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                     <view class="house_img">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                     <view class="house_img">
-                        <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                 </view>
             </view>
             <view class="cells">
                 <view class="cells_title title">房源位置<text class="intro">（房源在定位附件）</text></view>
                 <view class="cell map">
-                    <image src="/static/image/index/banner.png" mode="aspectFill"></image>
+                    <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                 </view>
             </view>
             <!-- <view class="cells">

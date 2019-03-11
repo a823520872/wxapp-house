@@ -1,133 +1,80 @@
-import store from '../store/index.js'
+import store from '../store/index.js';
 
 const ajax = async (path, data, options = {}) => {
-    const urlPrefix = 'https://house.zhiqiang.ink'
-    const url = urlPrefix + path
-    const hasLogin = store.state.hasLogin
-    const token = uni.getStorageSync('tk')
-    if (!hasLogin) {
-        try {
-            await login()
-        } catch (e) {
-            return Promise.reject(e)
-        }
-    }
-    if (!options.noToken && !store.state.userInfo) {
-        uni.showToast({
-            title: '请先登录小程序',
-            icon: 'none'
-        })
-        return Promise.reject(e)
-    }
-    options.type = options.type || 'get'
-    options.type = options.type.toUpperCase()
+    const urlPrefix = 'https://house.zhiqiang.ink';
+    const url = urlPrefix + path;
+    const token = uni.getStorageSync('tk');
+    options.type = options.type || 'get';
     options.loading &&
         uni.showLoading({
             title: '加载中……',
             mask: options.mask
-        })
-
-    function request() {
-        return new Promise((resolve, reject) => {
-            const success = res => {
-                options.loading && uni.hideLoading()
-
-                if (res && res.statusCode == 200) {
-                    let data = res.data
-                    if (data.code && data.code === 1) {
-                        resolve(data)
-                    } else {
-                        !options.noAlert && uni.showToast({ title: data.msg, icon: 'none' })
-                        reject(data)
-                    }
-                } else {
-                    reject({ code: res.statusCode, msg: res.errMsg })
-                }
-            }
-            const fail = e => {
-                options.loading && uni.hideLoading()
-                reject(e)
-                if (e && e.errMsg === 'request:fail abort') return
-                !options.noAlert &&
-                    uni.showToast({
-                        title: '网络异常',
-                        icon: 'none'
-                    })
-            }
-            let header = {
-                'content-type': 'application/json'
-            }
-            if (!options.noToken) {
-                header['token'] = token
-            }
-            let obj = {
-                url,
-                method: options.type,
-                data,
-                header,
-                success,
-                fail
-            }
-            const requestTask = uni.request(obj)
-            // if (options.upload) {
-            //     let obj = {
-            //         url,
-            //         files: data.files,
-            //         filePath: data.files[0].uri,
-            //         name: data.files[0].name,
-            //         formData: data.params || {},
-            //         success,
-            //         fail
-            //     }
-            //     uni.uploadFile(obj)
-            // } else {
-            // }
-        })
+        });
+    if (!options.noToken && !token) {
+        setTimeout(() => {
+            uni.navigateTo({
+                url: '/pages/me/me'
+            });
+        }, 100);
+        uni.showToast({
+            title: '请先登录小程序',
+            icon: 'none'
+        });
+        return Promise.reject({
+            msg: '未登录'
+        });
     }
 
-    return request()
-}
-
-function login() {
-    return new Promise((resolve, reject) => {
-        let token = uni.getStorageSync('tk')
-        if (token) {
-            resolve(token)
-        } else {
-            uni.login({
-                success(res) {
-                    const { code } = res
-                    console.log(code)
-                    ajax('/api/Wxapp/Wxapp/getAuthToken', { code }, { noToken: true })
-                        .then(json => {
-                            console.log(json)
-                            // token = json.data.is_member
-                            // context.commit('setLogin', true)
-                            // uni.setStorageSync('tk', token)
-                            // resolve(token)
-                        })
-                        .catch(e => {
-                            uni.removeStorageSync('tk')
-                            reject(e)
-                        })
-                },
-                fail(e) {
-                    const pages = getCurrentPages()
-                    const page = pages[pages.length - 1]
-                    setTimeout(() => {
-                        uni.reLaunch({
-                            url: `/${page.route}`
-                        })
-                    }, 2000)
-                    uni.showToast({
-                        title: '登录失败',
-                        icon: 'none',
-                        duration: 2000
-                    })
-                }
-            })
+    const header = {
+        'content-type': 'application/json'
+    };
+    if (!options.noToken) {
+        header['token'] = token;
+    }
+    const success = res => {
+        console.log(path, res);
+        options.loading && uni.hideLoading();
+        if (res.length && res.length === 2) {
+            res = res[1];
         }
-    })
-}
 
-export default ajax
+        if (res && res.statusCode == 200) {
+            let data = res.data;
+            if (data.code && data.code === 1) {
+                if (data.data && data.data.message && data.data.message === '请求Token失败') {
+                    uni.showToast({
+                        title: '请重新登录',
+                        icon: 'none'
+                    });
+                }
+                return Promise.resolve(data);
+            } else {
+                !options.noAlert && uni.showToast({ title: data.msg, icon: 'none' });
+                return Promise.reject(data);
+            }
+        } else {
+            return Promise.reject({ code: res.statusCode, msg: res.errMsg });
+        }
+    };
+    const fail = e => {
+        console.log(path, e);
+        options.loading && uni.hideLoading();
+        return Promise.reject(e);
+        if (e && e.errMsg === 'request:fail abort') return;
+        !options.noAlert &&
+            uni.showToast({
+                title: '网络异常',
+                icon: 'none'
+            });
+    };
+    const obj = {
+        url,
+        method: options.type,
+        data,
+        header
+    };
+
+    return uni.request(obj).then(success, fail);
+};
+
+export default ajax;

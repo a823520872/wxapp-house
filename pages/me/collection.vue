@@ -1,6 +1,7 @@
 <template>
     <view>
         <house-list :list.sync="list"></house-list>
+        <v-page ref="page" :list.sync="list"></v-page>
     </view>
 </template>
 
@@ -17,29 +18,24 @@ export default {
             hasMore: false
         };
     },
-    onPullDownRefresh() {
-        this.reload();
-    },
-    onReachBottom() {
-        this.next();
-    },
     onLoad(res) {},
     onReady() {
         this.getData();
     },
-    methods: {
-        getData(n) {
-            const data = [];
-            this.list = n === 1 ? [...data] : [...this.list, ...data];
-            this.page = n;
-        },
-        reload() {
-            this.getData(1);
-        },
-        next() {
-            this.getData(this.page + 1);
-        }
-    }
+    onPullDownRefresh() {
+        this.$refs.page.getData(1);
+    },
+    onReachBottom() {
+        this.$refs.page.next();
+    },
+    onReady() {
+        this.$refs.page.init({
+            url: "getMyCollection",
+            params: {},
+            fn: null
+        });
+    },
+    methods: {}
 };
 </script>
 

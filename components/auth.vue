@@ -21,50 +21,97 @@
 import { mapState, mapMutations } from "vuex";
 export default {
     props: {},
-    computed: {
-        ...mapState(['hasRigister'])
-    },
     data() {
-        return {};
+        return {
+            session3rd: ""
+        };
+    },
+    computed: {
+        ...mapState(["code", "hasRigister"])
     },
     methods: {
-        ...mapMutations(["setUserInfo"]),
-        signUp() {
-            this.$request.signUp().then(res => {
-                console.log(res);
-            }).catch(e => {
-                console.log(e);
-            })
+        ...mapMutations(["setUserInfo", "setCode"]),
+        signUp(data) {
+            this.setCode("");
+            this.$request.getToken(data).then(res => {
+                if (res && res.data && res.data.userinfo) {
+                    this.session3rd = res.data.session3rd;
+                    this.getPhone();
+                    uni.setStorageSync("tk", res.data.userinfo.token);
+                    this.setUserInfo(res.data.userinfo);
+                }
+            });
         },
         getUserInfoByBtn(e) {
-            console.log(JSON.stringify(e.detail));
-            const { errMsg, encryptedData, iv, signature, userInfo } = e.detail;
-            this.$refs.user_modal.hide();
+            const self = this;
+            const {
+                errMsg,
+                rawData,
+                encryptedData,
+                iv,
+                signature,
+                userInfo
+            } = e.detail;
             if (errMsg === "getUserInfo:ok") {
-                this.setUserInfo(userInfo);
+                this.$refs.user_modal.hide();
+                // this.setUserInfo(userInfo);
+                this.signUp({
+                    code: self.code,
+                    rawData,
+                    encryptedData,
+                    signature,
+                    iv
+                });
             }
         },
         getUserInfo(e) {
             const self = this;
-            if (e) {
-                this.getUserInfoByBtn(e);
-            } else {
-                this.$refs.user_modal.show({
-                    content: "为了更好的用户体验，需要获取您的个人信息",
-                    cancelText: "取消",
-                    success() {
-                        self.getPhone();
+            if (!this.code) {
+                this.$request.login().then(code => {
+                    if (e) {
+                        this.getUserInfoByBtn(e);
+                    } else {
+                        this.$refs.user_modal.show({
+                            content: "为了更好的用户体验，需要获取您的个人信息",
+                            cancelText: "取消"
+                        });
                     }
                 });
+            } else {
+                if (e) {
+                    this.getUserInfoByBtn(e);
+                } else {
+                    this.$refs.user_modal.show({
+                        content: "为了更好的用户体验，需要获取您的个人信息",
+                        cancelText: "取消"
+                    });
+                }
             }
         },
         getPhoneByBtn(e) {
-            console.log(JSON.stringify(e.detail));
-            // const { errMsg, encryptedData, iv, signature, userInfo } = e.detail;
-            // this.$refs.user_modal.hide();
-            // if (errMsg === "getUserInfo:ok") {
-            //     this.setUserInfo(userInfo);
-            // }
+            const self = this;
+            const {
+                errMsg,
+                rawData,
+                encryptedData,
+                iv,
+                signature,
+                userInfo
+            } = e.detail;
+            this.$refs.phone_modal.hide();
+            if (errMsg === "getUserInfo:ok") {
+                this.$request
+                    .bindMobile({
+                        session3rd: self.session3rd,
+                        rawData,
+                        encryptedData,
+                        signature,
+                        iv
+                    })
+                    .then(res => {
+                        console.log(res);
+                    });
+            }
         },
         getPhone(e) {
             const self = this;
@@ -73,13 +120,7 @@ export default {
             } else {
                 this.$refs.phone_modal.show({
                     content: "为了更好的用户体验，需要获取您的手机号码",
-                    cancelText: "取消",
-                    success() {
-                        self.signUp()
-                    },
-                    fail() {
-                        self.signUp()
-                    }
+                    cancelText: "取消"
                 });
             }
         }

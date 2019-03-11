@@ -2,12 +2,12 @@
     <view class="content content_bg_ff">
         <view class="hd">
             <view class="avatar" @tap="getAuth">
-                <image v-if="userInfo" :src="userInfo.avatarUrl" mode="aspectFit"></image>
+                <image v-if="userInfo" :src="userInfo.avatar" mode="aspectFit"></image>
             </view>
             <view class="main">
                 <view class="box">
                     <view class="name m_textover">
-                        <view v-if="userInfo">{{ userInfo.nickName }}</view>
+                        <view v-if="userInfo">{{ userInfo.nickname }}</view>
                         <button v-else class="m_button" type="primary" plain open-type="getUserInfo" @getuserinfo="getUserInfo">
                             登录
                         </button>
@@ -76,11 +76,32 @@ export default {
         return {};
     },
     onReady() {
-        // if (!this.userInfo) {
-        // 	this.getUserInfo();
-        // }
+        const tk = uni.getStorageSync("tk");
+        if (tk) {
+            this.getInfo();
+        } else {
+            if (!this.userInfo) {
+                this.login();
+            }
+        }
     },
     methods: {
+        ...mapMutations(["setUserInfo", "setCode"]),
+        login() {
+            this.$request.login().then(code => {
+                if (code) {
+                    this.getUserInfo();
+                }
+            });
+        },
+        getInfo() {
+            this.$request.getUserInfo().then(res => {
+                if (res && res.data) {
+                    uni.setStorageSync("tk", res.data.token);
+                    this.setUserInfo(res.data);
+                }
+            });
+        },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },
@@ -88,7 +109,7 @@ export default {
             this.$refs.modal.show({
                 title: "联系方式",
                 confirmText: "确定",
-                success() { }
+                success() {}
             });
         },
         call() {
@@ -148,14 +169,17 @@ export default {
     }
 
     .name {
-        padding-top: 10upx;
         height: 95upx;
+        padding-top: 10upx;
         line-height: 95upx;
         text-align: center;
         color: $text-color;
     }
 
     .m_button {
+        width: 100%;
+        height: 95upx;
+        line-height: 95upx;
         padding: 0 30upx;
         border: none;
         font-size: 33upx;

@@ -1,21 +1,21 @@
 <script>
 export default {
-    onLaunch: function () {
+    onLaunch: function() {
         // #ifdef MP-WEIXIN
-        if (wx.canIUse && wx.canIUse('getUpdateManager')) {
+        if (wx.canIUse && wx.canIUse("getUpdateManager")) {
             let updateManager = wx.getUpdateManager();
-            updateManager.onUpdateReady(function () {
+            updateManager.onUpdateReady(function() {
                 updateManager.applyUpdate();
             });
         }
         // #endif
     },
-    onShow: function () {
-        console.log('App Show');
+    onShow: function() {
+        console.log("App Show");
         // this.init();
     },
-    onHide: function () {
-        console.log('App Hide');
+    onHide: function() {
+        console.log("App Hide");
     }
 };
 </script>
@@ -65,11 +65,11 @@ image {
 .content_bg_ff {
     position: absolute;
     top: 0;
-	right: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-	background-color: #fff;
-    overflow: hidden;
+    background-color: #fff;
+    overflow: auto;
 }
 .m_flex {
     display: flex;

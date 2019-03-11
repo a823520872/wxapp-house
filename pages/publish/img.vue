@@ -52,13 +52,17 @@ export default {
                 .getQiniuToken()
                 .then(
                     res => {
+                        console.log(1, res);
                         if (res.data && res.data.token) {
                             this.option.uptoken = res.data.token;
+                            return res.data.token;
                         }
                     },
                     e => {
+                        console.log(1, e);
                         if (e.data && e.data.token) {
                             this.option.uptoken = e.data.token;
+                            return res.data.token;
                         }
                     }
                 )
@@ -71,7 +75,6 @@ export default {
             uni.chooseImage({
                 sourceType: "album",
                 success(e) {
-                    console.log(e);
                     if (e.errMsg === "chooseImage:ok") {
                         const list = [...self.houseTempImg, ...e.tempFilePaths];
                         self.setHouseTempImg(list);
@@ -118,6 +121,7 @@ export default {
                     });
             } else {
                 this.getQiniuToken().then(() => {
+                    console.log(231);
                     this.confirm();
                 });
             }

@@ -13,7 +13,7 @@
                         </button>
                     </view>
                     <view class="tabs m_flex">
-                        <view class="tab" @tap="goPage('/pages/me/collection')">
+                        <view class="tab" @tap="to('/pages/me/collection')">
                             <view class="icon">
                                 <image src="/static/image/me/collection.png" mode="aspectFit"></image>
                             </view>
@@ -31,11 +31,11 @@
         </view>
         <view class="split"></view>
         <view class="bd">
-            <view class="cell m_flex_justify m_flex_middle" @tap="goPage('/pages/me/publish')">
+            <view class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/publish')">
                 <view class="cell_hd">我的发布</view>
                 <view class="cell_fd right_icon"></view>
             </view>
-            <view class="cell m_flex_justify m_flex_middle" @tap="goPage('/pages/me/invitation')">
+            <view class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/invitation')">
                 <view class="cell_hd">推荐好友</view>
                 <view class="cell_fd">获得88元分享基金</view>
             </view>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import VAuth from "../../components/auth.vue";
 export default {
     components: {
@@ -75,18 +75,15 @@ export default {
     data() {
         return {};
     },
-    onReady() {
+    onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
-            this.getInfo();
-        } else {
             if (!this.userInfo) {
-                this.login();
+                this.getInfo();
             }
         }
     },
     methods: {
-        ...mapMutations(["setUserInfo", "setCode"]),
         login() {
             this.$request.login().then(code => {
                 if (code) {
@@ -96,21 +93,23 @@ export default {
         },
         getInfo() {
             this.$request.getUserInfo().then(res => {
-                if (res && res.data) {
-                    uni.setStorageSync("tk", res.data.token);
-                    this.setUserInfo(res.data);
-                }
+                console.log(res);
             });
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },
         linkAdmin() {
-            this.$refs.modal.show({
-                title: "联系方式",
-                confirmText: "确定",
-                success() {}
-            });
+            this.userInfo
+                ? this.$refs.modal.show({
+                      title: "联系方式",
+                      confirmText: "确定",
+                      success() {}
+                  })
+                : this.getUserInfo();
+        },
+        to(url) {
+            this.userInfo ? this.goPage(url) : this.getUserInfo();
         },
         call() {
             uni.makePhoneCall({

@@ -149,24 +149,50 @@
                 </view>
             </view>
         </v-modal>
+        <v-auth ref="auth"></v-auth>
     </view>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+    computed: {
+        ...mapState(["userInfo"])
+    },
     onShareAppMessage(obj) {
         return {
             title: "房源详情",
             path: "/pages/index/house"
         };
     },
+    onShow() {
+        const tk = uni.getStorageSync("tk");
+        if (tk) {
+            if (!this.userInfo) {
+                this.getInfo();
+            }
+        } else {
+            this.login();
+        }
+    },
     methods: {
+        login() {
+            this.$request.login();
+        },
+        getInfo() {
+            this.$request.getUserInfo();
+        },
+        getUserInfo(e) {
+            this.$refs.auth.getUserInfo(e);
+        },
         linkLandlord() {
-            this.$refs.modal.show({
-                title: "联系方式",
-                confirmText: "确定",
-                success() {}
-            });
+            this.userInfo
+                ? this.$refs.modal.show({
+                      title: "联系方式",
+                      confirmText: "确定",
+                      success() {}
+                  })
+                : this.getUserInfo();
         },
         call() {
             uni.makePhoneCall({

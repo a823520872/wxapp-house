@@ -12,7 +12,6 @@ export default {
     },
     onShow: function() {
         console.log("App Show");
-        // this.init();
     },
     onHide: function() {
         console.log("App Hide");
@@ -69,7 +68,8 @@ image {
     bottom: 0;
     left: 0;
     background-color: #fff;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .m_flex {
     display: flex;

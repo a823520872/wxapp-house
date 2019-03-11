@@ -8,7 +8,6 @@ const store = new Vuex.Store({
     state: {
         code: '',
         hasLogin: false,
-        openid: '',
         hasRegister: false,
         userInfo: null,
         houseTempImg: []
@@ -19,9 +18,6 @@ const store = new Vuex.Store({
         },
         setLogin(state, bl) {
             state.hasLogin = bl;
-        },
-        setOpenId(state, openid) {
-            state.openid = openid;
         },
         setRegister(state, bl) {
             state.hasRegister = bl;

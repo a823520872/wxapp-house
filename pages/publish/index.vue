@@ -56,32 +56,58 @@
             </view>
             <view class="fd m_button primary" @tap="goPage(`/pages/publish/house`)">我承诺并立即发布</view>
         </view>
+        <v-auth ref="auth"></v-auth>
     </view>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import linkModal from '../components/link-modal';
+import { mapState, mapMutations } from "vuex";
+import linkModal from "../components/link-modal";
 export default {
     components: {
         linkModal
     },
+    computed: {
+        ...mapState(["userInfo"])
+    },
     data() {
         return {
-            step: 0,
+            step: null,
             temp: {
-                contact_mobile: '',
-                wechat_number: ''
+                contact_mobile: "",
+                wechat_number: ""
             }
         };
     },
+    onShow() {
+        const tk = uni.getStorageSync("tk");
+        if (tk) {
+            if (!this.userInfo) {
+                this.getInfo();
+            }
+        } else {
+            this.login();
+        }
+    },
     methods: {
-        getData() { },
-        showLink() {
-            this.$refs.modal.show({
-                title: "联系方式",
-                confirmText: "确定",
+        login() {
+            this.$request.login();
+        },
+        getInfo() {
+            this.$request.getUserInfo().then(res => {
+                this.step = res.data.is_landlord === 2 ? 0 : 1;
             });
+        },
+        getUserInfo(e) {
+            this.$refs.auth.getUserInfo(e);
+        },
+        showLink() {
+            this.userInfo
+                ? this.$refs.modal.show({
+                      title: "联系方式",
+                      confirmText: "确定"
+                  })
+                : this.getUserInfo();
         }
     }
 };

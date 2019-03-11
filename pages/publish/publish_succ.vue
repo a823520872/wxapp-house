@@ -11,9 +11,11 @@
         </view>
         <view class="fd" @tap="showPoster">生成定制海报</view>
         <poster ref="poster" :uri="uri"></poster>
-        <canvas class="cvs_avatar" canvas-id="myAvatar"></canvas>
-        <canvas class="cvs" canvas-id="myCanvas"></canvas>
-        <image :src="img.list[img.index].url" @load="getImageInfo"></image>
+        <view class="cvs_wrap">
+            <canvas class="cvs_avatar" canvas-id="myAvatar"></canvas>
+            <canvas class="cvs" canvas-id="myCanvas"></canvas>
+        </view>
+        <image class="none" :src="img.list[img.index].url" @load="getImageInfo"></image>
     </view>
 </template>
 
@@ -21,6 +23,7 @@
 import { mapState } from "vuex";
 import poster from "../components/poster.vue";
 import Canvas from "../../common/canvas.js";
+import getPosition from "../../common/position.js";
 export default {
     computed: {
         ...mapState(["userInfo"])
@@ -41,18 +44,7 @@ export default {
                     },
                     {
                         url:
-                            "https://zos.alipayobjects.com/rmsportal/VTcUYAaoKqXyHJbLAPyF.svg",
-                        width: 0,
-                        height: 0
-                    },
-                    {
-                        url: "https://eggjs.org/images/search.png",
-                        width: 0,
-                        height: 0
-                    },
-                    {
-                        url:
-                            "https://cloud.githubusercontent.com/assets/227713/22960991/812999bc-f37d-11e6-8bd5-a96ca37d0ff2.png",
+                            "https://images.cnblogs.com/cnblogs_com/tomxu/tom.jpg",
                         width: 0,
                         height: 0
                     },
@@ -68,34 +60,56 @@ export default {
         };
     },
     onReady() {
-        this.getQRCode();
-        this.createCanvas().then(path => {
-            this.uri = path;
+        this.$request.login().then(code => {
+            if (code) {
+                this.$request.getUserInfo().then(res => {
+                    if (res && res.data) {
+                        this.validateImg();
+                    }
+                });
+            }
         });
     },
     methods: {
         getQRCode() {
+            this.$request.getQRCode().then(res => {});
             return new Promise((resolve, reject) => {});
         },
         getAvatar() {
             const cvs = new Canvas("myAvatar");
             cvs.arc(40, 40, 40);
-            cvs.drawImage(this.userInfo.avatarUrl, 0, 0, 80, 80);
+            cvs.drawImage(this.userInfo.avatar, 0, 0, 80, 80);
             return cvs.toFile(true);
         },
         createCanvas() {
             const self = this;
+            this.img.list = getPosition(this.img.list);
             return this.getAvatar().then(tempFile => {
                 console.log(tempFile);
                 const cvs = new Canvas("myCanvas");
-                cvs.drawImage(
+                const imgArr = cvs.drawImage(
                     "/static/image/publish/poster.png",
                     0,
                     0,
                     534,
-                    948
+                    949
                 );
                 cvs.drawImage(tempFile, 40, 16, 80, 80);
+
+                for (let index = 0; index < this.img.list.length; index++) {
+                    const item = this.img.list[index];
+                    cvs.drawImage(
+                        item.url,
+                        item.sx,
+                        item.sy,
+                        item.sWidth,
+                        item.sHeight,
+                        item.dx,
+                        item.dy,
+                        item.dWidth,
+                        item.dHeight
+                    );
+                }
                 return cvs.toFile(true);
             });
         },
@@ -103,17 +117,26 @@ export default {
             if (this.uri) {
                 this.$refs.poster.show();
             } else {
-                this.createCanvas().then(path => {
-                    this.uri = path;
-                    this.showPoster();
-                });
+                if (
+                    this.userInfo &&
+                    this.img.list[this.img.list.length - 1].width
+                ) {
+                    this.createCanvas().then(path => {
+                        this.uri = path;
+                        this.showPoster();
+                    });
+                }
             }
         },
+        validateImg() {
+            this.showPoster();
+        },
         getImageInfo(e) {
-            if (this.img.index < this.img.list.length - 1) {
+            const max = this.img.list.length - 1;
+            if (this.img.index < max + 1) {
                 this.img.list[this.img.index].width = e.detail.width;
                 this.img.list[this.img.index].height = e.detail.height;
-                this.img.index++;
+                this.img.index < max ? this.img.index++ : this.validateImg();
             }
         }
     }
@@ -160,21 +183,32 @@ export default {
     color: #fff;
 }
 
+.cvs_wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
 .cvs {
     position: absolute;
     top: 0;
     left: 0;
     width: 534px;
     height: 948px;
-    z-index: -1;
 }
 .cvs_avatar {
-    position: absolute;
     position: absolute;
     top: 0;
     left: 0;
     width: 80px;
     height: 80px;
-    z-index: -1;
+}
+
+.none {
+    display: none;
 }
 </style>

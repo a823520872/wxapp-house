@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="list">
-            <view v-for="(li, i) in list" :key="i" class="cell" @tap="goPage(`/pages/index/house`)">
+            <view v-for="(li, i) in list" :key="i" class="cell" @tap="to(`/pages/index/house?id=${li.id}`)">
                 <view class="hd">
                     <view class="m_flex_justify">
                         <view class="title m_textover">{{li.house_type}}</view>
@@ -33,6 +33,7 @@
                 </view>
             </view>
         </view>
+        <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
             <view slot="content">
                 <link-modal :temp="temp"></link-modal>
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import linkModal from "./link-modal";
 export default {
     props: {
@@ -52,6 +54,9 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapState(["userInfo"])
+    },
     components: {
         linkModal
     },
@@ -61,24 +66,34 @@ export default {
         };
     },
     methods: {
+        to(url) {
+            this.userInfo ? this.goPage(url) : this.getUserInfo();
+        },
+        getUserInfo(e) {
+            this.$refs.auth.getUserInfo(e);
+        },
         linkLandlord(li) {
             const self = this;
-            this.temp = {
-                contact_mobile: li.contact_mobile,
-                wechat_number: li.wechat_number
-            };
-            this.$nextTick(() => {
-                this.$refs.modal.show({
-                    title: "联系方式",
-                    confirmText: "确定",
-                    success() {
-                        self.temp = null;
-                    },
-                    fail() {
-                        self.temp = null;
-                    }
+            if (this.userInfo) {
+                this.temp = {
+                    contact_mobile: li.contact_mobile,
+                    wechat_number: li.wechat_number
+                };
+                this.$nextTick(() => {
+                    this.$refs.modal.show({
+                        title: "联系方式",
+                        confirmText: "确定",
+                        success() {
+                            self.temp = null;
+                        },
+                        fail() {
+                            self.temp = null;
+                        }
+                    });
                 });
-            });
+            } else {
+                this.getUserInfo();
+            }
         }
     }
 };

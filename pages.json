@@ -1,128 +1,135 @@
 {
-	"pages": [
-		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "村里找房",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/index/house",
-			"style": {
-				"navigationBarTitleText": "房源详情",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/publish/index",
-			"style": {
-				"navigationBarTitleText": "发布房源"
-			}
-		},
-		{
-			"path": "pages/publish/settled",
-			"style": {
-				"navigationBarTitleText": "填写信息"
-			}
-		},
-		{
-			"path": "pages/publish/settled_succ",
-			"style": {
-				"navigationBarTitleText": "提交成功"
-			}
-		},
-		{
-			"path": "pages/publish/house",
-			"style": {
-				"navigationBarTitleText": "房源信息"
-			}
-		},
-		{
-			"path": "pages/publish/img",
-			"style": {
-				"navigationBarTitleText": "编辑照片"
-			}
-		},
-		{
-			"path": "pages/publish/publish_succ",
-			"style": {
-				"navigationBarTitleText": "发布成功"
-			}
-		},
-		{
-			"path": "pages/me/me",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-		},
-		{
-			"path": "pages/me/collection",
-			"style": {
-				"navigationBarTitleText": "我的收藏",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/me/publish",
-			"style": {
-				"navigationBarTitleText": "我的发布",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/me/invitation",
-			"style": {
-				"navigationBarTitleText": "邀请入驻"
-			}
-		}
-	],
-	"tabBar": {
-		"color": "#a8a8a8",
-		"selectedColor": "#4ce6e8",
-		"backgroundColor": "#FFFFFF",
-		"borderStyle": "white",
-		"list": [{
-				"pagePath": "pages/index/index",
-				"iconPath": "static/image/tab/index.png",
-				"selectedIconPath": "static/image/tab/index_active.png",
-				"text": "找房"
-			},
-			{
-				"pagePath": "pages/publish/index",
-				"iconPath": "static/image/tab/publish.png",
-				"selectedIconPath": "static/image/tab/publish_active.png",
-				"text": "发布房源"
-			},
-			{
-				"pagePath": "pages/me/me",
-				"iconPath": "static/image/tab/me.png",
-				"selectedIconPath": "static/image/tab/me_active.png",
-				"text": "我的"
-			}
-		]
-	},
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "村里找房",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	"condition": {
-		"current": 0,
-		"list": [{
-				"name": "首页",
-				"path": "pages/index/index"
-			},
-			{
-				"name": "入驻",
-				"path": "pages/publish/settled"
-			},
-			{
-				"name": "发布房源",
-				"path": "pages/publish/house"
-			},
+    "pages": [
+        //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+        {
+            "path": "pages/index/index",
+            "style": {
+                "navigationBarTitleText": "村里找房",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/index/house",
+            "style": {
+                "navigationBarTitleText": "房源详情",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/publish/index",
+            "style": {
+                "navigationBarTitleText": "发布房源"
+            }
+        },
+        {
+            "path": "pages/publish/settled",
+            "style": {
+                "navigationBarTitleText": "填写信息"
+            }
+        },
+        {
+            "path": "pages/publish/settled_succ",
+            "style": {
+                "navigationBarTitleText": "提交成功"
+            }
+        },
+        {
+            "path": "pages/publish/house",
+            "style": {
+                "navigationBarTitleText": "房源信息"
+            }
+        },
+        {
+            "path": "pages/publish/img",
+            "style": {
+                "navigationBarTitleText": "编辑照片"
+            }
+        },
+        {
+            "path": "pages/publish/publish_succ",
+            "style": {
+                "navigationBarTitleText": "发布成功"
+            }
+        },
+        {
+            "path": "pages/me/me",
+            "style": {
+                "navigationBarTitleText": "我的"
+            }
+        },
+        {
+            "path": "pages/me/collection",
+            "style": {
+                "navigationBarTitleText": "我的收藏",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/me/publish",
+            "style": {
+                "navigationBarTitleText": "我的发布",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
+            "path": "pages/me/invitation",
+            "style": {
+                "navigationBarTitleText": "邀请入驻"
+            }
+        }
+    ],
+    "tabBar": {
+        "color": "#a8a8a8",
+        "selectedColor": "#4ce6e8",
+        "backgroundColor": "#FFFFFF",
+        "borderStyle": "white",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "iconPath": "static/image/tab/index.png",
+                "selectedIconPath": "static/image/tab/index_active.png",
+                "text": "找房"
+            },
+            {
+                "pagePath": "pages/publish/index",
+                "iconPath": "static/image/tab/publish.png",
+                "selectedIconPath": "static/image/tab/publish_active.png",
+                "text": "发布房源"
+            },
+            {
+                "pagePath": "pages/me/me",
+                "iconPath": "static/image/tab/me.png",
+                "selectedIconPath": "static/image/tab/me_active.png",
+                "text": "我的"
+            }
+        ]
+    },
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "村里找房",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
+    },
+    "condition": {
+        "current": 0,
+        "list": [
+            {
+                "name": "首页",
+                "path": "pages/index/index"
+            },
+            {
+                "name": "房源详情",
+                "path": "pages/index/house",
+                "query": "id=16"
+            },
+            {
+                "name": "入驻",
+                "path": "pages/publish/settled"
+            },
+            {
+                "name": "发布房源",
+                "path": "pages/publish/house"
+            },
             {
                 "name": "上传图片",
                 "path": "pages/publish/img"
@@ -131,18 +138,18 @@
                 "name": "发布成功",
                 "path": "pages/publish/publish_succ"
             },
-			{
-				"name": "我的",
-				"path": "pages/me/me"
-			},
-			{
-				"name": "收藏",
-				"path": "pages/me/collection"
-			},
-			{
-				"name": "我的发布",
-				"path": "pages/me/publish"
-			}
-		]
-	}
+            {
+                "name": "我的",
+                "path": "pages/me/me"
+            },
+            {
+                "name": "收藏",
+                "path": "pages/me/collection"
+            },
+            {
+                "name": "我的发布",
+                "path": "pages/me/publish"
+            }
+        ]
+    }
 }

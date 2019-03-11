@@ -28,25 +28,25 @@
                 </view> -->
                 <view class="cell m_flex">
                     <view class="label">房源位置</view>
-                    <view class="model m_flex_middle">
-                        <picker mode="multiSelector" :range="[]" @change="addrChange">
+                    <view class="model m_flex_middle m_flex_item">
+                        <picker class="m_flex_item" mode="multiSelector" :range="addr.list" @change="addrChange">
                             <view class="addr_picker m_flex_middle">
-                                <view class="addr_item m_textover">广州市</view>
+                                <view class="addr_item m_textover m_flex_item">广州市</view>
                                 <view class="addr_pull bottom_icon"></view>
                             </view>
-                            <!-- </picker>
-                        <picker :range="[]" @change=""> -->
+                        </picker>
+                        <!-- <picker :range="[]" @change="">
                             <view class="addr_picker m_flex_middle">
                                 <view class="addr_item m_textover">天河区</view>
                                 <view class="addr_pull bottom_icon"></view>
                             </view>
-                            <!-- </picker>
-                        <picker :range="[]" @change=""> -->
+                        </picker>
+                        <picker :range="[]" @change="">
                             <view class="addr_picker last m_flex_middle">
                                 <view class="addr_item m_textover">上社</view>
                                 <view class="addr_pull bottom_icon"></view>
                             </view>
-                        </picker>
+                        </picker> -->
                     </view>
                 </view>
                 <view class="cell m_flex">
@@ -82,26 +82,28 @@ export default {
                 // num: "",
                 referrer_user_mobile: ""
             },
-            // addrList: {
-            //     p: null,
-            //     c: null,
-            //     d: null,
-            //     s: null
-            // },
+            addr: {
+                list: [[], [], [], []],
+                p: null,
+                c: null,
+                d: null,
+                s: null
+            },
             code: ""
         };
     },
-    // computed: {
-    //     citys() {
-    //         return this;
-    //     }
-    // },
-    onReady() {
+    onShow() {
         this.getData();
     },
     methods: {
         getData() {
-            this.$request.getAddrList().then(res => {
+            const request = this.$request.getAddrList;
+            Promise.all([
+                request({ level: 1, page_size: 200 }),
+                request({ level: 2, page_size: 200 }),
+                request({ level: 3, page_size: 200 }),
+                request({ level: 4, page_size: 200 })
+            ]).then(res => {
                 console.log(res);
             });
         },
@@ -109,36 +111,21 @@ export default {
         addrChange(e) {
             console.log(e);
         },
-        validate() {
-            return new Promise((resolve, reject) => {
-                if (!this.form.name) {
-                    reject({
-                        msg: "请输入姓名"
-                    });
-                }
-                if (!this.form.mobile) {
-                    reject({
-                        msg: "请输入手机号码"
-                    });
-                }
-                if (!this.testMobile(this.form.mobile)) {
-                    reject({
-                        msg: "手机号码不正确"
-                    });
-                }
-                if (!this.form.postion_street) {
-                    reject({
-                        msg: "请选择地址"
-                    });
-                }
-                resolve();
-            });
-        },
         confirm() {
-            this.validate().then(
+            this.$validate(this.form, {
+                name: [{ required: true, msg: "请输入姓名" }],
+                mobile: [
+                    { required: true, msg: "请输入手机号码" },
+                    { type: "mobile", msg: "手机号码不正确" }
+                ],
+                postion_street: [{ required: true, msg: "请选择地址" }]
+            }).then(
                 () => {
                     this.$request.addLandlord(this.form).then(res => {
-                        this.goPage(`/pages/publish/settled_succ`);
+                        this.goPage({
+                            path: `/pages/publish/settled_succ`,
+                            replace: true
+                        });
                     });
                 },
                 e => {
@@ -222,7 +209,7 @@ export default {
         padding-right: 30upx;
     }
     &_item {
-        width: 100upx;
+        // width: 100upx;
     }
     &_pull {
         width: 14upx;

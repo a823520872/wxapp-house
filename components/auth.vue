@@ -36,7 +36,7 @@ export default {
             this.$request.getToken(data).then(res => {
                 if (res && res.data && res.data.userinfo) {
                     this.session3rd = res.data.session3rd;
-                    this.getPhone();
+                    // this.getPhone();
                     uni.setStorageSync("tk", res.data.userinfo.token);
                     this.setUserInfo(res.data.userinfo);
                 }

@@ -130,6 +130,20 @@ export default {
                 params: self.params,
                 fn: null
             });
+            const tk = uni.getStorageSync("tk");
+            if (tk) {
+                if (!this.userInfo) {
+                    this.getInfo();
+                }
+            } else {
+                this.login();
+            }
+        },
+        login() {
+            this.$request.login();
+        },
+        getInfo() {
+            this.$request.getUserInfo();
         },
         getData() {
             this.$request.getConfig().then(res => {

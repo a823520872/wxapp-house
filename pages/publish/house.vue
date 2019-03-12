@@ -128,16 +128,16 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     computed: {
-        ...mapState(["houseTempImg"])
+        ...mapState(["userInfo", "houseTempImg"])
     },
     data() {
         return {
             step: 0,
             form: {
                 images: [],
-                landlord_id: 15,
-                landlord_mobile: "18100001038",
-                rental: 1999,
+                landlord_id: "",
+                landlord_mobile: "",
+                rental: "",
                 address_street_id: 1969,
                 address_street: "上社15",
                 address_flag_id: 3752,
@@ -216,6 +216,9 @@ export default {
             });
         },
         confirm() {
+            this.$validate(this.form, {
+                name: [{}]
+            });
             this.goPage({ path: `/pages/publish/publish_succ`, replace: true });
         }
     }

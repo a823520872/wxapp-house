@@ -31,17 +31,21 @@
         </view>
         <view class="split"></view>
         <view class="bd">
-            <view class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/publish')">
+            <view v-if="userInfo && userInfo.is_landlord === 1" class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/publish')">
                 <view class="cell_hd">我的发布</view>
                 <view class="cell_fd right_icon"></view>
             </view>
-            <view class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/invitation')">
+            <!-- <view class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/invitation')">
                 <view class="cell_hd">推荐好友</view>
                 <view class="cell_fd">获得88元分享基金</view>
+            </view> -->
+            <view class="cell m_flex_justify m_flex_middle">
+                <view class="cell_hd">推荐好友</view>
+                <button class="cell_fd m_button plain" open-type="share">获得88元分享基金</button>
             </view>
-            <view class="cell m_flex_justify m_flex_middle" @tap="linkAdmin">
+            <view class="cell m_flex_justify m_flex_middle">
                 <view class="cell_hd">联系村长</view>
-                <view class="cell_fd">全能村长，24小时在线</view>
+                <button class="cell_fd m_button plain" open-type="contact">全能村长，24小时在线</button>
             </view>
         </view>
         <v-auth ref="auth"></v-auth>
@@ -63,12 +67,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import VAuth from "../../components/auth.vue";
+import { mapState } from "vuex";
 export default {
-    components: {
-        VAuth
-    },
     computed: {
         ...mapState(["userInfo"])
     },
@@ -81,13 +81,25 @@ export default {
             if (!this.userInfo) {
                 this.getInfo();
             }
+        } else {
+            this.login();
         }
+    },
+    onShareAppMessage() {
+        return {
+            title: "邀请入驻",
+            path: this.userInfo
+                ? this.userInfo.is_landlord === 1
+                    ? `/pages/publish/index?rid=${this.userInfo.id}`
+                    : `/pages/index/index?rid=${this.userInfo.id}`
+                : `/pages/index/index`
+        };
     },
     methods: {
         login() {
             this.$request.login().then(code => {
                 if (code) {
-                    this.getUserInfo();
+                    !this.userInfo && this.getUserInfo();
                 }
             });
         },
@@ -110,22 +122,6 @@ export default {
         },
         to(url) {
             this.userInfo ? this.goPage(url) : this.getUserInfo();
-        },
-        call() {
-            uni.makePhoneCall({
-                phoneNumber: "114"
-            });
-        },
-        copy() {
-            uni.setClipboardData({
-                data: "hello",
-                success() {
-                    uni.showToast({
-                        title: "复制成功",
-                        icon: "success"
-                    });
-                }
-            });
         }
     }
 };

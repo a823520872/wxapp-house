@@ -16,6 +16,7 @@
             </view>
         </view>
         <publish-list :list.sync="list"></publish-list>
+        <v-page ref="page" :list.sync="list"></v-page>
     </view>
 </template>
 
@@ -27,21 +28,26 @@ export default {
     },
     data() {
         return {
-            list: [1, 2, 3]
+            list: []
         };
     },
-    onLoad(res) {
-        console.log("onLoad");
-    },
+    onLoad(res) {},
     onReady() {
-        console.log("onReady");
+        this.$refs.page.init({
+            url: "getMyHouse",
+            params: {
+                hr_id: ""
+            },
+            fn: null
+        });
     },
     onPullDownRefresh() {
-        console.log("onPullDownRefresh");
+        this.$refs.page.getData(1);
     },
     onReachBottom() {
-        console.log("onReachBottom");
-    }
+        this.$refs.page.next();
+    },
+    methods: {}
 };
 </script>
 

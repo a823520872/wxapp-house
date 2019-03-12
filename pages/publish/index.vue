@@ -1,13 +1,13 @@
 <template>
     <view class="content content_bg_ff">
-        <view class="not_landlord" v-if="step === 0">
+        <view class="not_landlord" v-if="step === 2">
             <view class="bd m_flex">
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
-            <view class="fd" @tap="showLink">
-                <text>咨询村长</text>
+            <view class="fd">
+                <button class="m_button plain" open-type="contact">咨询村长</button>
             </view>
-            <button class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="goPage(`/pages/publish/settled`)">
+            <button class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
                 <view>申请</view>
                 <view>入驻</view>
             </button>
@@ -54,7 +54,7 @@
                     </view>
                 </view>
             </view>
-            <view class="fd m_button primary" @tap="goPage(`/pages/publish/house`)">我承诺并立即发布</view>
+            <view class="fd m_button primary" @tap="to(`/pages/publish/house`)">我承诺并立即发布</view>
         </view>
         <v-auth ref="auth"></v-auth>
     </view>
@@ -72,7 +72,7 @@ export default {
     },
     data() {
         return {
-            step: null,
+            step: 2,
             temp: {
                 contact_mobile: "",
                 wechat_number: ""
@@ -84,6 +84,8 @@ export default {
         if (tk) {
             if (!this.userInfo) {
                 this.getInfo();
+            } else {
+                this.step = this.userInfo.is_landlord;
             }
         } else {
             this.login();
@@ -91,15 +93,21 @@ export default {
     },
     methods: {
         login() {
-            this.$request.login();
+            this.$request.login().then(code => {
+                console.log(code);
+                this.step = 2;
+            });
         },
         getInfo() {
             this.$request.getUserInfo().then(res => {
-                this.step = res.data.is_landlord === 2 ? 0 : 1;
+                this.step = res.data.is_landlord;
             });
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
+        },
+        to(url) {
+            this.userInfo ? this.goPage(url) : this.getUserInfo();
         },
         showLink() {
             this.userInfo

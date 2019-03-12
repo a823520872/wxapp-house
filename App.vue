@@ -111,6 +111,7 @@ image {
     }
     &_item {
         flex: 1;
+        overflow: hidden;
     }
 }
 .m_button {

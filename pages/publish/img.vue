@@ -37,7 +37,7 @@ export default {
         return {
             option: {
                 uptoken: "",
-                uploadURL: "https://house.zhiqiang.ink/api/upload/add",
+                uploadURL: "https://house.zhiqiang.ink/api/upload/uploadImage",
                 domain: "house.zhiqiang.ink"
             }
         };
@@ -92,7 +92,8 @@ export default {
                 qiniuUploader.upload(
                     filePath,
                     res => {
-                        resolve(res);
+                        console.log(res.data.url);
+                        resolve(res.data);
                     },
                     e => {
                         reject(e);

@@ -88,10 +88,10 @@
                     <image src="/static/image/index/collect.png" mode="aspectFit"></image>
                     <text>收藏</text>
                 </view>
-                <view class="gift m_flex_column m_flex_middle m_flex_center m_flex_item">
+                <button class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" open-type="contact" plain>
                     <image src="/static/image/index/gift.png" mode="aspectFit"></image>
                     <text>拿乔迁礼</text>
-                </view>
+                </button>
                 <view class="link m_flex_column m_flex_middle m_flex_center" @tap="linkLandlord">
                     <image src="/static/image/index/tel.png" mode="aspectFit"></image>
                     <text>联系房东</text>
@@ -99,16 +99,17 @@
             </view>
             <v-modal ref="modal">
                 <view slot="content">
-                    <view class="modal">
+                    <link-modal :temp="detail"></link-modal>
+                    <!-- <view class="modal">
                         <view v-if="detail.contact_mobile" class="link m_flex_justify">
                             <view>手机号：{{detail.contact_mobile}}</view>
-                            <button class="m_button main" plain @tap="call">拨打</button>
+                            <button class="m_button main" plain @tap="call(detail.contact_mobile)">拨打</button>
                         </view>
                         <view v-if="detail.wechat_number" class="link m_flex_justify">
                             <view>微信号：{{detail.wechat_number}}</view>
-                            <button class="m_button main" plain @tap="copy">复制</button>
+                            <button class="m_button main" plain @tap="copy(detail.wechat_number)">复制</button>
                         </view>
-                    </view>
+                    </view> -->
                 </view>
             </v-modal>
         </view>
@@ -118,9 +119,13 @@
 
 <script>
 import { mapState } from "vuex";
+import linkModal from "../components/link-modal";
 export default {
     computed: {
         ...mapState(["userInfo"])
+    },
+    components: {
+        linkModal
     },
     data() {
         return {
@@ -131,7 +136,10 @@ export default {
     onShareAppMessage(obj) {
         return {
             title: "房源详情",
-            path: `/pages/index/house?id=${this.id}`
+            path:
+                `/pages/index/house?id=${this.id}` + this.userInfo
+                    ? `&rid=${this.userInfo.id}`
+                    : ``
         };
     },
     onLoad(res) {
@@ -190,24 +198,6 @@ export default {
                       success() {}
                   })
                 : this.getUserInfo();
-        },
-        call() {
-            const self = this;
-            uni.makePhoneCall({
-                phoneNumber: self.detail.contact_mobile
-            });
-        },
-        copy() {
-            const self = this;
-            uni.setClipboardData({
-                data: self.detail.wechat_number,
-                success() {
-                    uni.showToast({
-                        title: "复制成功",
-                        icon: "success"
-                    });
-                }
-            });
         }
     }
 };
@@ -356,7 +346,10 @@ export default {
         color: $text-color-inverse;
     }
     .gift {
+        display: flex;
+        border-radius: 0;
         background-color: $primary-color;
+        font-size: 20upx;
         color: #fff;
     }
     .link {

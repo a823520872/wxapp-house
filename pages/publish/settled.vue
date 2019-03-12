@@ -18,7 +18,7 @@
                 <!-- <view class="cell m_flex">
                     <view class="label">验证码</view>
                     <view class="model m_flex_middle">
-                        <input class="m_flex_item" type="number" v-model="code" placeholder="请输入短信验证码" />
+                        <input class="m_flex_item" type="number" v-model="form.code" placeholder="请输入短信验证码" />
                         <view class="m_button main btn_code" @tap="getCode">获取验证码</view>
                     </view>
                 </view> -->
@@ -29,12 +29,12 @@
                 <view class="cell m_flex">
                     <view class="label">房源位置</view>
                     <view class="model m_flex_middle m_flex_item">
-                        <picker class="m_flex_item" mode="multiSelector" :range="addr.list" @change="addrChange">
-                            <view class="addr_picker m_flex_middle">
-                                <view class="addr_item m_textover m_flex_item">广州市</view>
-                                <view class="addr_pull bottom_icon"></view>
-                            </view>
-                        </picker>
+                        <!-- <picker class="m_flex_item" mode="multiSelector" :range="[]" @change="addrChange"> -->
+                        <view class="addr_picker m_flex_middle m_flex_item" @tap="addrChoose">
+                            <view class="addr_item m_textover m_flex_item">{{addr}}</view>
+                            <view class="addr_pull bottom_icon"></view>
+                        </view>
+                        <!-- </picker> -->
                         <!-- <picker :range="[]" @change="">
                             <view class="addr_picker m_flex_middle">
                                 <view class="addr_item m_textover">天河区</view>
@@ -60,6 +60,7 @@
             <view class="m_button main btn_confirm" @tap="confirm">提交</view>
         </view>
         <view class="fd"></view>
+        <v-auth ref="auth"></v-auth>
     </view>
 </template>
 
@@ -71,45 +72,48 @@ export default {
             form: {
                 name: "",
                 mobile: "",
-                position_province_id: "",
-                position_province: "广东省",
-                position_city_id: "",
-                position_city: "广州市",
-                postion_district_id: "",
-                postion_district: "天河区",
-                postion_street_id: "",
-                postion_street: "上社",
+                code: "",
+                // position_province_id: "",
+                position_province: "",
+                // position_city_id: "",
+                position_city: "",
+                // postion_district_id: "",
+                postion_district: "",
+                // postion_street_id: "",
+                postion_street: "",
                 // num: "",
                 referrer_user_mobile: ""
-            },
-            addr: {
-                list: [[], [], [], []],
-                p: null,
-                c: null,
-                d: null,
-                s: null
-            },
-            code: ""
+            }
         };
     },
-    onShow() {
-        this.getData();
+    computed: {
+        addr() {
+            return (
+                (this.form.position_province || "") +
+                    (this.form.position_city || "") +
+                    (this.form.postion_district || "") +
+                    (this.form.postion_street || "") || "广州市"
+            );
+        }
     },
     methods: {
-        getData() {
-            const request = this.$request.getAddrList;
-            Promise.all([
-                request({ level: 1, page_size: 200 }),
-                request({ level: 2, page_size: 200 }),
-                request({ level: 3, page_size: 200 }),
-                request({ level: 4, page_size: 200 })
-            ]).then(res => {
-                console.log(res);
-            });
-        },
         getCode() {},
-        addrChange(e) {
-            console.log(e);
+        addrChoose() {
+            const self = this;
+            this.$refs.auth.chooseLocation({
+                success(res) {
+                    // res.longitude
+                    // res.latitude
+                    // res.landmark
+                    self.form.position_province = res.province;
+                    self.form.position_city = res.city;
+                    self.form.postion_district = res.county;
+                    self.form.postion_street = res.address;
+                },
+                fail(e) {
+                    console.log(e);
+                }
+            });
         },
         confirm() {
             this.$validate(this.form, {
@@ -214,6 +218,7 @@ export default {
     &_pull {
         width: 14upx;
         height: 14upx;
+        margin-left: 10upx;
     }
 }
 </style>

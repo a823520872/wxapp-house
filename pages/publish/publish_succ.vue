@@ -64,7 +64,7 @@ export default {
             if (code) {
                 this.$request.getUserInfo().then(res => {
                     if (res && res.data) {
-                        this.validateImg();
+                        this.showPoster();
                     }
                 });
             }
@@ -73,7 +73,6 @@ export default {
     methods: {
         getQRCode() {
             this.$request.getQRCode().then(res => {});
-            return new Promise((resolve, reject) => {});
         },
         getAvatar() {
             const cvs = new Canvas("myAvatar");
@@ -85,8 +84,8 @@ export default {
             const self = this;
             this.img.list = getPosition(this.img.list);
             return this.getAvatar().then(tempFile => {
-                console.log(tempFile);
                 const cvs = new Canvas("myCanvas");
+                const max = Math.min(this.img.list.length, 5);
                 cvs.ctx.setFillStyle("#e9f9f9");
                 cvs.ctx.fillRect(0, 0, 534, 949);
                 cvs.drawImage(
@@ -99,10 +98,12 @@ export default {
                 cvs.drawImage(tempFile, 40, 16, 80, 80);
                 cvs.ctx.setFillStyle("#2b2b2b");
                 cvs.ctx.setFontSize(25);
-                cvs.ctx.setTextBaseline("normal");
-                cvs.ctx.fillText(this.userInfo.nickname, 135, 75);
+                cvs.ctx.setTextBaseline("top");
+                cvs.ctx.fillText(this.userInfo.nickname, 135, 50);
+                cvs.ctx.setTextAlign("center");
+                cvs.ctx.fillText("识别二维码查看详细房源信息", 267, 893);
 
-                for (let index = 0; index < this.img.list.length; index++) {
+                for (let index = 0; index < max; index++) {
                     const item = this.img.list[index];
                     cvs.drawImage(
                         item.url,
@@ -137,15 +138,12 @@ export default {
                 }
             }
         },
-        validateImg() {
-            this.showPoster();
-        },
         getImageInfo(e) {
             const max = this.img.list.length - 1;
             if (this.img.index < max + 1) {
                 this.img.list[this.img.index].width = e.detail.width;
                 this.img.list[this.img.index].height = e.detail.height;
-                this.img.index < max ? this.img.index++ : this.validateImg();
+                this.img.index < max && this.img.index++;
             }
         }
     }

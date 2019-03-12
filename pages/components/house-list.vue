@@ -79,17 +79,15 @@ export default {
                     contact_mobile: li.contact_mobile,
                     wechat_number: li.wechat_number
                 };
-                this.$nextTick(() => {
-                    this.$refs.modal.show({
-                        title: "联系方式",
-                        confirmText: "确定",
-                        success() {
-                            self.temp = null;
-                        },
-                        fail() {
-                            self.temp = null;
-                        }
-                    });
+                this.$refs.modal.show({
+                    title: "联系方式",
+                    confirmText: "确定",
+                    success() {
+                        self.temp = null;
+                    },
+                    fail() {
+                        self.temp = null;
+                    }
                 });
             } else {
                 this.getUserInfo();

@@ -127,6 +127,10 @@
                 "path": "pages/publish/settled"
             },
             {
+                "name": "入驻成功",
+                "path": "pages/publish/settled_succ"
+            },
+            {
                 "name": "发布房源",
                 "path": "pages/publish/house"
             },

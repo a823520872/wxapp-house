@@ -2,23 +2,35 @@
     <view>
         <v-modal ref="user_modal">
             <block slot="footer">
-                <button class="m_button" open-type="getUserInfo" @getuserinfo="getUserInfoByBtn">
+                <button class="m_button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="getUserInfoByBtn">
                     去授权
                 </button>
             </block>
         </v-modal>
         <v-modal ref="phone_modal">
             <block slot="footer">
-                <button class="m_button" open-type="getUserInfo" @getuserinfo="getPhoneByBtn">
+                <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">
                     去授权
                 </button>
             </block>
         </v-modal>
+        <!-- <v-modal ref="phone_modal">
+            <block slot="footer">
+                <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">
+                    去授权
+                </button>
+            </block>
+        </v-modal> -->
     </view>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import amapFile from "../common/amap-wx.js";
+
+var myAmapFun = new amapFile.AMapWX({
+    key: "9243ebd0fc3e66ed2ba643128aa8fb1f"
+});
 export default {
     props: {},
     data() {
@@ -27,14 +39,13 @@ export default {
         };
     },
     computed: {
-        ...mapState(["code", "hasRigister"])
+        ...mapState(["code"])
     },
     methods: {
-        ...mapMutations(["setUserInfo", "setCode"]),
+        ...mapMutations(["setUserInfo"]),
         signUp(data) {
-            this.setCode("");
             this.$request.getToken(data).then(res => {
-                if (res && res.data && res.data.userinfo) {
+                if (res && res.data) {
                     this.session3rd = res.data.session3rd;
                     // this.getPhone();
                 }
@@ -108,6 +119,39 @@ export default {
                         content: "为了更好的用户体验，需要获取您的手机号码",
                         cancelText: "取消"
                     });
+                }
+            });
+        },
+        chooseLocation(obj) {
+            uni.chooseLocation({
+                success(res) {
+                    const { errMsg, name, address, latitude, longitude } = res;
+                    if (errMsg === "chooseLocation:ok") {
+                        myAmapFun.getPoiAround({
+                            location: longitude + "," + latitude,
+                            success: function(data) {
+                                if (data && data.poisData && data.poisData[0]) {
+                                    obj.success &&
+                                        obj.success({
+                                            longitude: longitude,
+                                            latitude: latitude,
+                                            landmark: name,
+                                            province: data.poisData[0].pname,
+                                            city: data.poisData[0].cityname,
+                                            county: data.poisData[0].adname,
+                                            address: data.poisData[0].address
+                                        });
+                                }
+                            },
+                            fail(e) {
+                                obj.fail && obj.fail(e);
+                            }
+                        });
+                    }
+                },
+                fail(e) {
+                    console.log(e);
+                    obj.fail && obj.fail(e);
                 }
             });
         }

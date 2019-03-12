@@ -13,27 +13,22 @@ export default {
     },
     data() {
         return {
-            list: [1],
-            page: 1,
-            hasMore: false
+            list: []
         };
     },
     onLoad(res) {},
-    onReady() {
-        this.getData();
-    },
-    onPullDownRefresh() {
-        this.$refs.page.getData(1);
-    },
-    onReachBottom() {
-        this.$refs.page.next();
-    },
     onReady() {
         this.$refs.page.init({
             url: "getMyCollection",
             params: {},
             fn: null
         });
+    },
+    onPullDownRefresh() {
+        this.$refs.page.getData(1);
+    },
+    onReachBottom() {
+        this.$refs.page.next();
     },
     methods: {}
 };

@@ -37,8 +37,6 @@ export default {
                 if (res && res.data && res.data.userinfo) {
                     this.session3rd = res.data.session3rd;
                     // this.getPhone();
-                    uni.setStorageSync("tk", res.data.userinfo.token);
-                    this.setUserInfo(res.data.userinfo);
                 }
             });
         },
@@ -65,19 +63,7 @@ export default {
             }
         },
         getUserInfo(e) {
-            const self = this;
-            if (!this.code) {
-                this.$request.login().then(code => {
-                    if (e) {
-                        this.getUserInfoByBtn(e);
-                    } else {
-                        this.$refs.user_modal.show({
-                            content: "为了更好的用户体验，需要获取您的个人信息",
-                            cancelText: "取消"
-                        });
-                    }
-                });
-            } else {
+            this.$request.login().then(code => {
                 if (e) {
                     this.getUserInfoByBtn(e);
                 } else {
@@ -86,7 +72,7 @@ export default {
                         cancelText: "取消"
                     });
                 }
-            }
+            });
         },
         getPhoneByBtn(e) {
             const self = this;
@@ -114,15 +100,16 @@ export default {
             }
         },
         getPhone(e) {
-            const self = this;
-            if (e) {
-                this.getPhoneByBtn(e);
-            } else {
-                this.$refs.phone_modal.show({
-                    content: "为了更好的用户体验，需要获取您的手机号码",
-                    cancelText: "取消"
-                });
-            }
+            this.$request.login().then(code => {
+                if (e) {
+                    this.getPhoneByBtn(e);
+                } else {
+                    this.$refs.phone_modal.show({
+                        content: "为了更好的用户体验，需要获取您的手机号码",
+                        cancelText: "取消"
+                    });
+                }
+            });
         }
     }
 };

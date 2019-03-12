@@ -38,13 +38,13 @@ export default {
                 list: [
                     {
                         url:
-                            "https://cloud.githubusercontent.com/assets/227713/22960991/812999bc-f37d-11e6-8bd5-a96ca37d0ff2.png",
+                            "https://images.cnblogs.com/cnblogs_com/tomxu/tom.jpg",
                         width: 0,
                         height: 0
                     },
                     {
                         url:
-                            "https://images.cnblogs.com/cnblogs_com/tomxu/tom.jpg",
+                            "https://cloud.githubusercontent.com/assets/227713/22960991/812999bc-f37d-11e6-8bd5-a96ca37d0ff2.png",
                         width: 0,
                         height: 0
                     },
@@ -87,14 +87,20 @@ export default {
             return this.getAvatar().then(tempFile => {
                 console.log(tempFile);
                 const cvs = new Canvas("myCanvas");
-                const imgArr = cvs.drawImage(
+                cvs.ctx.setFillStyle("#e9f9f9");
+                cvs.ctx.fillRect(0, 0, 534, 949);
+                cvs.drawImage(
                     "/static/image/publish/poster.png",
                     0,
                     0,
                     534,
-                    949
+                    173
                 );
                 cvs.drawImage(tempFile, 40, 16, 80, 80);
+                cvs.ctx.setFillStyle("#2b2b2b");
+                cvs.ctx.setFontSize(25);
+                cvs.ctx.setTextBaseline("normal");
+                cvs.ctx.fillText(this.userInfo.nickname, 135, 75);
 
                 for (let index = 0; index < this.img.list.length; index++) {
                     const item = this.img.list[index];
@@ -117,12 +123,15 @@ export default {
             if (this.uri) {
                 this.$refs.poster.show();
             } else {
-                if (
-                    this.userInfo &&
-                    this.img.list[this.img.list.length - 1].width
-                ) {
+                uni.showLoading({
+                    title: "图片正在生成",
+                    mask: true
+                });
+                const max = this.img.list.length - 1;
+                if (this.userInfo && this.img.list[max].width) {
                     this.createCanvas().then(path => {
                         this.uri = path;
+                        uni.hideLoading();
                         this.showPoster();
                     });
                 }

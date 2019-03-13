@@ -69,8 +69,10 @@
                 </scroll-view>
             </view> -->
         </view>
-        <house-list :list.sync="list"></house-list>
-        <v-page ref="page" :list.sync="list"></v-page>
+        <view class="list">
+            <house-list :list.sync="list"></house-list>
+            <v-page ref="page" :list.sync="list"></v-page>
+        </view>
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal" v-if="modalList && modalList.length">
@@ -128,7 +130,15 @@ export default {
             this.$refs.page.init({
                 url: "getHouseList",
                 params: self.params,
-                fn: null
+                fn(data) {
+                    return data.map(
+                        item => (
+                            (item.image_urls =
+                                item.image_urls && item.image_urls.split(",")),
+                            item
+                        )
+                    );
+                }
             });
             const tk = uni.getStorageSync("tk");
             if (tk) {
@@ -264,7 +274,7 @@ export default {
         width: 200upx;
         height: 56upx;
         margin-right: 8upx;
-        padding: 22upx 22upx 22upx 0;
+        padding: 22upx 22upx 0 0;
     }
     .btn {
         width: 200upx;
@@ -288,6 +298,9 @@ export default {
         height: 24upx;
         padding: 10upx;
     }
+}
+.list {
+    margin-top: 22upx;
 }
 .modal {
     &_item {

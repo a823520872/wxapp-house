@@ -20,15 +20,9 @@
                         </view>
                     </view>
                 </view>
-                <view class="bd m_flex_justify">
-                    <view class="img_box">
-                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
-                    </view>
-                    <view class="img_box">
-                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
-                    </view>
-                    <view class="img_box last">
-                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
+                <view class="bd m_flex" v-if="li.image_urls && li.image_urls.length">
+                    <view :class="{'img_box': true, 'last': li.image_urls.length > 3 && j === 2}" v-for="(it, j) in li.image_urls" :key="j" v-if="j < 3">
+                        <image :src="it" mode="aspectFill"></image>
                     </view>
                 </view>
             </view>
@@ -144,11 +138,13 @@ export default {
     .bd {
         padding-top: 16upx;
         padding-bottom: 24upx;
+        margin-right: -6upx;
     }
 
     .img_box {
         width: 222upx;
         height: 174upx;
+        margin-right: 6upx;
         background-color: $uni-bg-color-grey;
     }
 

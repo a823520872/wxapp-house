@@ -25,9 +25,9 @@ export default {
             return res
         })
     },
-    bindMobile(data = {}) {
-        return ajax('/api/user/decryptData', data, { type: 'post' })
-    },
+    // bindMobile(data = {}) {
+    //     return ajax('/api/user/decryptData', data, { type: 'post' })
+    // },
     getQiniuToken(data = {}) {
         return ajax('/api/upload/getUploadToken', data, { noToken: true, noAlert: true })
     },
@@ -89,5 +89,8 @@ export default {
     },
     uploadImg(data = {}) {
         return ajax('/api/upload/add', data, { type: 'post', upload: true, noToken: true })
+    },
+    getQRCode(data = {}) {
+        return ajax('/api/Wxapp/Wxapp/getWxcodeUnlimit', data, { type: 'post' })
     }
 }

@@ -46,7 +46,7 @@ export default {
         this.getQiniuToken();
     },
     methods: {
-        ...mapMutations(["setHouseTempImg"]),
+        ...mapMutations(["setHouseTempImg", "setHouseImg"]),
         getQiniuToken() {
             return this.$request
                 .getQiniuToken()
@@ -92,7 +92,6 @@ export default {
                 qiniuUploader.upload(
                     filePath,
                     res => {
-                        console.log(res.data.url);
                         resolve(res.data);
                     },
                     e => {
@@ -101,12 +100,6 @@ export default {
                     this.option
                 );
             });
-            // 			.then(
-            //                 res => { },
-            //                 e => {
-            //                     return this.uploadImg(filePath);
-            //                 }
-            //             );
         },
         confirm() {
             if (this.option.uptoken) {
@@ -116,13 +109,20 @@ export default {
                 Promise.all(tasks)
                     .then(res => {
                         console.log(res);
+                        this.setHouseImg(res);
+                        uni.navigateBack({
+                            delta: 1
+                        });
                     })
                     .catch(e => {
                         console.log(e);
+                        uni.showToast({
+                            title: e && e.message,
+                            icon: "none"
+                        });
                     });
             } else {
                 this.getQiniuToken().then(() => {
-                    console.log(231);
                     this.confirm();
                 });
             }

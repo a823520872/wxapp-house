@@ -24,24 +24,27 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <picker class="m_flex_item" :range="[]" @change="">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">地址</view>
-                                <view class="cell_bd">请选择</view>
-                            </view>
-                        </picker>
-                        <picker class="m_flex_item" :range="[]" @change="">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">标志建筑</view>
-                                <view class="cell_bd">请选择</view>
-                            </view>
-                        </picker>
-                        <picker class="m_flex_item" :range="[]" @change="">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">路边距离</view>
-                                <view class="cell_bd">请选择</view>
-                            </view>
-                        </picker>
+                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">地址</view>
+                            <!-- <view class="cell_bd">请选择</view> -->
+                            <input class="cell_bd" type="text" v-model="form.address_street" placeholder="请输入地址" />
+                        </view>
+                        <!-- </picker> -->
+                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">标志建筑</view>
+                            <!-- <view class="cell_bd">请选择</view> -->
+                            <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" />
+                        </view>
+                        <!-- </picker> -->
+                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">路边距离</view>
+                            <!-- <view class="cell_bd">请选择</view> -->
+                            <input class="cell_bd" type="text" v-model="form.road_distance" placeholder="请输入路边距离" />
+                        </view>
+                        <!-- </picker> -->
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
@@ -50,18 +53,20 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <picker class="m_flex_item" :range="[]" @change="">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">房型</view>
-                                <view class="cell_bd">请选择</view>
-                            </view>
-                        </picker>
-                        <picker class="m_flex_item" :range="[]" @change="">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">楼层</view>
-                                <view class="cell_bd">请选择</view>
-                            </view>
-                        </picker>
+                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">房型</view>
+                            <!-- <view class="cell_bd">请选择</view> -->
+                            <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
+                        </view>
+                        <!-- </picker> -->
+                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">楼层</view>
+                            <!-- <view class="cell_bd">请选择</view> -->
+                            <input class="cell_bd" type="text" v-model="form.floor_number" placeholder="请输入楼层" />
+                        </view>
+                        <!-- </picker> -->
                     </view>
                 </view>
                 <view class="cells">
@@ -83,31 +88,20 @@
             <view class="fd" @tap="next">下一步</view>
         </view>
         <view class="step_two next" v-else-if="step === 1">
-            <view class="cells">
+            <view class="cells" v-if="config_base && config_base.length">
                 <view class="cells_title">
                     一般配置
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view class="info_item">床</view>
-                    <view class="info_item">衣柜</view>
-                    <view class="info_item">桌椅</view>
-                    <view class="info_item">热水器</view>
+                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config_base" :key="i" @tap="chooseCfgBase(li)">{{li.value}}</view>
                 </view>
             </view>
-            <view class="cells">
+            <view class="cells" v-if="config_lightspot && config_lightspot.length">
                 <view class="cells_title">
                     房屋亮点
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view class="info_item">空调</view>
-                    <view class="info_item">洗衣机</view>
-                    <view class="info_item">冰箱</view>
-                    <view class="info_item">阳台</view>
-                    <view class="info_item">沙发</view>
-                    <view class="info_item">茶几</view>
-                    <view class="info_item">电梯</view>
-                    <view class="info_item">光线好</view>
-                    <view class="info_item">房大</view>
+                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{li.value}}</view>
                 </view>
             </view>
             <view class="cells">
@@ -128,7 +122,7 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     computed: {
-        ...mapState(["userInfo", "houseTempImg"])
+        ...mapState(["userInfo", "houseTempImg", "houseImg"])
     },
     data() {
         return {
@@ -136,27 +130,29 @@ export default {
             form: {
                 images: [],
                 landlord_id: "",
-                landlord_mobile: "",
+                // landlord_mobile: "",
                 rental: "",
-                address_street_id: 1969,
-                address_street: "上社15",
-                address_flag_id: 3752,
-                address_flag: "上社市场",
-                road_distance_id: 1,
-                road_distance: "第一栋",
-                address_detail: "二巷四号",
-                house_type_id: 10,
-                house_type: "一房一厅",
-                floor_number: 2,
-                contact_mobile: "19900010001",
-                wechat_number: "19900010001",
-                config_base_ids: "1,2",
-                config_base: "床,衣柜",
-                config_lightspot_ids: "1,2",
-                config_lightspot: "空调,洗衣机",
-                supplement: "非常好"
+                // address_street_id: 1969,
+                address_street: "",
+                // address_flag_id: 3752,
+                address_flag: "",
+                // road_distance_id: 1,
+                road_distance: "",
+                address_detail: "",
+                // house_type_id: 10,
+                house_type: "",
+                floor_number: "",
+                contact_mobile: "",
+                wechat_number: "",
+                config_base_ids: "",
+                config_base: "",
+                config_lightspot_ids: "",
+                config_lightspot: "",
+                supplement: ""
             },
-            house_id: ""
+            house_id: "",
+            config_base: null,
+            config_lightspot: null
         };
     },
     onLoad(res) {
@@ -164,12 +160,46 @@ export default {
             this.house_id = res.id;
         }
     },
+    onShow() {
+        if (this.houseImg && this.houseImg.length) {
+            this.form.images = this.houseImg;
+        }
+    },
     onReady() {
         this.getData();
     },
     methods: {
         ...mapMutations(["setHouseTempImg"]),
-        getData() {},
+        getData() {
+            if (this.house_id) {
+                this.$request.getHouse({ id: this.house_id }).then(res => {});
+            }
+            this.$request.getConfig().then(res => {
+                if (res && res.data) {
+                    const arr = this.filterArr(res.data, [
+                        "config_base",
+                        "config_lightspot"
+                    ]);
+                    this.config_base = arr[0];
+                    this.config_lightspot = arr[1];
+                }
+            });
+        },
+        filterArr(data = [], condition) {
+            return data.reduce(
+                (arr, item) => {
+                    if (item.type === condition[0]) {
+                        item.active = false;
+                        arr[0].push(item);
+                    } else if (item.type === condition[1]) {
+                        item.active = false;
+                        arr[1].push(item);
+                    }
+                    return arr;
+                },
+                [[], []]
+            );
+        },
         chooseImg() {
             const self = this;
             if (this.houseTempImg && this.houseTempImg.length) {
@@ -178,7 +208,6 @@ export default {
                 uni.chooseImage({
                     sourceType: "album",
                     success(e) {
-                        console.log(e);
                         if (e.errMsg === "chooseImage:ok") {
                             self.setHouseTempImg(e.tempFilePaths);
                             self.goPage(`/pages/publish/img`);
@@ -188,38 +217,74 @@ export default {
             }
         },
         next() {
-            this.step = 1;
-        },
-        validate() {
-            return new Promise((resolve, reject) => {
-                if (!this.form.name) {
-                    reject({
-                        msg: "请输入姓名"
+            this.$validate(this.form, {
+                name: [{ required: true, msg: "请输入姓名" }],
+                rental: [{ required: true, msg: "请输入租金" }],
+                floor_number: [{ required: true, msg: "请输入楼层" }],
+                postion_street: [{ required: true, msg: "请选择地址" }],
+                images: [{ type: "array", msg: "请上传图片" }]
+            }).then(
+                () => {
+                    this.step = 1;
+                },
+                e => {
+                    uni.showToast({
+                        title: e.msg,
+                        icon: "none"
                     });
                 }
-                if (!this.form.mobile) {
-                    reject({
-                        msg: "请输入手机号码"
-                    });
-                }
-                if (!this.testMobile(this.form.mobile)) {
-                    reject({
-                        msg: "手机号码不正确"
-                    });
-                }
-                if (!this.form.postion_street) {
-                    reject({
-                        msg: "请选择地址"
-                    });
-                }
-                resolve();
-            });
+            );
         },
         confirm() {
+            const config_base = this.config_base.filter(item => item.active);
+            const config_lightspot = this.config_lightspot.filter(
+                item => item.active
+            );
+            this.form.landlord_id = this.userInfo.landlord_id;
+            this.form.config_base_ids = config_base
+                .map(item => item.id)
+                .join(",");
+            this.form.config_base = config_base
+                .map(item => item.value)
+                .join(",");
+            this.form.config_lightspot_ids = config_lightspot
+                .map(item => item.id)
+                .join(",");
+            this.form.config_lightspot = config_lightspot
+                .map(item => item.value)
+                .join(",");
             this.$validate(this.form, {
-                name: [{}]
-            });
-            this.goPage({ path: `/pages/publish/publish_succ`, replace: true });
+                name: [{ required: true, msg: "请输入姓名" }],
+                rental: [{ required: true, msg: "请输入租金" }],
+                floor_number: [{ required: true, msg: "请输入楼层" }],
+                postion_street: [{ required: true, msg: "请选择地址" }],
+                images: [{ type: "array", msg: "请上传图片" }]
+            }).then(
+                () => {
+                    this.$request.addHouse(this.form).then(res => {
+                        if (res && res.data) {
+                            this.goPage({
+                                path: `/pages/publish/publish_succ?id=${
+                                    res.data
+                                }`,
+                                replace: true
+                            });
+                        }
+                    });
+                },
+                e => {
+                    uni.showToast({
+                        title: e.msg,
+                        icon: "none"
+                    });
+                }
+            );
+        },
+        chooseCfgBase(li) {
+            li.active = !li.active;
+        },
+        chooseCfgLight(li) {
+            li.active = !li.active;
         }
     }
 };

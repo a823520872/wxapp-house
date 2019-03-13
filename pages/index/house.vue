@@ -5,7 +5,7 @@
                 <view class="cells">
                     <view class="cell intro m_flex_wrap">
                         <view class="house_name m_flex_justify">
-                            <view class="title">单间·天河区·上社</view>
+                            <view class="title">{{detail.house_type}}</view>
                             <button class="share m_button plain m_flex_middle" open-type="share">
                                 <image src="/static/image/index/share.png" mode="aspectFit"></image>
                                 <text>分享</text>
@@ -28,18 +28,18 @@
                             <text class="intro_hd">地址：</text>
                             <text class="intro_bd">【{{detail.address_street}}】【{{detail.address_flag}}】【{{detail.address_detail}}】【{{detail.road_distance}}】</text>
                         </view>
-                        <view class="intro_cell m_textover">
+                        <view class="intro_cell m_textover" v-if="detail.config_base || detail.config_lightspot">
                             <text class="intro_hd">亮点：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.config_base">【{{detail.config_base}}】</text>
                                 <text v-if="detail.config_lightspot">【{{detail.config_lightspot}}】</text>
                             </text>
                         </view>
-                        <view class="intro_cell m_textover">
+                        <view class="intro_cell m_textover" v-if="detail.address">
                             <text class="intro_hd">具体地址：</text>
-                            <text class="intro_bd">广州上社乐泰路大街9号</text>
+                            <text class="intro_bd">{{detail.address}}</text>
                         </view>
-                        <view class="intro_cell m_textover">
+                        <view class="intro_cell m_textover" v-if="detail.supplement">
                             <text class="intro_hd">备注：</text>
                             <text class="intro_bd">{{detail.supplement}}</text>
                         </view>
@@ -48,10 +48,10 @@
                 <view class="cells">
                     <view class="cell m_flex_middle">
                         <view class="avatar">
-                            <image src="/static/image/index/time.png" mode="aspectFit"></image>
+                            <image :src="detail.landlord_info.avatar" mode="aspectFit"></image>
                         </view>
                         <view class="user m_flex_item">
-                            <view class="name">房东微信昵称</view>
+                            <view class="name">{{detail.landlord_info.nickname}}</view>
                             <view class="m_flex_middle">
                                 <text>阅读量：500</text>
                             </view>
@@ -61,17 +61,11 @@
                         </view>
                     </view>
                 </view>
-                <view class="cells">
+                <view class="cells" v-if="detail.image_urls && detail.image_urls.length">
                     <view class="cells_title title">房源图片</view>
                     <view class="cell">
-                        <view class="house_img">
-                            <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
-                        </view>
-                        <view class="house_img">
-                            <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
-                        </view>
-                        <view class="house_img">
-                            <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
+                        <view class="house_img" v-for="(li, i) in detail.image_urls" :key="i">
+                            <image :src="li" mode="aspectFill"></image>
                         </view>
                     </view>
                 </view>
@@ -146,6 +140,10 @@ export default {
         if (res.id) {
             this.id = res.id;
         }
+        if (res.scene) {
+            const params = decodeURIComponent(res.scene);
+            this.id = params.split("=")[1];
+        }
     },
     onShow() {
         const tk = uni.getStorageSync("tk");
@@ -163,6 +161,8 @@ export default {
             this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {
                     res.data.create_at = this.getTime(res.data.createtime);
+                    res.data.image_urls =
+                        res.data.image_urls && res.data.image_urls.split(",");
                     this.detail = { ...res.data };
                 }
             });

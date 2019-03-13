@@ -13,6 +13,10 @@ export default (obj, params) => {
                         const msg = item.msg || `手机号码错误`
                         reject({ msg })
                     }
+                    if (item.type === 'array' && !(obj[key] && obj[key].length)) {
+                        const msg = item.msg
+                        reject({ msg })
+                    }
                 })
             }
         }

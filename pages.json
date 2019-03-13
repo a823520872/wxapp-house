@@ -120,7 +120,7 @@
             {
                 "name": "房源详情",
                 "path": "pages/index/house",
-                "query": "id=16"
+                "query": "id=19"
             },
             {
                 "name": "入驻",
@@ -140,7 +140,8 @@
             },
             {
                 "name": "发布成功",
-                "path": "pages/publish/publish_succ"
+                "path": "pages/publish/publish_succ",
+                "query": "id=1"
             },
             {
                 "name": "我的",

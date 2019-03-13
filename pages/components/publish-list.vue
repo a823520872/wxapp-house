@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="list">
-            <view class="item" v-for="(li, i) in list" :key="i" @tap="goPage(`/pages/index/house`)">
+            <view class="item" v-for="(li, i) in list" :key="i" @tap="goPage(`/pages/index/house?id=${li.id}`)">
                 <view class="bd m_flex">
                     <view class="img">
                         <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>

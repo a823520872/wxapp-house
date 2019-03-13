@@ -10,7 +10,8 @@ const store = new Vuex.Store({
         hasLogin: false,
         hasRegister: false,
         userInfo: null,
-        houseTempImg: []
+        houseTempImg: [],
+        houseImg: []
     },
     mutations: {
         setCode(state, code) {
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
         },
         setHouseTempImg(state, arr) {
             state.houseTempImg = arr
+        },
+        setHouseImg(state, arr) {
+            state.houseImg = arr
         }
     }
 })

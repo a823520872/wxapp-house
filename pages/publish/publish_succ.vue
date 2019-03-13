@@ -15,7 +15,7 @@
             <canvas class="cvs_avatar" canvas-id="myAvatar"></canvas>
             <canvas class="cvs" canvas-id="myCanvas"></canvas>
         </view>
-        <image class="none" :src="img.list[img.index].url" @load="getImageInfo"></image>
+        <image v-if="img.list.length" class="none" :src="img.list[img.index].url" @load="getImageInfo"></image>
     </view>
 </template>
 
@@ -26,53 +26,62 @@ import Canvas from "../../common/canvas.js";
 import getPosition from "../../common/position.js";
 export default {
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo", "houseImg"])
     },
     components: {
         poster
     },
     data() {
         return {
+            id: "",
             uri: "",
             img: {
-                list: [
-                    {
-                        url:
-                            "https://images.cnblogs.com/cnblogs_com/tomxu/tom.jpg",
-                        width: 0,
-                        height: 0
-                    },
-                    {
-                        url:
-                            "https://cloud.githubusercontent.com/assets/227713/22960991/812999bc-f37d-11e6-8bd5-a96ca37d0ff2.png",
-                        width: 0,
-                        height: 0
-                    },
-                    {
-                        url:
-                            "https://zos.alipayobjects.com/rmsportal/VTcUYAaoKqXyHJbLAPyF.svg",
-                        width: 0,
-                        height: 0
-                    }
-                ],
+                list: [],
                 index: 0
-            }
+            },
+            qrcode: ""
         };
+    },
+    onLoad(res) {
+        if (res.id) {
+            this.id = res.id;
+        }
     },
     onReady() {
         this.$request.login().then(code => {
             if (code) {
                 this.$request.getUserInfo().then(res => {
-                    if (res && res.data) {
-                        this.showPoster();
-                    }
+                    this.getQRCode();
                 });
+                this.getDetail();
             }
         });
     },
     methods: {
+        getDetail() {
+            this.$request.getHouse({ id: this.id }).then(res => {
+                if (res && res.data) {
+                    this.img.list = res.data.image_urls
+                        ? res.data.image_urls
+                              .split(",")
+                              .map(item => ({ url: item }))
+                        : [];
+                }
+            });
+        },
         getQRCode() {
-            this.$request.getQRCode().then(res => {});
+            this.$request
+                .getQRCode({
+                    scene: encodeURIComponent(`houseresource_id=${this.id}`),
+                    page: `/pages/index/house?id=${this.id}&rid=${
+                        this.userInfo.id
+                    }`,
+                    width: "350"
+                })
+                .then(res => {
+                    console.log(res);
+                    this.qrcode = res.data;
+                });
         },
         getAvatar() {
             const cvs = new Canvas("myAvatar");
@@ -96,6 +105,7 @@ export default {
                     173
                 );
                 cvs.drawImage(tempFile, 40, 16, 80, 80);
+                cvs.drawImage(this.qrcode, 220, 790, 95, 95);
                 cvs.ctx.setFillStyle("#2b2b2b");
                 cvs.ctx.setFontSize(25);
                 cvs.ctx.setTextBaseline("top");
@@ -129,7 +139,15 @@ export default {
                     mask: true
                 });
                 const max = this.img.list.length - 1;
-                if (this.userInfo && this.img.list[max].width) {
+                if (this.img.list.length) {
+                    if (this.img.list[max].width) {
+                        this.createCanvas().then(path => {
+                            this.uri = path;
+                            uni.hideLoading();
+                            this.showPoster();
+                        });
+                    }
+                } else {
                     this.createCanvas().then(path => {
                         this.uri = path;
                         uni.hideLoading();

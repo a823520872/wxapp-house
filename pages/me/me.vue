@@ -47,6 +47,9 @@
                 <view class="cell_hd">联系村长</view>
                 <button class="cell_fd m_button plain" open-type="contact">全能村长，24小时在线</button>
             </view>
+            <view class="cell m_flex_justify m_flex_middle" @tap="clear">
+                <view class="cell_hd">清楚授权</view>
+            </view>
         </view>
         <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
@@ -104,9 +107,7 @@ export default {
             });
         },
         getInfo() {
-            this.$request.getUserInfo().then(res => {
-                console.log(res);
-            });
+            this.$request.getUserInfo();
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
@@ -122,6 +123,20 @@ export default {
         },
         to(url) {
             this.userInfo ? this.goPage(url) : this.getUserInfo();
+        },
+        clear() {
+            try {
+                uni.clearStorageSync();
+                uni.reLaunch({
+                    url: "/pages/me/me"
+                });
+            } catch (e) {
+                //TODO handle the exception
+                uni.showToast({
+                    title: "清楚授权失败",
+                    icon: "none"
+                });
+            }
         }
     }
 };

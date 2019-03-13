@@ -90,9 +90,9 @@ export default {
         addr() {
             return (
                 (this.form.position_province || "") +
-                    (this.form.position_city || "") +
-                    (this.form.postion_district || "") +
-                    (this.form.postion_street || "") || "广州市"
+                (this.form.position_city || "") +
+                (this.form.postion_district || "") +
+                (this.form.postion_street || "")
             );
         }
     },
@@ -210,6 +210,7 @@ export default {
 }
 .addr {
     &_picker {
+        height: 100%;
         padding-right: 30upx;
     }
     &_item {

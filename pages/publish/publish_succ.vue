@@ -79,8 +79,9 @@ export default {
                     width: "350"
                 })
                 .then(res => {
-                    console.log(res);
-                    this.qrcode = res.data;
+                    if (res && res.data) {
+                        this.qrcode = res.data;
+                    }
                 });
         },
         getAvatar() {

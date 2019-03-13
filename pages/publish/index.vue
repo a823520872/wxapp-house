@@ -1,7 +1,8 @@
 <template>
     <view class="content content_bg_ff">
         <view class="not_landlord" v-if="step === 2">
-            <view class="bd m_flex">
+            <view class="bd">
+                <view>您未入驻，无法发布房源</view>
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
             <view class="fd">
@@ -72,7 +73,7 @@ export default {
     },
     data() {
         return {
-            step: 2,
+            step: 0,
             temp: {
                 contact_mobile: "",
                 wechat_number: ""
@@ -82,11 +83,7 @@ export default {
     onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
-            if (!this.userInfo) {
-                this.getInfo();
-            } else {
-                this.step = this.userInfo.is_landlord;
-            }
+            this.getInfo();
         } else {
             this.login();
         }
@@ -98,8 +95,8 @@ export default {
             });
         },
         getInfo() {
-            this.$request.getUserInfo().then(res => {
-                this.step = res.data.is_landlord;
+            this.$request.getUserInfo({}, true).then(res => {
+                this.step = +res.data.is_landlord;
             });
         },
         getUserInfo(e) {
@@ -126,6 +123,8 @@ export default {
         width: 750upx;
         height: 2228upx;
         padding-top: 90upx;
+        text-align: center;
+        line-height: 40upx;
     }
 
     .fd {

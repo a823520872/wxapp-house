@@ -338,6 +338,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 10;
     height: 100upx;
     line-height: 100upx;
     text-align: center;

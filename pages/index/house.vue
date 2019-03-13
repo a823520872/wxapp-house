@@ -348,6 +348,8 @@ export default {
     .gift {
         display: flex;
         border-radius: 0;
+        border: none;
+        line-height: 1.2;
         background-color: $primary-color;
         font-size: 20upx;
         color: #fff;

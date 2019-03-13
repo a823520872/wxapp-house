@@ -28,6 +28,7 @@ export default {
             this.$emit("update:list", []);
         },
         init(obj) {
+            this.empty();
             obj.fn = obj.fn || ((data = []) => data);
             this.obj = obj;
             return this.getData(obj.page ? obj.page : -1);

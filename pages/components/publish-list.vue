@@ -5,21 +5,30 @@
                 <view class="bd m_flex">
                     <view class="img">
                         <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
-                        <!-- <view class="rent m_textover">租金：¥1000/月</view> -->
+                        <view v-if="li.is_booked === 1" class="rent m_textover">租金：¥{{li.rental}}/月</view>
                     </view>
                     <view class="intro m_flex_item">
-                        <view class="intro_cell name">单间·天河区·上社</view>
-                        <view class="intro_cell price">¥1000/月</view>
+                        <view class="intro_cell name">{{li.house_type}}</view>
+                        <view v-if="li.is_booked === 2" class="intro_cell price">¥{{li.rental}}/月</view>
                         <view class="intro_cell addr">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
-                            <text>上社乐泰路大街9号</text>
+                            <text>{{li.address_street + li.address_flag + li.address_detail + li.road_distance}}</text>
+                        </view>
+                        <view v-if="li.is_booked === 1" class="intro_cell addr">
+                            <image src="/static/image/index/addr.png" mode="aspectFit"></image>
+                            <text>{{li.floor_number}}楼</text>
                         </view>
                     </view>
                 </view>
                 <view class="fd m_flex_right">
-                    <button class="m_button plain" @tap.stop="edit">编辑</button>
-                    <button class="m_button plain" @tap.stop="rented">已租</button>
-                    <button class="m_button primary" @tap.stop="">生产海报</button>
+                    <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
+                    <block v-if="li.is_booked === 2">
+                        <button class="m_button plain" @tap.stop="rented(li)">已租</button>
+                        <button class="m_button primary" @tap.stop="">生产海报</button>
+                    </block>
+                    <block v-else-if="li.is_booked === 1">
+                        <button class="m_button primary" @tap.stop="">发布</button>
+                    </block>
                 </view>
             </view>
         </view>
@@ -54,10 +63,10 @@ export default {
         }
     },
     methods: {
-        edit() {
-            this.goPage(`/pages/publish/house`);
+        edit(li) {
+            this.goPage(`/pages/publish/house?id=${li.id}`);
         },
-        rented() {
+        rented(li) {
             this.$refs.modal.show({
                 title: "联系方式",
                 confirmText: "确定",

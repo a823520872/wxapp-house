@@ -94,7 +94,6 @@ export default {
     methods: {
         login() {
             this.$request.login().then(code => {
-                console.log(code);
                 this.step = 2;
             });
         },

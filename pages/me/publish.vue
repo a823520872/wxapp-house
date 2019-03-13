@@ -2,17 +2,17 @@
     <view class="content">
         <view class="hd">
             <view class="avatar">
-                <image mode="aspectFit"></image>
+                <image :src="userInfo.avatar" mode="aspectFit"></image>
             </view>
-            <view class="name">房东微信昵称</view>
+            <view class="name">{{userInfo.nickname}}</view>
             <view class="tips">已发布29套 还有2套空房</view>
         </view>
         <view class="tabs m_flex">
             <view class="m_flex_item">
-                <view class="tab active">空房（发布中）</view>
+                <view :class="{'tab': true, 'active' : tab === 2}" @tap="chooseTab(2)">空房（发布中）</view>
             </view>
             <view class="m_flex_item">
-                <view class="tab">已租（未发布）</view>
+                <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">已租（未发布）</view>
             </view>
         </view>
         <publish-list :list.sync="list"></publish-list>
@@ -21,25 +21,24 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import publishList from "../components/publish-list.vue";
 export default {
     components: {
         publishList
     },
+    computed: {
+        ...mapState(["userInfo"])
+    },
     data() {
         return {
+            tab: 2,
             list: []
         };
     },
     onLoad(res) {},
     onReady() {
-        this.$refs.page.init({
-            url: "getMyHouse",
-            params: {
-                hr_id: ""
-            },
-            fn: null
-        });
+        this.getData();
     },
     onPullDownRefresh() {
         this.$refs.page.getData(1);
@@ -47,7 +46,23 @@ export default {
     onReachBottom() {
         this.$refs.page.next();
     },
-    methods: {}
+    methods: {
+        getData() {
+            const self = this;
+            this.$refs.page.init({
+                url: "getMyHouse",
+                params: {
+                    hr_id: "",
+                    is_booked: self.tab
+                },
+                fn: null
+            });
+        },
+        chooseTab(v) {
+            this.tab = v;
+            this.getData();
+        }
+    }
 };
 </script>
 

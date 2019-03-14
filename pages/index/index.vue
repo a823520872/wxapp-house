@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
 import HouseList from "../components/house-list";
 export default {
     components: {
@@ -125,6 +126,7 @@ export default {
         this.getData();
     },
     methods: {
+        ...mapActions(["login", "getInfo"]),
         init() {
             const self = this;
             this.$refs.page.init({
@@ -148,12 +150,6 @@ export default {
             } else {
                 this.login();
             }
-        },
-        login() {
-            this.$request.login();
-        },
-        getInfo() {
-            this.$request.getUserInfo();
         },
         getData() {
             this.$request.getConfig().then(res => {

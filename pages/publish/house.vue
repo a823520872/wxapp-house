@@ -3,7 +3,7 @@
         <view class="step_one" v-if="step === 0">
             <view class="hd">
                 <view class="bg">
-                    <image src="/static/image/publish/house_bg.png" mode="aspectFit"></image>
+                    <image :src="houseTempImg.length ? houseTempImg[0] : '/static/image/publish/house_bg.png'" mode="aspectFit"></image>
                 </view>
                 <view class="warn">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
                 <view class="main m_flex_column m_flex_middle">
@@ -170,10 +170,20 @@ export default {
     },
     methods: {
         ...mapMutations(["setHouseTempImg"]),
+        ...mapActions(["login", "getInfo"]),
         getData() {
             if (this.house_id) {
                 this.$request.getHouse({ id: this.house_id }).then(res => {});
             }
+            this.getInfo().then(() => {
+                this.$request
+                    .getLandlordDetail({ id: this.userInfo.landlord_id })
+                    .then(res => {
+                        if (res && res.data) {
+                            this.form.contact_mobile = res.data.mobile;
+                        }
+                    });
+            });
             this.$request.getConfig().then(res => {
                 if (res && res.data) {
                     const arr = this.filterArr(res.data, [
@@ -220,7 +230,9 @@ export default {
             this.$validate(this.form, {
                 name: [{ required: true, msg: "请输入姓名" }],
                 rental: [{ required: true, msg: "请输入租金" }],
-                floor_number: [{ required: true, msg: "请输入楼层" }],
+                floor_number: [
+                    { required: true, type: "number", msg: "楼层请输入数字" }
+                ],
                 postion_street: [{ required: true, msg: "请选择地址" }],
                 images: [{ type: "array", msg: "请上传图片" }]
             }).then(
@@ -326,6 +338,7 @@ export default {
         margin-top: 56upx;
         border: 1upx solid #cad3d7;
         background-color: #738995;
+        // background-color: transparent;
         border-radius: 50%;
         font-size: 25upx;
         color: #fff;

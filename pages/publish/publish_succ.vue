@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import poster from "../components/poster.vue";
 import Canvas from "../../common/canvas.js";
 import getPosition from "../../common/position.js";
@@ -48,7 +48,7 @@ export default {
         }
     },
     onReady() {
-        this.$request.login().then(code => {
+        this.login().then(code => {
             if (code) {
                 this.$request.getUserInfo().then(res => {
                     this.getQRCode();
@@ -58,6 +58,7 @@ export default {
         });
     },
     methods: {
+        ...mapActions(["login", "getInfo"]),
         getDetail() {
             this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {

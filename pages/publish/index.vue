@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import linkModal from "../components/link-modal";
 export default {
     components: {
@@ -83,22 +83,17 @@ export default {
     onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
-            this.getInfo();
+            this.getInfo(true).then(res => {
+                this.step = +res.data.is_landlord;
+            });
         } else {
-            this.login();
+            this.login().then(code => {
+                this.step = 2;
+            });
         }
     },
     methods: {
-        login() {
-            this.$request.login().then(code => {
-                this.step = 2;
-            });
-        },
-        getInfo() {
-            this.$request.getUserInfo({}, true).then(res => {
-                this.step = +res.data.is_landlord;
-            });
-        },
+        ...mapActions(["login", "getInfo"]),
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },

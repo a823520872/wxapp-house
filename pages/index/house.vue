@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import linkModal from "../components/link-modal";
 export default {
     computed: {
@@ -157,6 +157,7 @@ export default {
         this.getData();
     },
     methods: {
+        ...mapActions(["login", "getInfo"]),
         getData() {
             this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {
@@ -166,12 +167,6 @@ export default {
                     this.detail = { ...res.data };
                 }
             });
-        },
-        login() {
-            this.$request.login();
-        },
-        getInfo() {
-            this.$request.getUserInfo();
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);

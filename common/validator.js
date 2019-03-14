@@ -17,6 +17,10 @@ export default (obj, params) => {
                         const msg = item.msg
                         reject({ msg })
                     }
+                    if (item.type === 'number') {
+                        const n = +obj[key]
+                        if (!n) reject({ msg })
+                    }
                 })
             }
         }

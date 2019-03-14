@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import amapFile from "../common/amap-wx.js";
 
 var myAmapFun = new amapFile.AMapWX({
@@ -43,8 +43,9 @@ export default {
     },
     methods: {
         ...mapMutations(["setUserInfo"]),
+        ...mapActions(["login", "getToken"]),
         signUp(data) {
-            this.$request.getToken(data).then(res => {
+            this.getToken(data).then(res => {
                 if (res && res.data) {
                     this.session3rd = res.data.session3rd;
                     // this.getPhone();
@@ -74,7 +75,7 @@ export default {
             }
         },
         getUserInfo(e) {
-            this.$request.login().then(code => {
+            this.login().then(code => {
                 if (e) {
                     this.getUserInfoByBtn(e);
                 } else {
@@ -111,7 +112,7 @@ export default {
             }
         },
         getPhone(e) {
-            this.$request.login().then(code => {
+            this.login().then(code => {
                 if (e) {
                     this.getPhoneByBtn(e);
                 } else {

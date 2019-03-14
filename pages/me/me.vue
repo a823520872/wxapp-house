@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     computed: {
         ...mapState(["userInfo"])
@@ -85,7 +85,11 @@ export default {
                 this.getInfo();
             }
         } else {
-            this.login();
+            this.login().then(code => {
+                if (code) {
+                    !this.userInfo && this.getInfo();
+                }
+            });
         }
     },
     onShareAppMessage() {
@@ -99,16 +103,7 @@ export default {
         };
     },
     methods: {
-        login() {
-            this.$request.login().then(code => {
-                if (code) {
-                    !this.userInfo && this.getUserInfo();
-                }
-            });
-        },
-        getInfo() {
-            this.$request.getUserInfo();
-        },
+        ...mapActions(["login", "getInfo"]),
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },

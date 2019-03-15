@@ -23,27 +23,27 @@
                             <input class="cell_bd" type="text" v-model="form.rental" placeholder="请输入房源租金" />
                         </view>
                     </view>
-                    <view class="cell m_flex_center m_flex_middle">
-                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
-                        <view class="cell_box m_flex_item">
+                    <view class="cell m_flex_center m_flex_middle" v-if="config">
+                        <picker class="cell_box m_flex_item" :range="address_street" mode="multiSelector" @change="pickerChange('address_street', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">地址</view>
-                            <!-- <view class="cell_bd">请选择</view> -->
-                            <input class="cell_bd" type="text" v-model="form.address_street" placeholder="请输入地址" />
-                        </view>
-                        <!-- </picker> -->
-                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
-                        <view class="cell_box m_flex_item">
+                            <view class="cell_bd">{{form.address_street ? form.address_street : '请选择'}}</view>
+                            <!-- <input class="cell_bd" type="text" v-model="form.address_street" placeholder="请输入地址" /> -->
+                            <!-- </view> -->
+                        </picker>
+                        <picker class="cell_box m_flex_item" :range="address_flag" @change="pickerChange('address_flag', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">标志建筑</view>
-                            <!-- <view class="cell_bd">请选择</view> -->
-                            <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" />
-                        </view>
-                        <!-- </picker> -->
-                        <picker class="m_flex_item" :range="road_distance" @change="pickerChange('road_distance', $event)">
-                            <view class="cell_box m_flex_item">
-                                <view class="cell_hd">路边距离</view>
-                                <view class="cell_bd">{{form.road_distance ? form.road_distance : '请选择'}}</view>
-                                <!-- <input class="cell_bd" type="text" v-model="form.road_distance" placeholder="请输入路边距离" /> -->
-                            </view>
+                            <view class="cell_bd">{{form.address_flag ? form.address_flag : '请选择'}}</view>
+                            <!-- <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" /> -->
+                            <!-- </view> -->
+                        </picker>
+                        <picker class="cell_box m_flex_item" :range="road_distance" @change="pickerChange('road_distance', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
+                            <view class="cell_hd">路边距离</view>
+                            <view class="cell_bd">{{form.road_distance ? form.road_distance : '请选择'}}</view>
+                            <!-- <input class="cell_bd" type="text" v-model="form.road_distance" placeholder="请输入路边距离" /> -->
+                            <!-- </view> -->
                         </picker>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
@@ -53,14 +53,14 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <!-- <picker class="cell_box m_flex_item" :range="[]" @change=""> -->
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">房型</view>
                             <!-- <view class="cell_bd">请选择</view> -->
                             <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
                         </view>
                         <!-- </picker> -->
-                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
+                        <!-- <picker class="cell_box m_flex_item" :range="[]" @change=""> -->
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">楼层</view>
                             <!-- <view class="cell_bd">请选择</view> -->
@@ -123,12 +123,31 @@ import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     computed: {
         ...mapState(["userInfo", "houseTempImg", "houseImg"]),
+        address_street() {
+            return (
+                this.config &&
+                this.config.address_street &&
+                this.config.address_street.map(lis => {
+                    return lis.map(li => li.name);
+                })
+            );
+        },
+        address_flag() {
+            return (
+                this.config &&
+                this.config.address_flag &&
+                this.config.address_flag.map(item => item.shortname || "")
+            );
+        },
         road_distance() {
             return (
                 this.config &&
                 this.config.road_distance &&
                 this.config.road_distance.map(item => item.value)
             );
+        },
+        address() {
+            return this.form.address_street || "";
         }
     },
     data() {
@@ -139,11 +158,11 @@ export default {
                 landlord_id: "",
                 // landlord_mobile: "",
                 rental: "",
-                // address_street_id: 1969,
+                address_street_id: 1969,
                 address_street: "",
-                // address_flag_id: 3752,
+                address_flag_id: 3752,
                 address_flag: "",
-                // road_distance_id: 1,
+                road_distance_id: 1,
                 road_distance: "",
                 address_detail: "",
                 // house_type_id: 10,
@@ -158,9 +177,12 @@ export default {
                 supplement: ""
             },
             house_id: "",
-            config: null
-            // config_base: null,
-            // config_lightspot: null
+            config: {
+                address_street: null,
+                address_flag: null,
+                config_base: null,
+                config_lightspot: null
+            }
         };
     },
     onLoad(res) {
@@ -174,15 +196,23 @@ export default {
         }
     },
     onReady() {
-        this.getData();
+        this.getInfo().then(() => {
+            this.getData();
+        });
     },
     methods: {
         ...mapMutations(["setHouseTempImg", "setHouseImg"]),
         ...mapActions(["login", "getInfo"]),
         getData() {
+            this.getConfig();
+            this.getAddr();
+            this.getHouse();
+            this.getLandlord();
+        },
+        getConfig() {
             this.$request.getConfig().then(res => {
                 if (res && res.data) {
-                    this.config = res.data.reduce((obj, item) => {
+                    const config = res.data.reduce((obj, item) => {
                         if (!obj[item.type]) {
                             obj[item.type] = [];
                         }
@@ -190,8 +220,78 @@ export default {
                         obj[item.type].push(item);
                         return obj;
                     }, {});
+
+                    this.config = { ...this.config, ...config };
                 }
             });
+        },
+        getAddr() {
+            this.config = {
+                ...this.config,
+                address_street: [
+                    [
+                        {
+                            id: 1965,
+                            name: "广州市",
+                            first: "G",
+                            pinyin: "guangzhou",
+                            level: 2,
+                            active: true
+                        }
+                    ],
+                    [
+                        {
+                            id: 1969,
+                            name: "天河区",
+                            first: "T",
+                            pinyin: "tianhe",
+                            level: 3,
+                            active: true
+                        }
+                    ],
+                    [
+                        {
+                            id: 3749,
+                            name: "上社",
+                            first: "S",
+                            level: 4,
+                            active: true
+                        },
+                        {
+                            id: 3750,
+                            name: "棠东",
+                            first: "T",
+                            level: 4,
+                            active: false
+                        },
+                        {
+                            id: 3751,
+                            name: "棠下",
+                            first: "T",
+                            level: 4,
+                            active: false
+                        }
+                    ]
+                ]
+            };
+            this.getAreaFlag(3749);
+        },
+        getAreaFlag(id) {
+            console.log(id);
+            this.$request.getAreaFlag({ pid_area_street: id }).then(res => {
+                if (res && res.data) {
+                    try {
+                        this.config = {
+                            ...this.config,
+                            address_flag: res.data
+                        };
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            });
+        },
+        getHouse() {
             if (this.house_id) {
                 this.$request.getHouse({ id: this.house_id }).then(res => {
                     if (res && res.data) {
@@ -205,15 +305,15 @@ export default {
                     }
                 });
             }
-            this.getInfo().then(() => {
-                this.$request
-                    .getLandlordDetail({ id: this.userInfo.landlord_id })
-                    .then(res => {
-                        if (res && res.data) {
-                            this.form.contact_mobile = res.data.mobile;
-                        }
-                    });
-            });
+        },
+        getLandlord() {
+            this.$request
+                .getLandlordDetail({ id: this.userInfo.landlord_id })
+                .then(res => {
+                    if (res && res.data) {
+                        this.form.contact_mobile = res.data.mobile;
+                    }
+                });
         },
         chooseImg() {
             const self = this;
@@ -231,10 +331,36 @@ export default {
                 });
             }
         },
-        pickerChange(item, e) {
-            this.config[item][e.detail.value].active = true;
-            if (item === "road_distance") {
-                this.form[item] = this.config[item][e.detail.value].value;
+        pickerChange(key, e) {
+            console.log(key, e.detail.value);
+            switch (key) {
+                case "address_street":
+                    const item = this.config.address_street[2][
+                        e.detail.value[2]
+                    ];
+                    this.getAreaFlag(item.id);
+                    this.form.address_street = item.name;
+                    this.form.address_street_id = item.id;
+                    break;
+                case "address_flag":
+                    this.form.address_flag = this.config.address_flag[
+                        e.detail.value
+                    ].shortname;
+                    this.form.address_flag_id = this.config.address_flag[
+                        e.detail.value
+                    ].id;
+                    break;
+                case "road_distance":
+                    this.form.road_distance = this.config.road_distance[
+                        e.detail.value
+                    ].value;
+                    this.form.road_distance_id = this.config.road_distance[
+                        e.detail.value
+                    ].id;
+                    break;
+
+                default:
+                    break;
             }
         },
         next() {
@@ -415,6 +541,10 @@ export default {
     .cell {
         height: 132upx;
         border-top: 1upx solid $border-color;
+
+        // &_box {
+        //     height: 100%;
+        // }
 
         picker {
             position: relative;

@@ -88,22 +88,13 @@ export default {
         },
         getPhoneByBtn(e) {
             const self = this;
-            const {
-                errMsg,
-                rawData,
-                encryptedData,
-                iv,
-                signature,
-                userInfo
-            } = e.detail;
+            const { errMsg, encryptedData, iv } = e.detail;
             this.$refs.phone_modal.hide();
             if (errMsg === "getUserInfo:ok") {
                 this.$request
                     .bindMobile({
                         session3rd: self.session3rd,
-                        rawData,
                         encryptedData,
-                        signature,
                         iv
                     })
                     .then(res => {

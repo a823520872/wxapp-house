@@ -116,7 +116,7 @@ export default {
     }
 
     .title {
-        max-width: 40%;
+        width: 40%;
         font-size: 33upx;
     }
 

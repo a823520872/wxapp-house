@@ -72,6 +72,8 @@
         <view class="list">
             <house-list :list.sync="list"></house-list>
             <v-page ref="page" :list.sync="list"></v-page>
+            <view class="official-account"></view>
+            <official-account></official-account>
         </view>
         <v-modal ref="modal">
             <view slot="content">
@@ -112,7 +114,7 @@ export default {
         };
     },
     onLoad(res) {
-        console.log("onLoad");
+        console.log(res);
     },
     onShow() {},
     onPullDownRefresh() {

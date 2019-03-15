@@ -183,6 +183,23 @@ image {
 .modal {
     .link {
         padding: 10upx 0;
+        line-height: 56upx;
     }
+    .tips {
+        margin-top: 20upx;
+        line-height: 1.2;
+        text-align: left;
+        font-size: 25upx;
+        color: #ccc;
+    }
+}
+.official-account {
+    height: 84upx;
+}
+official-account {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 </style>

@@ -2,7 +2,7 @@
     <view class="content content_bg_ff">
         <view class="not_landlord" v-if="step === 2 || step === 3">
             <view class="bd">
-                <view>{{step === 2 ? '您未入驻，无法发布房源' : '待审核，请联系村长审核'}}</view>
+                <view>{{userInfo && userInfo.is_landlord === 3 ? '待审核，请联系村长审核' : '您未入驻，无法发布房源'}}</view>
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
             <view class="fd">
@@ -57,6 +57,8 @@
             </view>
             <view class="fd m_button primary" @tap="to(`/pages/publish/house`)">我承诺并立即发布</view>
         </view>
+        <view class="official-account"></view>
+        <official-account></official-account>
         <v-auth ref="auth"></v-auth>
     </view>
 </template>
@@ -73,19 +75,21 @@ export default {
     },
     data() {
         return {
-            step: 0
+            step: 2
         };
     },
     onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
             this.getInfo(true).then(res => {
-                this.step = +res.data.is_landlord;
+                if (res && res.data) {
+                    this.step = res.data.is_landlord;
+                } else {
+                    this.step = 2;
+                }
             });
         } else {
-            this.login().then(code => {
-                this.step = 2;
-            });
+            this.login();
         }
     },
     methods: {
@@ -113,7 +117,7 @@ export default {
     .bd {
         width: 750upx;
         height: 2228upx;
-        padding-top: 90upx;
+        padding-top: 70upx;
         text-align: center;
         line-height: 40upx;
     }

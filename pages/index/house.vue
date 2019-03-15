@@ -65,7 +65,7 @@
                     <view class="cells_title title">房源图片</view>
                     <view class="cell">
                         <view class="house_img" v-for="(li, i) in detail.image_urls" :key="i">
-                            <image :src="li" mode="aspectFill"></image>
+                            <image :src="li" mode="aspectFit"></image>
                         </view>
                     </view>
                 </view>
@@ -75,6 +75,8 @@
                         <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                     </view>
                 </view>
+                <view class="official-account"></view>
+                <official-account></official-account>
             </view>
             <view class="empty"></view>
             <view class="fd m_flex">
@@ -363,5 +365,8 @@ export default {
         width: 48upx;
         height: 48upx;
     }
+}
+official-account {
+    bottom: 100upx;
 }
 </style>

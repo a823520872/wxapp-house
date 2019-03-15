@@ -9,7 +9,7 @@
                     <view class="name m_textover">
                         <view v-if="userInfo">{{ userInfo.nickname }}</view>
                         <button v-else class="m_button" type="primary" plain open-type="getUserInfo" @getuserinfo="getUserInfo">
-                            登录
+                            点击登录
                         </button>
                     </view>
                     <view class="tabs m_flex">

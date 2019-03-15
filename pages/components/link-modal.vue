@@ -8,6 +8,7 @@
             <view>微信号：{{temp.wechat_number}}</view>
             <button class="m_button main" plain @tap="copy(temp.wechat_number)">复制</button>
         </view>
+        <view class="tips">温馨提示：电话或者微信请备注说明“来自村里租房”，可享受更好的服务~</view>
     </view>
 </template>
 

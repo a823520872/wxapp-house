@@ -81,6 +81,8 @@ export default {
                 postion_district: "",
                 // postion_street_id: "",
                 postion_street: "",
+                latitude: "",
+                longitude: "",
                 // num: "",
                 referrer_user_mobile: ""
             }
@@ -104,6 +106,12 @@ export default {
             this.$refs.auth.getLocation().then(
                 res => {
                     console.log(res);
+                    this.form.position_province = res.province;
+                    this.form.position_city = res.city;
+                    this.form.postion_district = res.county;
+                    this.form.postion_street = res.address;
+                    this.form.longitude = res.longitude;
+                    this.form.latitude = res.latitude;
                 },
                 e => {
                     console.log(e);
@@ -120,6 +128,8 @@ export default {
                     this.form.position_city = res.city;
                     this.form.postion_district = res.county;
                     this.form.postion_street = res.address;
+                    this.form.longitude = res.longitude;
+                    this.form.latitude = res.latitude;
                 },
                 e => {
                     console.log(e);

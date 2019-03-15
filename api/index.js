@@ -53,6 +53,6 @@ export default {
         return ajax('/api/upload/add', data, { type: 'post', upload: true, noToken: true })
     },
     getQRCode(data = {}) {
-        return ajax('/api/Wxapp/Wxapp/getWxcodeUnlimit', data, { type: 'post' })
+        return ajax('/api/House_Resource/getPoster', data, { type: 'post' })
     }
 }

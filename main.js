@@ -4,6 +4,7 @@ import App from './App'
 import store from './store/index.js'
 import api from './api/index.js'
 import util from './common/utils.js'
+import config from './common/config.js'
 import validator from './common/validator.js'
 
 import vMask from './components/mask.vue'
@@ -16,6 +17,11 @@ Vue.component('VAuth', VAuth)
 Vue.component('vPage', vPage)
 
 Vue.mixin({
+    data() {
+        return {
+            config
+        }
+    },
     methods: util
 })
 

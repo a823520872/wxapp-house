@@ -96,24 +96,35 @@ export default {
             );
         }
     },
+    onReady() {
+        this.getAddress();
+    },
     methods: {
-        getCode() {},
+        getAddress() {
+            this.$refs.auth.getLocation().then(
+                res => {
+                    console.log(res);
+                },
+                e => {
+                    console.log(e);
+                }
+            );
+        },
         addrChoose() {
-            const self = this;
-            this.$refs.auth.chooseLocation({
-                success(res) {
+            this.$refs.auth.chooseLocation().then(
+                res => {
                     // res.longitude
                     // res.latitude
                     // res.landmark
-                    self.form.position_province = res.province;
-                    self.form.position_city = res.city;
-                    self.form.postion_district = res.county;
-                    self.form.postion_street = res.address;
+                    this.form.position_province = res.province;
+                    this.form.position_city = res.city;
+                    this.form.postion_district = res.county;
+                    this.form.postion_street = res.address;
                 },
-                fail(e) {
+                e => {
                     console.log(e);
                 }
-            });
+            );
         },
         confirm() {
             this.$validate(this.form, {

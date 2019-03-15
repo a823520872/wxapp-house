@@ -1,20 +1,20 @@
 <template>
     <view class="content content_bg_ff">
-        <view class="not_landlord" v-if="step === 2">
+        <view class="not_landlord" v-if="step === 2 || step === 3">
             <view class="bd">
-                <view>您未入驻，无法发布房源</view>
+                <view>{{step === 2 ? '您未入驻，无法发布房源' : '待审核，请联系村长审核'}}</view>
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
             <view class="fd">
                 <button class="m_button plain" open-type="contact">咨询村长</button>
             </view>
-            <button class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
+            <button v-if="step === 2" class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
                 <view>申请</view>
                 <view>入驻</view>
             </button>
             <v-modal ref="modal">
                 <view slot="content">
-                    <link-modal :temp="temp"></link-modal>
+                    <link-modal :temp="config"></link-modal>
                 </view>
             </v-modal>
         </view>
@@ -73,11 +73,7 @@ export default {
     },
     data() {
         return {
-            step: 0,
-            temp: {
-                contact_mobile: "",
-                wechat_number: ""
-            }
+            step: 0
         };
     },
     onShow() {

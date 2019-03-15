@@ -2,13 +2,13 @@
     <view class="content">
         <view class="hd">
             <view class="banner">
-                <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
+                <image :src="houseTempImg[0]" @tap="showImg(houseTempImg[0])" mode="aspectFit"></image>
             </view>
             <view class="intro">首图</view>
         </view>
         <view class="bd m_flex_wrap">
             <view v-for="(li, i) in houseTempImg" :key="i" class="item">
-                <view class="img">
+                <view class="img" @tap="showImg(li)">
                     <image :src="li" mode="aspectFill"></image>
                 </view>
                 <view class="close" @tap="del(i)">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 const qiniuUploader = require("../../common/qiniuUploader.js");
 export default {
     computed: {
@@ -52,14 +52,12 @@ export default {
                 .getQiniuToken()
                 .then(
                     res => {
-                        console.log(1, res);
                         if (res.data && res.data.token) {
                             this.option.uptoken = res.data.token;
                             return res.data.token;
                         }
                     },
                     e => {
-                        console.log(1, e);
                         if (e.data && e.data.token) {
                             this.option.uptoken = e.data.token;
                             return res.data.token;
@@ -69,6 +67,12 @@ export default {
                 .catch(e => {
                     console.log(e);
                 });
+        },
+        showImg(li) {
+            uni.previewImage({
+                current: li,
+                urls: this.houseTempImg
+            })
         },
         chooseImg() {
             const self = this;
@@ -89,6 +93,9 @@ export default {
         },
         uploadImg(filePath) {
             return new Promise((resolve, reject) => {
+                if (filePath.indexOf("zhiqiang.ink") > 0) {
+                    resolve(filePath);
+                }
                 qiniuUploader.upload(
                     filePath,
                     res => {
@@ -108,14 +115,12 @@ export default {
                 });
                 Promise.all(tasks)
                     .then(res => {
-                        console.log(res);
                         this.setHouseImg(res);
                         uni.navigateBack({
                             delta: 1
                         });
                     })
                     .catch(e => {
-                        console.log(e);
                         uni.showToast({
                             title: e && e.message,
                             icon: "none"

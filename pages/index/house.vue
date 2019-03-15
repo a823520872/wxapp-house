@@ -171,6 +171,9 @@ export default {
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },
+        getPhone(e) {
+            this.$refs.auth.getPhone(e);
+        },
         collect() {
             this.userInfo
                 ? this.$request
@@ -187,11 +190,13 @@ export default {
         },
         linkLandlord() {
             this.userInfo
-                ? this.$refs.modal.show({
-                      title: "联系方式",
-                      confirmText: "确定",
-                      success() {}
-                  })
+                ? this.userInfo.mobile
+                    ? this.$refs.modal.show({
+                          title: "联系方式",
+                          confirmText: "确定",
+                          success() {}
+                      })
+                    : this.getPhone()
                 : this.getUserInfo();
         }
     }

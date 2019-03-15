@@ -18,13 +18,13 @@
         <view class="bd">
             <view class="title">联系村长自主缴费</view>
             <view class="cells">
-                <view class="cell m_flex_middle" @tap="copy(wechat_number)">
+                <view class="cell m_flex_middle" @tap="copy(config.wechat_number)">
                     <view class="label m_flex_item">村长微信：</view>
-                    <view class="model m_flex_item">{{wechat_number}}</view>
+                    <view class="model m_flex_item">{{config.wechat_number}}</view>
                 </view>
-                <view class="cell m_flex_middle" @tap="call(contact_mobile)">
+                <view class="cell m_flex_middle" @tap="call(config.contact_mobile)">
                     <view class="label m_flex_item">村长联系电话：</view>
-                    <view class="model m_flex_item">{{contact_mobile}}</view>
+                    <view class="model m_flex_item">{{config.contact_mobile}}</view>
                 </view>
             </view>
         </view>
@@ -32,14 +32,7 @@
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            contact_mobile: "18922717216",
-            wechat_number: "fangdada1225"
-        };
-    }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

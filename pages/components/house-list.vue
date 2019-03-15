@@ -13,7 +13,12 @@
                     </view>
                     <view class="intro">
                         <view class="intro_cell m_textover">楼层：【{{li.floor_number}}楼】</view>
-                        <view class="intro_cell m_textover">地址：【{{li.address_street}}】【{{li.address_flag}}】【{{li.address_detail}}】【{{li.road_distance}}】</view>
+                        <view class="intro_cell m_textover">地址：
+                            <text v-if="li.address_street">【{{li.address_street}}】</text>
+                            <text v-if="li.address_flag">【{{li.address_flag}}】</text>
+                            <text v-if="li.address_detail">【{{li.address_detail}}】</text>
+                            <text v-if="li.road_distance">【{{li.road_distance}}】</text>
+                        </view>
                         <view class="intro_cell m_textover">亮点：
                             <text v-if="li.config_base">【{{li.config_base}}】</text>
                             <text v-if="li.config_lightspot">【{{li.config_lightspot}}】</text>
@@ -66,23 +71,30 @@ export default {
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },
+        getPhone(e) {
+            this.$refs.auth.getPhone(e);
+        },
         linkLandlord(li) {
             const self = this;
             if (this.userInfo) {
-                this.temp = {
-                    contact_mobile: li.contact_mobile,
-                    wechat_number: li.wechat_number
-                };
-                this.$refs.modal.show({
-                    title: "联系方式",
-                    confirmText: "确定",
-                    success() {
-                        self.temp = null;
-                    },
-                    fail() {
-                        self.temp = null;
-                    }
-                });
+                if (this.userInfo.mobile) {
+                    this.temp = {
+                        contact_mobile: li.contact_mobile,
+                        wechat_number: li.wechat_number
+                    };
+                    this.$refs.modal.show({
+                        title: "联系方式",
+                        confirmText: "确定",
+                        success() {
+                            self.temp = null;
+                        },
+                        fail() {
+                            self.temp = null;
+                        }
+                    });
+                } else {
+                    this.getPhone();
+                }
             } else {
                 this.getUserInfo();
             }

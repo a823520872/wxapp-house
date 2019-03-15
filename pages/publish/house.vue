@@ -38,13 +38,13 @@
                             <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" />
                         </view>
                         <!-- </picker> -->
-                        <!-- <picker class="m_flex_item" :range="[]" @change=""> -->
-                        <view class="cell_box m_flex_item">
-                            <view class="cell_hd">路边距离</view>
-                            <!-- <view class="cell_bd">请选择</view> -->
-                            <input class="cell_bd" type="text" v-model="form.road_distance" placeholder="请输入路边距离" />
-                        </view>
-                        <!-- </picker> -->
+                        <picker class="m_flex_item" :range="road_distance" @change="pickerChange('road_distance', $event)">
+                            <view class="cell_box m_flex_item">
+                                <view class="cell_hd">路边距离</view>
+                                <view class="cell_bd">{{form.road_distance ? form.road_distance : '请选择'}}</view>
+                                <!-- <input class="cell_bd" type="text" v-model="form.road_distance" placeholder="请输入路边距离" /> -->
+                            </view>
+                        </picker>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
@@ -64,7 +64,7 @@
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">楼层</view>
                             <!-- <view class="cell_bd">请选择</view> -->
-                            <input class="cell_bd" type="text" v-model="form.floor_number" placeholder="请输入楼层" />
+                            <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
                         </view>
                         <!-- </picker> -->
                     </view>
@@ -88,20 +88,20 @@
             <view class="fd" @tap="next">下一步</view>
         </view>
         <view class="step_two next" v-else-if="step === 1">
-            <view class="cells" v-if="config_base && config_base.length">
+            <view class="cells" v-if="config && config.config_base && config && config.config_base.length">
                 <view class="cells_title">
                     一般配置
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config_base" :key="i" @tap="chooseCfgBase(li)">{{li.value}}</view>
+                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config && config.config_base" :key="i" @tap="chooseCfgBase(li)">{{li.value}}</view>
                 </view>
             </view>
-            <view class="cells" v-if="config_lightspot && config_lightspot.length">
+            <view class="cells" v-if="config && config.config_lightspot && config && config.config_lightspot.length">
                 <view class="cells_title">
                     房屋亮点
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{li.value}}</view>
+                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config && config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{li.value}}</view>
                 </view>
             </view>
             <view class="cells">
@@ -122,7 +122,14 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     computed: {
-        ...mapState(["userInfo", "houseTempImg", "houseImg"])
+        ...mapState(["userInfo", "houseTempImg", "houseImg"]),
+        road_distance() {
+            return (
+                this.config &&
+                this.config.road_distance &&
+                this.config.road_distance.map(item => item.value)
+            );
+        }
     },
     data() {
         return {
@@ -151,8 +158,9 @@ export default {
                 supplement: ""
             },
             house_id: "",
-            config_base: null,
-            config_lightspot: null
+            config: null
+            // config_base: null,
+            // config_lightspot: null
         };
     },
     onLoad(res) {
@@ -169,11 +177,33 @@ export default {
         this.getData();
     },
     methods: {
-        ...mapMutations(["setHouseTempImg"]),
+        ...mapMutations(["setHouseTempImg", "setHouseImg"]),
         ...mapActions(["login", "getInfo"]),
         getData() {
+            this.$request.getConfig().then(res => {
+                if (res && res.data) {
+                    this.config = res.data.reduce((obj, item) => {
+                        if (!obj[item.type]) {
+                            obj[item.type] = [];
+                        }
+                        item.active = false;
+                        obj[item.type].push(item);
+                        return obj;
+                    }, {});
+                }
+            });
             if (this.house_id) {
-                this.$request.getHouse({ id: this.house_id }).then(res => {});
+                this.$request.getHouse({ id: this.house_id }).then(res => {
+                    if (res && res.data) {
+                        const images = res.data.image_urls
+                            ? res.data.image_urls.split(",")
+                            : [];
+                        this.setHouseTempImg([...images]);
+                        this.setHouseImg([...images]);
+                        res.data.images = [...images];
+                        this.form = { ...res.data };
+                    }
+                });
             }
             this.getInfo().then(() => {
                 this.$request
@@ -184,31 +214,6 @@ export default {
                         }
                     });
             });
-            this.$request.getConfig().then(res => {
-                if (res && res.data) {
-                    const arr = this.filterArr(res.data, [
-                        "config_base",
-                        "config_lightspot"
-                    ]);
-                    this.config_base = arr[0];
-                    this.config_lightspot = arr[1];
-                }
-            });
-        },
-        filterArr(data = [], condition) {
-            return data.reduce(
-                (arr, item) => {
-                    if (item.type === condition[0]) {
-                        item.active = false;
-                        arr[0].push(item);
-                    } else if (item.type === condition[1]) {
-                        item.active = false;
-                        arr[1].push(item);
-                    }
-                    return arr;
-                },
-                [[], []]
-            );
         },
         chooseImg() {
             const self = this;
@@ -226,6 +231,12 @@ export default {
                 });
             }
         },
+        pickerChange(item, e) {
+            this.config[item][e.detail.value].active = true;
+            if (item === "road_distance") {
+                this.form[item] = this.config[item][e.detail.value].value;
+            }
+        },
         next() {
             this.$validate(this.form, {
                 name: [{ required: true, msg: "请输入姓名" }],
@@ -237,6 +248,22 @@ export default {
                 images: [{ type: "array", msg: "请上传图片" }]
             }).then(
                 () => {
+                    const config_base = this.form.config_base
+                        ? this.form.config_base.split(",")
+                        : [];
+                    const config_lightspot = this.form.config_lightspot
+                        ? this.form.config_lightspot.split(",")
+                        : [];
+                    this.config.config_base.map(item => {
+                        if (config_base.indexOf(item.value) > -1) {
+                            item.active = true;
+                        }
+                    });
+                    this.config.config_lightspot.map(item => {
+                        if (config_lightspot.indexOf(item.value) > -1) {
+                            item.active = true;
+                        }
+                    });
                     this.step = 1;
                 },
                 e => {
@@ -248,8 +275,10 @@ export default {
             );
         },
         confirm() {
-            const config_base = this.config_base.filter(item => item.active);
-            const config_lightspot = this.config_lightspot.filter(
+            const config_base = this.config.config_base.filter(
+                item => item.active
+            );
+            const config_lightspot = this.config.config_lightspot.filter(
                 item => item.active
             );
             this.form.landlord_id = this.userInfo.landlord_id;
@@ -273,7 +302,11 @@ export default {
                 images: [{ type: "array", msg: "请上传图片" }]
             }).then(
                 () => {
-                    this.$request.addHouse(this.form).then(res => {
+                    const api = this.form.id
+                        ? ((this.form.hr_id = this.form.id), "editHouse")
+                        : "addHouse";
+                    const { landlord_info, image_urls, ...params } = this.form;
+                    this.$request[api](params).then(res => {
                         if (res && res.data) {
                             this.goPage({
                                 path: `/pages/publish/publish_succ?id=${
@@ -403,6 +436,8 @@ export default {
         }
 
         &_bd {
+            height: 52upx;
+            line-height: 52upx;
             font-size: 25upx;
             color: $text-color-inverse;
         }

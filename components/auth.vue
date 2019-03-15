@@ -14,13 +14,13 @@
                 </button>
             </block>
         </v-modal>
-        <!-- <v-modal ref="phone_modal">
+        <v-modal ref="phone_modal">
             <block slot="footer">
                 <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">
                     去授权
                 </button>
             </block>
-        </v-modal> -->
+        </v-modal>
     </view>
 </template>
 
@@ -123,37 +123,76 @@ export default {
                 }
             });
         },
-        chooseLocation(obj) {
-            uni.chooseLocation({
-                success(res) {
-                    const { errMsg, name, address, latitude, longitude } = res;
-                    if (errMsg === "chooseLocation:ok") {
-                        myAmapFun.getPoiAround({
-                            location: longitude + "," + latitude,
-                            success: function(data) {
-                                if (data && data.poisData && data.poisData[0]) {
-                                    obj.success &&
-                                        obj.success({
-                                            longitude: longitude,
-                                            latitude: latitude,
-                                            landmark: name,
-                                            province: data.poisData[0].pname,
-                                            city: data.poisData[0].cityname,
-                                            county: data.poisData[0].adname,
-                                            address: data.poisData[0].address
-                                        });
-                                }
+        getLocation(e) {
+            const self = this;
+            return new Promise((resolve, reject) => {
+                uni.getLocation({
+                    type: "gcj02",
+                    success(res) {
+                        self.transformAddr(res.longitude, res.latitude).then(
+                            r => {
+                                resolve(r);
                             },
-                            fail(e) {
-                                obj.fail && obj.fail(e);
+                            e => {
+                                reject(e);
                             }
-                        });
+                        );
+                    },
+                    fail: reject
+                });
+            });
+        },
+        chooseLocation(obj) {
+            const self = this;
+            return new Promise((resolve, reject) => {
+                uni.chooseLocation({
+                    success(res) {
+                        const {
+                            errMsg,
+                            name,
+                            address,
+                            latitude,
+                            longitude
+                        } = res;
+                        if (errMsg === "chooseLocation:ok") {
+                            self.transformAddr(
+                                res.longitude,
+                                res.latitude
+                            ).then(
+                                r => {
+                                    resolve(r);
+                                },
+                                e => {
+                                    reject(e);
+                                }
+                            );
+                        }
+                    },
+                    fail: reject
+                });
+            });
+        },
+        transformAddr(longitude, latitude) {
+            return new Promise((resolve, reject) => {
+                myAmapFun.getPoiAround({
+                    location: longitude + "," + latitude,
+                    success: function(data) {
+                        if (data && data.poisData && data.poisData[0]) {
+                            resolve({
+                                longitude: longitude,
+                                latitude: latitude,
+                                // landmark: name,
+                                province: data.poisData[0].pname,
+                                city: data.poisData[0].cityname,
+                                county: data.poisData[0].adname,
+                                address: data.poisData[0].address
+                            });
+                        }
+                    },
+                    fail(e) {
+                        reject(e);
                     }
-                },
-                fail(e) {
-                    console.log(e);
-                    obj.fail && obj.fail(e);
-                }
+                });
             });
         }
     }

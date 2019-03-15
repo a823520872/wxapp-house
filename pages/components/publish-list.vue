@@ -24,7 +24,7 @@
                     <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_booked === 2">
                         <button class="m_button plain" @tap.stop="rented(li)">已租</button>
-                        <button class="m_button primary" @tap.stop="">生产海报</button>
+                        <button class="m_button primary" @tap.stop="getQRCode(li)">生产海报</button>
                     </block>
                     <block v-else-if="li.is_booked === 1">
                         <button class="m_button primary" @tap.stop="">发布</button>
@@ -32,6 +32,7 @@
                 </view>
             </view>
         </view>
+        <poster ref="poster" :uri="uri"></poster>
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal">
@@ -53,6 +54,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import poster from "../components/poster.vue";
 export default {
     props: {
         list: {
@@ -62,9 +64,28 @@ export default {
             }
         }
     },
+    components: {
+        poster
+    },
+    data() {
+        return {
+            uri: ""
+        };
+    },
     methods: {
         edit(li) {
             this.goPage(`/pages/publish/house?id=${li.id}`);
+        },
+        getQRCode(li) {
+            this.$request
+                .getQRCode({
+                    house_id: li.id
+                })
+                .then(res => {
+                    if (res && res.data) {
+                        this.uri = res.data;
+                    }
+                });
         },
         rented(li) {
             this.$refs.modal.show({

@@ -3,7 +3,7 @@
         <view class="step_one" v-if="step === 0">
             <view class="hd">
                 <view class="bg">
-                    <image :src="houseTempImg.length ? houseTempImg[0] : '/static/image/publish/house_bg.png'" mode="aspectFit"></image>
+                    <image :src="houseTempImg.length ? houseTempImg[0] : '/static/image/publish/house_bg.png'" :mode="config.house_mode"></image>
                 </view>
                 <view class="warn">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
                 <view class="main m_flex_column m_flex_middle">

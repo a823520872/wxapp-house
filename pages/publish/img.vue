@@ -2,14 +2,14 @@
     <view class="content">
         <view class="hd">
             <view class="banner">
-                <image :src="houseTempImg[0]" @tap="showImg(houseTempImg[0])" mode="aspectFit"></image>
+                <image :src="houseTempImg[0]" @tap="showImg(houseTempImg[0])" :mode="config.house_mode"></image>
             </view>
             <view class="intro">首图</view>
         </view>
         <view class="bd m_flex_wrap">
             <view v-for="(li, i) in houseTempImg" :key="i" class="item">
                 <view class="img" @tap="showImg(li)">
-                    <image :src="li" mode="aspectFill"></image>
+                    <image :src="li" :mode="config.house_mode"></image>
                 </view>
                 <view class="close" @tap="del(i)">
                     <image src="/static/image/index/del.png" mode="aspectFit"></image>

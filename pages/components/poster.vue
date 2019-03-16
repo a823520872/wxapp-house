@@ -22,28 +22,28 @@
 export default {
     props: {
         uri: {
-            type: String,
+            type: String
         }
     },
     data() {
         return {
             isShow: false
-        }
+        };
     },
     methods: {
         show() {
-            this.isShow = true
+            this.isShow = true;
         },
         hide() {
-            this.isShow = false
+            this.isShow = false;
         },
         showPoster() {
             uni.previewImage({
                 urls: [uri]
-            })
+            });
         }
     }
-}
+};
 </script>
 
 <style lang="scss">

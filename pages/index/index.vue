@@ -15,7 +15,7 @@
                         <image src="/static/image/index/addr.png" mode="aspectFit"></image>
                     </view>
                     <view class="addr_box m_flex">
-                        <picker :range="[]" @change="">
+                        <!-- <picker :range="[]" @change="">
                             <view class="addr_picker m_flex_middle">
                                 <view class="addr_item m_textover">广州市</view>
                                 <view class="addr_pull">
@@ -30,10 +30,10 @@
                                     <image src="/static/image/index/pull.png" mode="aspectFit"></image>
                                 </view>
                             </view>
-                        </picker>
-                        <picker :range="[]" @change="">
+                        </picker> -->
+                        <picker :range="address_street" @change="pickerChange" mode="multiSelector">
                             <view class="addr_picker last m_flex_middle">
-                                <view class="addr_item m_textover">上社</view>
+                                <view class="addr_item m_textover">{{params.address_street}}</view>
                                 <view class="addr_pull">
                                     <image src="/static/image/index/pull.png" mode="aspectFit"></image>
                                 </view>
@@ -59,7 +59,7 @@
             <!-- <view class="cells_fd">
                 <scroll-view class="scroll_view" :scroll-x="true">
                     <view class="m_flex">
-                        <view class="category">
+                        <view class="house_type">
                             <view class="btn active">单间</view>
                             <view class="del_btn">
                                 <image src="/static/image/index/del.png" mode="aspectFit"></image>
@@ -75,12 +75,13 @@
             <view class="official-account"></view>
             <official-account></official-account>
         </view>
+        <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal" v-if="modalList && modalList.length">
                     <view class="modal_list m_flex_wrap" v-for="(lis, i) in modalList" :key="i">
                         <view class="modal_item" v-for="(li, j) in lis" :key="j">
-                            <view class="m_button main plain">{{ li.value || li }}</view>
+                            <view :class="['m_button', 'main', {'plain': !li.active}]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
                         </view>
                     </view>
                 </view>
@@ -96,26 +97,61 @@ export default {
     components: {
         HouseList
     },
+    computed: {
+        address_street() {
+            return (
+                this.config &&
+                this.config.address_street &&
+                this.config.address_street.map(lis => {
+                    return lis.map(li => li.name);
+                })
+            );
+        },
+        house_type() {
+            return (
+                this.config &&
+                this.config.house_type &&
+                this.config.house_type.map(li => li.value)
+            );
+        },
+        price() {
+            return (
+                this.config &&
+                this.config.price &&
+                this.config.price.map(li => li.value)
+            );
+        }
+    },
     data() {
         return {
-            params: {},
+            params: {
+                address_street: "上社"
+            },
             list: [],
-            category: ["单间", "一房一厅", "两房一厅", "三房一厅"],
-            price: [
-                "500以下",
-                "500-700",
-                "700-900",
-                "900-1200",
-                "1200-1500",
-                "1500以上"
-            ],
-            moreList: null,
+            config: {
+                house_type: [
+                    { value: "单间", active: false },
+                    { value: "一房一厅", active: false },
+                    { value: "两房一厅", active: false },
+                    { value: "三房一厅", active: false }
+                ],
+                price: [
+                    { value: "500以下", active: false },
+                    { value: "500-700", active: false },
+                    { value: "700-900", active: false },
+                    { value: "900-1200", active: false },
+                    { value: "1500以上", active: false }
+                ],
+                address_street: null,
+                address_flag: null,
+                config_base: null,
+                config_lightspot: null
+            },
+            modalType: null,
             modalList: null
         };
     },
-    onLoad(res) {
-        console.log(res);
-    },
+    onLoad(res) {},
     onShow() {},
     onPullDownRefresh() {
         this.$refs.page.getData(1);
@@ -151,29 +187,51 @@ export default {
                 }
             } else {
                 this.login();
+                this.$refs.auth.getUserInfo();
             }
         },
         getData() {
             this.$request.getConfig().then(res => {
                 if (res.data) {
-                    this.moreList = [];
-                    this.moreList[0] = res.data.filter(
-                        item => item.type === "config_lightspot"
-                    );
-                    this.moreList[1] = res.data.filter(
-                        item => item.type === "config_base"
-                    );
+                    const config = res.data.reduce((obj, item) => {
+                        if (!obj[item.type]) {
+                            obj[item.type] = [];
+                        }
+                        item.active = false;
+                        obj[item.type].push(item);
+                        return obj;
+                    }, {});
+                    this.config = { ...this.config, ...config };
+                }
+            });
+            this.$request.getAddrList().then(res => {
+                if (res.data) {
+                    const address_street = res.data || [];
+                    this.config = {
+                        ...this.config,
+                        address_street
+                    };
                 }
             });
         },
+        pickerChange(e) {
+            this.params.address_street = this.config.address_street[2][
+                e.detail.value[2]
+            ].name;
+            this.init();
+        },
         showModal(type, title) {
             const self = this;
+            this.modalType = type;
             if (type === 1) {
-                this.modalList = [this.category];
+                this.modalList = [this.config.house_type];
             } else if (type === 2) {
-                this.modalList = [this.price];
+                this.modalList = [this.config.price];
             } else if (type === 3) {
-                this.modalList = this.moreList;
+                this.modalList = [
+                    this.config.config_base,
+                    this.config.config_lightspot
+                ];
             }
             this.$refs.modal.show({
                 title,
@@ -182,6 +240,17 @@ export default {
                     self.init();
                 }
             });
+        },
+        toggleList(i, j) {
+            let key = "";
+            if (this.modalType === 1) {
+                key = "house_type";
+            } else if (this.modalType === 2) {
+                key = "price";
+            } else if (this.modalType === 3) {
+                key = i === 0 ? "config_base" : "config_lightspot";
+            }
+            this.config[key][j].active = !this.config[key][j].active;
         }
     }
 };
@@ -267,7 +336,7 @@ export default {
 .scroll_view {
     padding: 0 30upx;
     line-height: 1;
-    .category {
+    .house_type {
         position: relative;
         width: 200upx;
         height: 56upx;

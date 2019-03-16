@@ -58,6 +58,7 @@
                 </view>
             </view>
             <view class="m_button main btn_confirm" @tap="confirm">提交</view>
+            <view class="tips" style="color: #ccc; text-align: center;">地址如有错误，请联系村长修改</view>
         </view>
         <view class="fd"></view>
         <v-auth ref="auth"></v-auth>
@@ -216,7 +217,7 @@ export default {
         &_confirm {
             width: 100%;
             height: 66upx;
-            margin: 91upx 0 26upx;
+            margin: 91upx 0 16upx;
             padding: 0;
             line-height: 64upx;
             text-align: center;

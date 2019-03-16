@@ -10,13 +10,13 @@
                     <text>请耐心等待，村长将在2小时内联系您；</text>
                 </view>
                 <view>
-                    <text class="strong">在您完成缴费后</text>
+                    <text class="strong">在您完成审核后</text>
                     <text>我们将为您开通房东权限。</text>
                 </view>
             </view>
         </view>
         <view class="bd">
-            <view class="title">联系村长自主缴费</view>
+            <view class="title">联系村长快速审核</view>
             <view class="cells">
                 <view class="cell m_flex_middle" @tap="copy(config.wechat_number)">
                     <view class="label m_flex_item">村长微信：</view>

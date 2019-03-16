@@ -11,7 +11,7 @@
                                 <text>分享</text>
                             </button>
                         </view>
-                        <view class="intro_cell m_textover">
+                        <view class="intro_cell">
                             <text class="intro_hd">租金：</text>
                             <text class="intro_bd">
                                 <text class="price">
@@ -20,26 +20,31 @@
                                 </text>
                             </text>
                         </view>
-                        <view class="intro_cell m_textover">
+                        <view class="intro_cell">
                             <text class="intro_hd">楼层：</text>
                             <text class="intro_bd">【{{detail.floor_number}}楼】</text>
                         </view>
-                        <view class="intro_cell m_textover">
+                        <view class="intro_cell">
                             <text class="intro_hd">地址：</text>
-                            <text class="intro_bd">【{{detail.address_street}}】【{{detail.address_flag}}】【{{detail.address_detail}}】【{{detail.road_distance}}】</text>
+                            <text class="intro_bd">
+                                <text v-if="detail.address_street">【{{detail.address_street}}】</text>
+                                <text v-if="detail.address_flag">【{{detail.address_flag}}】</text>
+                                <text v-if="detail.address_detail">【{{detail.address_detail}}】</text>
+                                <text v-if="detail.road_distance">【{{detail.road_distance}}】</text>
+                            </text>
                         </view>
-                        <view class="intro_cell m_textover" v-if="detail.config_base || detail.config_lightspot">
+                        <view class="intro_cell" v-if="detail.config_base || detail.config_lightspot">
                             <text class="intro_hd">亮点：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.config_base">【{{detail.config_base}}】</text>
                                 <text v-if="detail.config_lightspot">【{{detail.config_lightspot}}】</text>
                             </text>
                         </view>
-                        <view class="intro_cell m_textover" v-if="detail.address">
+                        <view class="intro_cell" v-if="detail.address">
                             <text class="intro_hd">具体地址：</text>
                             <text class="intro_bd">{{detail.address}}</text>
                         </view>
-                        <view class="intro_cell m_textover" v-if="detail.supplement">
+                        <view class="intro_cell" v-if="detail.supplement">
                             <text class="intro_hd">备注：</text>
                             <text class="intro_bd">{{detail.supplement}}</text>
                         </view>
@@ -52,9 +57,9 @@
                         </view>
                         <view class="user m_flex_item">
                             <view class="name">{{detail.landlord_info.nickname}}</view>
-                            <view class="m_flex_middle">
+                            <!-- <view class="m_flex_middle">
                                 <text>阅读量：500</text>
-                            </view>
+                            </view> -->
                         </view>
                         <view class="time">
                             {{detail.create_at}} 发布
@@ -307,7 +312,7 @@ export default {
         color: $primary-color;
     }
     .house_img {
-        height: 374upx;
+        height: 540upx;
         padding-bottom: 18upx;
         &:last-of-type {
             padding-bottom: 30upx;

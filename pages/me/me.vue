@@ -41,11 +41,11 @@
             </view> -->
             <view class="cell m_flex_justify m_flex_middle">
                 <view class="cell_hd">推荐好友</view>
-                <button class="cell_fd m_button plain" open-type="share">获得88元分享基金</button>
+                <button class="cell_fd m_button plain" open-type="share">{{userInfo && userInfo.is_landlord === 1 ? '邀请入驻2人同享1月免费服务' : '获得88元分享基金'}}</button>
             </view>
             <view class="cell m_flex_justify m_flex_middle">
                 <view class="cell_hd">联系村长</view>
-                <button class="cell_fd m_button plain" open-type="contact">全能村长，24小时在线</button>
+                <button class="cell_fd m_button plain" open-type="contact">智能找房、意见反馈、入驻咨询</button>
             </view>
             <view class="cell m_flex_justify m_flex_middle" @tap="clear">
                 <view class="cell_hd">清楚授权</view>

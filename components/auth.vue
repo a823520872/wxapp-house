@@ -14,13 +14,6 @@
                 </button>
             </block>
         </v-modal>
-        <v-modal ref="phone_modal">
-            <block slot="footer">
-                <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">
-                    去授权
-                </button>
-            </block>
-        </v-modal>
     </view>
 </template>
 
@@ -90,7 +83,7 @@ export default {
             const self = this;
             const { errMsg, encryptedData, iv } = e.detail;
             this.$refs.phone_modal.hide();
-            if (errMsg === "getUserInfo:ok") {
+            if (errMsg === "getPhoneNumber:ok") {
                 this.$request
                     .bindMobile({
                         session3rd: self.session3rd,

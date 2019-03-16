@@ -226,55 +226,16 @@ export default {
             });
         },
         getAddr() {
-            this.config = {
-                ...this.config,
-                address_street: [
-                    [
-                        {
-                            id: 1965,
-                            name: "广州市",
-                            first: "G",
-                            pinyin: "guangzhou",
-                            level: 2,
-                            active: true
-                        }
-                    ],
-                    [
-                        {
-                            id: 1969,
-                            name: "天河区",
-                            first: "T",
-                            pinyin: "tianhe",
-                            level: 3,
-                            active: true
-                        }
-                    ],
-                    [
-                        {
-                            id: 3749,
-                            name: "上社",
-                            first: "S",
-                            level: 4,
-                            active: true
-                        },
-                        {
-                            id: 3750,
-                            name: "棠东",
-                            first: "T",
-                            level: 4,
-                            active: false
-                        },
-                        {
-                            id: 3751,
-                            name: "棠下",
-                            first: "T",
-                            level: 4,
-                            active: false
-                        }
-                    ]
-                ]
-            };
-            this.getAreaFlag(3749);
+            this.$request.getAddrList().then(res => {
+                if (res && res.data) {
+                    const address_street = res.data || [];
+                    this.config = {
+                        ...this.config,
+                        address_street
+                    };
+                    this.getAreaFlag(3749);
+                }
+            });
         },
         getAreaFlag(id) {
             console.log(id);
@@ -332,7 +293,6 @@ export default {
             }
         },
         pickerChange(key, e) {
-            console.log(key, e.detail.value);
             switch (key) {
                 case "address_street":
                     const item = this.config.address_street[2][

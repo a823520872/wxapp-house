@@ -72,12 +72,14 @@ export default {
             uni.previewImage({
                 current: li,
                 urls: this.houseTempImg
-            })
+            });
         },
         chooseImg() {
             const self = this;
+            const num = 9 - this.houseTempImg.length;
             uni.chooseImage({
                 sourceType: "album",
+                count: num,
                 success(e) {
                     if (e.errMsg === "chooseImage:ok") {
                         const list = [...self.houseTempImg, ...e.tempFilePaths];
@@ -110,6 +112,10 @@ export default {
         },
         confirm() {
             if (this.option.uptoken) {
+                uni.showToast({
+                    title: "正在上传中……",
+                    icon: "none"
+                });
                 const tasks = this.houseTempImg.map(item => {
                     return this.uploadImg(item);
                 });

@@ -24,20 +24,29 @@
                             <text class="intro_hd">楼层：</text>
                             <text class="intro_bd">【{{detail.floor_number}}楼】</text>
                         </view>
+                        <view class="intro_cell" v-if="detail.address_flag">
+                            <text class="intro_hd">标志建筑：</text>
+                            <text class="intro_bd">【{{detail.address_flag}}】</text>
+                        </view>
+                        <view class="intro_cell" v-if="detail.road_distance">
+                            <text class="intro_hd">路边距离：</text>
+                            <text class="intro_bd">【{{detail.road_distance}}】</text>
+                        </view>
                         <view class="intro_cell">
                             <text class="intro_hd">地址：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.address_street">【{{detail.address_street}}】</text>
-                                <text v-if="detail.address_flag">【{{detail.address_flag}}】</text>
-                                <text v-if="detail.address_detail">【{{detail.address_detail}}】</text>
-                                <text v-if="detail.road_distance">【{{detail.road_distance}}】</text>
                             </text>
                         </view>
                         <view class="intro_cell" v-if="detail.config_base || detail.config_lightspot">
                             <text class="intro_hd">亮点：</text>
                             <text class="intro_bd">
-                                <text v-if="detail.config_base">【{{detail.config_base}}】</text>
-                                <text v-if="detail.config_lightspot">【{{detail.config_lightspot}}】</text>
+                                <text v-if="detail.config_base && detail.config_base.length">
+                                    <text v-for="(li, i) in detail.config_base" :key="i">【{{li}}】</text>
+                                </text>
+                                <text v-if="detail.config_lightspot && detail.config_lightspot.length">
+                                    <text v-for="(li, i) in detail.config_lightspot" :key="i">【{{li}}】</text>
+                                </text>
                             </text>
                         </view>
                         <view class="intro_cell" v-if="detail.address">
@@ -168,10 +177,16 @@ export default {
         getData() {
             this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {
-                    res.data.create_at = this.getTime(res.data.createtime);
-                    res.data.image_urls =
-                        res.data.image_urls && res.data.image_urls.split(",");
-                    this.detail = { ...res.data };
+                    const data = res.data;
+                    data.create_at = this.getTime(data.createtime);
+                    data.config_base =
+                        data.config_base && data.config_base.split(",");
+                    data.config_lightspot =
+                        data.config_lightspot &&
+                        data.config_lightspot.split(",");
+                    data.image_urls =
+                        data.image_urls && data.image_urls.split(",");
+                    this.detail = { ...data };
                 }
             });
         },
@@ -317,7 +332,7 @@ export default {
         color: $primary-color;
     }
     .house_img {
-        height: 540upx;
+        height: 600upx;
         padding-bottom: 18upx;
         &:last-of-type {
             padding-bottom: 30upx;

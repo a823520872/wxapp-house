@@ -177,6 +177,12 @@ export default {
                 fn(data) {
                     return data.map(
                         item => (
+                            (item.config_base =
+                                item.config_base &&
+                                item.config_base.split(",")),
+                            (item.config_lightspot =
+                                item.config_lightspot &&
+                                item.config_lightspot.split(",")),
                             (item.image_urls =
                                 item.image_urls && item.image_urls.split(",")),
                             item

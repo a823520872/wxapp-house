@@ -78,6 +78,7 @@ export default {
             this.goPage(`/pages/publish/house?id=${li.id}`);
         },
         getQRCode(li) {
+            const self = this;
             this.$request
                 .getQRCode({
                     house_id: li.id
@@ -85,13 +86,33 @@ export default {
                 .then(res => {
                     if (res && res.data) {
                         this.uri = res.data;
+                        uni.downloadFile({
+                            url: self.uri,
+                            success(res) {
+                                if (res.statusCode === 200) {
+                                    uni.saveImageToPhotosAlbum({
+                                        filePath: res.tempFilePath,
+                                        success(r) {
+                                            if (
+                                                r.errMsg ===
+                                                "saveImageToPhotosAlbum:ok"
+                                            ) {
+                                                uni.showToast({
+                                                    title: "保存成功",
+                                                    icon: "success"
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
                     }
                 });
         },
         rented(li) {
             const self = this;
             this.$refs.modal.show({
-                title: "联系方式",
                 confirmText: "确定",
                 success() {
                     if (self.rent_type) {

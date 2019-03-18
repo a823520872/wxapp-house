@@ -133,7 +133,7 @@
             {
                 "name": "发布房源",
                 "path": "pages/publish/house",
-                "query": "id=29"
+                "query": "id=39"
             },
             {
                 "name": "上传图片",
@@ -142,7 +142,7 @@
             {
                 "name": "发布成功",
                 "path": "pages/publish/publish_succ",
-                "query": "id=29"
+                "query": "id=39"
             },
             {
                 "name": "我的",

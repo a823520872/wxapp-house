@@ -91,6 +91,9 @@ export default {
     addReader(data) {
         return ajax('/api/house_resource/readAdd', data, { type: 'post', noAlert: true })
     },
+    rentChange(data = {}) {
+        return ajax('/api/House_resource/rentChange', data, { type: 'post' });
+    },
     getLandlordList(data = {}) {
         return ajax('/api/landlord/getList', data, { noToken: true })
     },

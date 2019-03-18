@@ -15,13 +15,14 @@
                         <view class="intro_cell m_textover">楼层：【{{li.floor_number}}楼】</view>
                         <view class="intro_cell m_textover">地址：
                             <text v-if="li.address_street">【{{li.address_street}}】</text>
-                            <text v-if="li.address_flag">【{{li.address_flag}}】</text>
-                            <text v-if="li.address_detail">【{{li.address_detail}}】</text>
-                            <text v-if="li.road_distance">【{{li.road_distance}}】</text>
                         </view>
                         <view class="intro_cell m_textover">亮点：
-                            <text v-if="li.config_base">【{{li.config_base}}】</text>
-                            <text v-if="li.config_lightspot">【{{li.config_lightspot}}】</text>
+                            <text v-if="li.config_base && li.config_base.length">
+                                <text v-for="(item, j) in li.config_base" :key="i">【{{item}}】</text>
+                            </text>
+                            <text v-if="li.config_lightspot && li.config_lightspot.length">
+                                <text v-for="(item, j) in li.config_lightspot" :key="i">【{{item}}】</text>
+                            </text>
                         </view>
                     </view>
                 </view>

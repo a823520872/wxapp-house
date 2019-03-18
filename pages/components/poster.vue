@@ -3,7 +3,7 @@
         <v-mask @click="hide"></v-mask>
         <view class="poster_wrap">
             <view class="tips">
-                <text class="strong">点击长按保存图片</text>
+                <text class="strong">点击保存图片</text>
                 <text>分享到朋友圈 提高您的租房成功率</text>
             </view>
             <view class="poster_contain">
@@ -11,8 +11,9 @@
                     <image src="/static/image/publish/close.png" mode="aspectFit"></image>
                 </view>
                 <view class="poster_box">
-                    <image @tap="showPoster" :src="uri" mode="aspectFit"></image>
+                    <image @tap="showPoster" :src="uri" mode="widthFix"></image>
                 </view>
+                <button class="m_button main btn_save" plain @tap="savePoster">保存</button>
             </view>
         </view>
     </view>
@@ -38,8 +39,29 @@ export default {
             this.isShow = false;
         },
         showPoster() {
+            const self = this;
             uni.previewImage({
-                urls: [uri]
+                urls: [self.uri]
+            });
+        },
+        savePoster() {
+            uni.downloadFile({
+                url: this.uri,
+                success(res) {
+                    if (res.statusCode === 200) {
+                        uni.saveImageToPhotosAlbum({
+                            filePath: res.tempFilePath,
+                            success(r) {
+                                if (r.errMsg === "saveImageToPhotosAlbum:ok") {
+                                    uni.showToast({
+                                        title: "保存成功",
+                                        icon: "success"
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
             });
         }
     }
@@ -71,6 +93,14 @@ export default {
             padding-right: 14upx;
             color: $primary-color;
         }
+
+        .btn_save {
+            display: block;
+            width: 40%;
+            margin: 20upx auto 0;
+            padding: 16upx 0;
+            text-align: center;
+        }
     }
     &_contain {
         position: relative;
@@ -88,7 +118,7 @@ export default {
     }
     &_box {
         width: 534upx;
-        height: 948upx;
+        // height: 948upx;
     }
 }
 </style>

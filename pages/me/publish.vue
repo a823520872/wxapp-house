@@ -5,7 +5,7 @@
                 <image :src="userInfo.avatar" mode="aspectFit"></image>
             </view>
             <view class="name">{{userInfo.nickname}}</view>
-            <view class="tips">已发布29套 还有2套空房</view>
+            <!-- <view class="tips">已发布29套 还有2套空房</view> -->
         </view>
         <view class="tabs m_flex">
             <view class="m_flex_item">
@@ -15,7 +15,7 @@
                 <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">已租（未发布）</view>
             </view>
         </view>
-        <publish-list :list.sync="list"></publish-list>
+        <publish-list :list.sync="list" @reload="getData"></publish-list>
         <v-page ref="page" :list.sync="list"></v-page>
     </view>
 </template>

@@ -38,12 +38,12 @@
                 <view class="modal">
                     <radio-group>
                         <view class="link m_flex_justify">
-                            <label>
-                                <radio checked="true" />村长带给您的人</label>
+                            <label @tap="rent_type = 1">
+                                <radio :checked="rent_type === 1" />村长带给您的人</label>
                         </view>
                         <view class="link m_flex_justify">
-                            <label>
-                                <radio />您自己租的</label>
+                            <label @tap="rent_type = 2">
+                                <radio :checked="rent_type === 2" />您自己租的</label>
                         </view>
                     </radio-group>
                 </view>
@@ -69,7 +69,8 @@ export default {
     },
     data() {
         return {
-            uri: ""
+            uri: "",
+            rent_type: ""
         };
     },
     methods: {
@@ -88,10 +89,28 @@ export default {
                 });
         },
         rented(li) {
+            const self = this;
             this.$refs.modal.show({
                 title: "联系方式",
                 confirmText: "确定",
-                success() {}
+                success() {
+                    if (self.rent_type) {
+                        self.$request
+                            .rent({
+                                id: li.id,
+                                rent_type: self.rent_type
+                            })
+                            .then(res => {
+                                if (res && res.data) {
+                                    uni.showToast({
+                                        title: "操作成功",
+                                        icon: "success"
+                                    });
+                                    self.$emit("reload");
+                                }
+                            });
+                    }
+                }
             });
         }
     }

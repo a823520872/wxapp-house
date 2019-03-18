@@ -54,6 +54,7 @@ export default {
                     house_id: this.id
                 })
                 .then(res => {
+                    uni.hideLoading();
                     if (res && res.data) {
                         this.uri = res.data;
                     }
@@ -63,9 +64,9 @@ export default {
             if (this.uri) {
                 this.$refs.poster.show();
             } else {
-                uni.showToast({
+                uni.showLoading({
                     title: "图片正在生成",
-                    icon: "none"
+                    mask: true
                 });
             }
         }

@@ -4,10 +4,15 @@
             <view class="banner">
                 <image :src="houseTempImg[0]" @tap="showImg(houseTempImg[0])" :mode="config.house_mode"></image>
             </view>
-            <view class="intro">首图</view>
+            <template v-if="houseTempImg && houseTempImg.length">
+                <view class="close" @tap="del(0)">
+                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                </view>
+                <view class="intro">首图</view>
+            </template>
         </view>
         <view class="bd m_flex_wrap">
-            <view v-for="(li, i) in houseTempImg" :key="i" class="item">
+            <view v-for="(li, i) in houseTempImg" :key="i" v-if="i > 0" class="item">
                 <view class="img" @tap="showImg(li)">
                     <image :src="li" :mode="config.house_mode"></image>
                 </view>
@@ -112,9 +117,9 @@ export default {
         },
         confirm() {
             if (this.option.uptoken) {
-                uni.showToast({
+                uni.showLoading({
                     title: "正在上传中……",
-                    icon: "none"
+                    mask: true
                 });
                 const tasks = this.houseTempImg.map(item => {
                     return this.uploadImg(item);
@@ -122,11 +127,13 @@ export default {
                 Promise.all(tasks)
                     .then(res => {
                         this.setHouseImg(res);
+                        uni.hideLoading();
                         uni.navigateBack({
                             delta: 1
                         });
                     })
                     .catch(e => {
+                        uni.hideLoading();
                         uni.showToast({
                             title: e && e.message,
                             icon: "none"
@@ -150,6 +157,14 @@ export default {
     .banner {
         width: 100%;
         height: 479upx;
+    }
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 46upx;
+        height: 46upx;
+        padding: 10upx;
     }
     .intro {
         position: absolute;

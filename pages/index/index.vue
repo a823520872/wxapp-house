@@ -120,6 +120,7 @@ export default {
                 this.config.price &&
                 this.config.price.map(li => li.value)
             );
+            z;
         }
     },
     data() {
@@ -129,12 +130,8 @@ export default {
             },
             list: [],
             config: {
-                house_type: [
-                    { value: "单间", active: false },
-                    { value: "一房一厅", active: false },
-                    { value: "两房一厅", active: false },
-                    { value: "三房一厅", active: false }
-                ],
+                house_type: null,
+                floor: null,
                 price: [
                     { value: "500以下", active: false },
                     { value: "500-700", active: false },
@@ -162,6 +159,13 @@ export default {
     onReady() {
         this.init();
         this.getData();
+    },
+    onShareAppMessage() {
+        return {
+            title: "村里租房",
+            desc: "村里租房",
+            path: "/pages/index/index"
+        };
     },
     methods: {
         ...mapActions(["login", "getInfo"]),

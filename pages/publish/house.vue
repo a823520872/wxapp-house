@@ -53,20 +53,20 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <!-- <picker class="cell_box m_flex_item" :range="[]" @change=""> -->
-                        <view class="cell_box m_flex_item">
+                        <picker class="cell_box m_flex_item" :range="house_type" @change="pickerChange('house_type', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">房型</view>
-                            <!-- <view class="cell_bd">请选择</view> -->
-                            <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
-                        </view>
-                        <!-- </picker> -->
-                        <!-- <picker class="cell_box m_flex_item" :range="[]" @change=""> -->
-                        <view class="cell_box m_flex_item">
+                            <view class="cell_bd">{{form.house_type ? form.house_type : '请选择'}}</view>
+                            <!-- <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
+                        </view> -->
+                        </picker>
+                        <picker class="cell_box m_flex_item" :range="floor" @change="pickerChange('floor', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">楼层</view>
-                            <!-- <view class="cell_bd">请选择</view> -->
-                            <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
-                        </view>
-                        <!-- </picker> -->
+                            <view class="cell_bd">{{form.floor_number ? form.floor_number : '请选择'}}</view>
+                            <!-- <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
+                        </view> -->
+                        </picker>
                     </view>
                 </view>
                 <view class="cells">
@@ -109,7 +109,7 @@
                     补充说明（选填）
                 </view>
                 <view class="cell">
-                    <textarea placeholder="详细的介绍会加大租房率" v-model="form.supplement"></textarea>
+                    <textarea placeholder="详细的介绍会加大租房率" v-model="form.remarks"></textarea>
                 </view>
             </view>
             <view class="fd" @tap="confirm">确认发布</view>
@@ -146,6 +146,20 @@ export default {
                 this.config.road_distance.map(item => item.value)
             );
         },
+        house_type() {
+            return (
+                this.config &&
+                this.config.house_type &&
+                this.config.house_type.map(item => item.value)
+            );
+        },
+        floor() {
+            return (
+                this.config &&
+                this.config.floor &&
+                this.config.floor.map(item => item.value)
+            );
+        },
         address() {
             return this.form.address_street || "";
         }
@@ -165,7 +179,7 @@ export default {
                 road_distance_id: 1,
                 road_distance: "",
                 address_detail: "",
-                // house_type_id: 10,
+                house_type_id: "",
                 house_type: "",
                 floor_number: "",
                 contact_mobile: "",
@@ -174,10 +188,12 @@ export default {
                 config_base: "",
                 config_lightspot_ids: "",
                 config_lightspot: "",
-                supplement: ""
+                remarks: ""
             },
             house_id: "",
             config: {
+                house_type: null,
+                floor: null,
                 address_street: null,
                 address_flag: null,
                 config_base: null,
@@ -233,12 +249,10 @@ export default {
                         ...this.config,
                         address_street
                     };
-                    this.getAreaFlag(3749);
                 }
             });
         },
         getAreaFlag(id) {
-            console.log(id);
             this.$request.getAreaFlag({ pid_area_street: id }).then(res => {
                 if (res && res.data) {
                     try {
@@ -303,34 +317,35 @@ export default {
                     this.form.address_street_id = item.id;
                     break;
                 case "address_flag":
-                    this.form.address_flag = this.config.address_flag[
-                        e.detail.value
-                    ].shortname;
-                    this.form.address_flag_id = this.config.address_flag[
+                    this.form[key] = this.config[key][e.detail.value].shortname;
+                    this.form[`${key}_id`] = this.config[key][
                         e.detail.value
                     ].id;
                     break;
                 case "road_distance":
-                    this.form.road_distance = this.config.road_distance[
-                        e.detail.value
-                    ].value;
-                    this.form.road_distance_id = this.config.road_distance[
+                case "house_type":
+                    this.form[key] = this.config[key][e.detail.value].value;
+                    this.form[`${key}_id`] = this.config[key][
                         e.detail.value
                     ].id;
                     break;
-
+                case "floor":
+                    this.form.floor_number = +this.config[key][
+                        e.detail.value
+                    ].value.replace("楼", "");
+                    break;
                 default:
                     break;
             }
         },
         next() {
             this.$validate(this.form, {
-                name: [{ required: true, msg: "请输入姓名" }],
                 rental: [{ required: true, msg: "请输入租金" }],
-                floor_number: [
-                    { required: true, type: "number", msg: "楼层请输入数字" }
-                ],
-                postion_street: [{ required: true, msg: "请选择地址" }],
+                address_street: [{ required: true, msg: "请选择地址" }],
+                address_flag: [{ required: true, msg: "请选择标志建筑" }],
+                road_distance: [{ required: true, msg: "请选择路边距离" }],
+                house_type: [{ required: true, msg: "请选择房型" }],
+                floor_number: [{ required: true, msg: "请输入楼层" }],
                 images: [{ type: "array", msg: "请上传图片" }]
             }).then(
                 () => {
@@ -381,10 +396,12 @@ export default {
                 .map(item => item.value)
                 .join(",");
             this.$validate(this.form, {
-                name: [{ required: true, msg: "请输入姓名" }],
                 rental: [{ required: true, msg: "请输入租金" }],
+                address_street: [{ required: true, msg: "请选择地址" }],
+                address_flag: [{ required: true, msg: "请选择标志建筑" }],
+                road_distance: [{ required: true, msg: "请选择路边距离" }],
+                house_type: [{ required: true, msg: "请选择房型" }],
                 floor_number: [{ required: true, msg: "请输入楼层" }],
-                postion_street: [{ required: true, msg: "请选择地址" }],
                 images: [{ type: "array", msg: "请上传图片" }]
             }).then(
                 () => {
@@ -395,9 +412,8 @@ export default {
                     this.$request[api](params).then(res => {
                         if (res && res.data) {
                             this.goPage({
-                                path: `/pages/publish/publish_succ?id=${
-                                    res.data
-                                }`,
+                                path: `/pages/publish/publish_succ?id=${this
+                                    .form.id || res.data}`,
                                 replace: true
                             });
                         }

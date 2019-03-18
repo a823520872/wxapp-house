@@ -175,6 +175,11 @@ export default {
                 }
             });
         },
+        addReader() {
+            this.$request.addReader({ id: this.id }).then(res => {
+                console.log(res);
+            });
+        },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },

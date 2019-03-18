@@ -26,24 +26,25 @@ var myAmapFun = new amapFile.AMapWX({
 });
 export default {
     props: {},
-    data() {
-        return {
-            session3rd: ""
-        };
-    },
+    // data() {
+    //     return {
+    //         session3rd: ""
+    //     };
+    // },
     computed: {
-        ...mapState(["code"])
+        ...mapState(["code", "userInfo"])
     },
     methods: {
         ...mapMutations(["setUserInfo"]),
         ...mapActions(["login", "getToken"]),
         signUp(data) {
-            this.getToken(data).then(res => {
-                if (res && res.data) {
-                    this.session3rd = res.data.session3rd;
-                    // this.getPhone();
-                }
-            });
+            this.getToken(data);
+            // .then(res => {
+            //     if (res && res.data) {
+            //         this.session3rd = res.data.session3rd;
+            //         this.getPhone();
+            //     }
+            // });
         },
         getUserInfoByBtn(e) {
             const self = this;
@@ -57,7 +58,6 @@ export default {
             } = e.detail;
             if (errMsg === "getUserInfo:ok") {
                 this.$refs.user_modal.hide();
-                // this.setUserInfo(userInfo);
                 this.signUp({
                     code: self.code,
                     rawData,
@@ -86,12 +86,13 @@ export default {
             if (errMsg === "getPhoneNumber:ok") {
                 this.$request
                     .bindMobile({
-                        session3rd: self.session3rd,
+                        // session3rd: self.session3rd,
                         encryptedData,
                         iv
                     })
                     .then(res => {
                         console.log(res);
+                        res.data.phoneNumber;
                     });
             }
         },

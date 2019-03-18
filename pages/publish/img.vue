@@ -126,6 +126,7 @@ export default {
                 });
                 Promise.all(tasks)
                     .then(res => {
+                        console.log(res);
                         this.setHouseImg(res);
                         uni.hideLoading();
                         uni.navigateBack({

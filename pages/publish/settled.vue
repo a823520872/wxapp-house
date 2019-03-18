@@ -26,29 +26,15 @@
                     <view class="label">房源数量</view>
                     <view class="model m_flex_middle"><input type="number" v-model="form.num" /></view>
                 </view> -->
-                <view class="cell m_flex">
+                <!-- <view class="cell m_flex">
                     <view class="label">房源位置</view>
                     <view class="model m_flex_middle m_flex_item">
-                        <!-- <picker class="m_flex_item" mode="multiSelector" :range="[]" @change="addrChange"> -->
                         <view class="addr_picker m_flex_middle m_flex_item" @tap="addrChoose">
                             <view class="addr_item m_textover m_flex_item">{{addr}}</view>
                             <view class="addr_pull bottom_icon"></view>
                         </view>
-                        <!-- </picker> -->
-                        <!-- <picker :range="[]" @change="">
-                            <view class="addr_picker m_flex_middle">
-                                <view class="addr_item m_textover">天河区</view>
-                                <view class="addr_pull bottom_icon"></view>
-                            </view>
-                        </picker>
-                        <picker :range="[]" @change="">
-                            <view class="addr_picker last m_flex_middle">
-                                <view class="addr_item m_textover">上社</view>
-                                <view class="addr_pull bottom_icon"></view>
-                            </view>
-                        </picker> -->
                     </view>
-                </view>
+                </view> -->
                 <view class="cell m_flex">
                     <view class="label">
                         推荐人
@@ -73,17 +59,17 @@ export default {
             form: {
                 name: "",
                 mobile: "",
-                code: "",
+                // code: "",
                 // position_province_id: "",
-                position_province: "",
+                // position_province: "",
                 // position_city_id: "",
-                position_city: "",
+                // position_city: "",
                 // postion_district_id: "",
-                postion_district: "",
+                // postion_district: "",
                 // postion_street_id: "",
-                postion_street: "",
-                latitude: "",
-                longitude: "",
+                // postion_street: "",
+                // latitude: "",
+                // longitude: "",
                 // num: "",
                 referrer_user_mobile: ""
             }
@@ -100,13 +86,12 @@ export default {
         }
     },
     onReady() {
-        this.getAddress();
+        // this.getAddress();
     },
     methods: {
         getAddress() {
             this.$refs.auth.getLocation().then(
                 res => {
-                    console.log(res);
                     this.form.position_province = res.province;
                     this.form.position_city = res.city;
                     this.form.postion_district = res.county;
@@ -122,9 +107,6 @@ export default {
         addrChoose() {
             this.$refs.auth.chooseLocation().then(
                 res => {
-                    // res.longitude
-                    // res.latitude
-                    // res.landmark
                     this.form.position_province = res.province;
                     this.form.position_city = res.city;
                     this.form.postion_district = res.county;
@@ -143,8 +125,8 @@ export default {
                 mobile: [
                     { required: true, msg: "请输入手机号码" },
                     { type: "mobile", msg: "手机号码不正确" }
-                ],
-                postion_street: [{ required: true, msg: "请选择地址" }]
+                ]
+                // postion_street: [{ required: true, msg: "请选择地址" }]
             }).then(
                 () => {
                     this.$request.addLandlord(this.form).then(res => {

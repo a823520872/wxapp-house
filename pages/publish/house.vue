@@ -211,7 +211,14 @@ export default {
     },
     onShow() {
         if (this.houseImg && this.houseImg.length) {
+            this.setHouseTempImg(
+                this.houseTempImg.filter(
+                    item => item.indexOf("zhiqiang.ink") > 0
+                )
+            );
             this.form.images = this.houseImg;
+        } else {
+            this.setHouseTempImg([]);
         }
     },
     onReady() {
@@ -274,7 +281,9 @@ export default {
                 this.$request.getHouse({ id: this.house_id }).then(res => {
                     if (res && res.data) {
                         const images = res.data.image_urls
-                            ? res.data.image_urls.split(",")
+                            ? res.data.image_urls
+                                  .split(",")
+                                  .map(item => ({ url: item.url }))
                             : [];
                         this.setHouseTempImg([...images]);
                         this.setHouseImg([...images]);
@@ -302,7 +311,9 @@ export default {
                     sourceType: "album",
                     success(e) {
                         if (e.errMsg === "chooseImage:ok") {
-                            self.setHouseTempImg(e.tempFilePaths);
+                            self.setHouseTempImg(
+                                e.tempFilePaths.map(item => ({ url: item.url }))
+                            );
                             self.goPage(`/pages/publish/img`);
                         }
                     }
@@ -412,11 +423,13 @@ export default {
                         ? ((this.form.hr_id = this.form.id), "editHouse")
                         : "addHouse";
                     const { landlord_info, image_urls, ...params } = this.form;
-                    if (typeof params.images[0] === "string") {
-                        params.images = params.images.map(item => ({
-                            url: item
-                        }));
-                    }
+                    params.images.forEach(item => {
+                        if (typeof item === "string") {
+                            item = {
+                                url: item
+                            };
+                        }
+                    });
                     this.$request[api](params).then(res => {
                         if (res && res.data) {
                             this.setHouseTempImg([]);

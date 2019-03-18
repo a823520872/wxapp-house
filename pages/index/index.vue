@@ -56,18 +56,44 @@
                     <text class="bottom_icon"></text>
                 </view>
             </view>
-            <!-- <view class="cells_fd">
+            <view class="cells_fd">
                 <scroll-view class="scroll_view" :scroll-x="true">
                     <view class="m_flex">
-                        <view class="house_type">
-                            <view class="btn active">单间</view>
-                            <view class="del_btn">
-                                <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                        <template v-if="house_type_active">
+                            <view class="house_type" v-for="(li, i) in house_type_active" :key="i">
+                                <view class="btn active">{{li.value}}</view>
+                                <view class="del_btn" @tap="li.active=false">
+                                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                </view>
                             </view>
-                        </view>
+                        </template>
+                        <template v-if="price_active">
+                            <view class="house_type" v-for="(li, i) in price_active" :key="i">
+                                <view class="btn active">{{li.value}}</view>
+                                <view class="del_btn" @tap="li.active=false">
+                                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                </view>
+                            </view>
+                        </template>
+                        <template v-if="config_base_active">
+                            <view class="house_type" v-for="(li, i) in config_base_active" :key="i">
+                                <view class="btn active">{{li.value}}</view>
+                                <view class="del_btn" @tap="li.active=false">
+                                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                </view>
+                            </view>
+                        </template>
+                        <template v-if="config_lightspot_active">
+                            <view class="house_type" v-for="(li, i) in config_lightspot_active" :key="i">
+                                <view class="btn active">{{li.value}}</view>
+                                <view class="del_btn" @tap="li.active=false">
+                                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                </view>
+                            </view>
+                        </template>
                     </view>
                 </scroll-view>
-            </view> -->
+            </view>
         </view>
         <view class="list">
             <house-list :list.sync="list"></house-list>
@@ -120,24 +146,104 @@ export default {
                 this.config.price &&
                 this.config.price.map(li => li.value)
             );
-            z;
+        },
+        house_type_active() {
+            return (
+                this.config &&
+                this.config.house_type &&
+                this.config.house_type.reduce((arr, li) => {
+                    if (li.active) {
+                        arr.push(li);
+                    }
+                    return arr;
+                }, [])
+            );
+        },
+        price_active() {
+            return (
+                this.config &&
+                this.config.price &&
+                this.config.price.reduce((arr, li) => {
+                    if (li.active) {
+                        arr.push(li);
+                    }
+                    return arr;
+                }, [])
+            );
+        },
+        config_base_active() {
+            return (
+                this.config &&
+                this.config.config_base &&
+                this.config.config_base.reduce((arr, li) => {
+                    if (li.active) {
+                        arr.push(li);
+                    }
+                    return arr;
+                }, [])
+            );
+        },
+        config_lightspot_active() {
+            return (
+                this.config &&
+                this.config.config_lightspot &&
+                this.config.config_lightspot.reduce((arr, li) => {
+                    if (li.active) {
+                        arr.push(li);
+                    }
+                    return arr;
+                }, [])
+            );
         }
     },
     data() {
         return {
             params: {
-                address_street: "上社"
+                address_street_id: "",
+                address_street: "",
+                // config_base_ids: "",
+                config_base: "",
+                // config_lightspot_ids: "",
+                config_lightspot: "",
+                rental_begin: "",
+                rental_end: "",
+                house_type: ""
             },
             list: [],
             config: {
                 house_type: null,
                 floor: null,
                 price: [
-                    { value: "500以下", active: false },
-                    { value: "500-700", active: false },
-                    { value: "700-900", active: false },
-                    { value: "900-1200", active: false },
-                    { value: "1500以上", active: false }
+                    {
+                        rental_begin: 0,
+                        rental_end: 500,
+                        value: "500以下",
+                        active: false
+                    },
+                    {
+                        rental_begin: 500,
+                        rental_end: 700,
+                        value: "500-700",
+                        active: false
+                    },
+                    {
+                        rental_begin: 700,
+                        rental_end: 900,
+                        value: "700-900",
+                        active: false
+                    },
+                    {
+                        rental_begin: 900,
+                        rental_end: 1200,
+                        value: "900-1200",
+                        active: false
+                    },
+                    {
+                        rental_begin: 1500,
+                        rental_end: "",
+                        value: "1500以上",
+                        active: false
+                    }
                 ],
                 address_street: null,
                 address_flag: null,
@@ -171,6 +277,37 @@ export default {
         ...mapActions(["login", "getInfo"]),
         init() {
             const self = this;
+            // address_street_id: "",
+            // address_street: "上社",
+            // config_base_ids: "",
+            // config_base: "",
+            // rental_begin: "",
+            // rental_end: "",
+            // house_type: ""
+            const house_type = this.config.house_type
+                ? this.config.house_type.filter(item => item.active)
+                : [];
+            this.params.house_type = house_type
+                .map(item => item.value)
+                .join(",");
+            const config_base = this.config.config_base
+                ? this.config.config_base.filter(item => item.active)
+                : [];
+            this.params.config_base = config_base
+                .map(item => item.value)
+                .join(",");
+            this.params.config_base_ids = config_base
+                .map(item => item.id)
+                .join(",");
+            const config_lightspot = this.config.config_lightspot
+                ? this.config.config_lightspot.filter(item => item.active)
+                : [];
+            this.params.config_lightspot = config_lightspot
+                .map(item => item.value)
+                .join(",");
+            this.params.config_lightspot_id = config_lightspot
+                .map(item => item.id)
+                .join(",");
             this.$refs.page.init({
                 url: "getHouseList",
                 params: self.params,
@@ -228,6 +365,9 @@ export default {
             this.params.address_street = this.config.address_street[2][
                 e.detail.value[2]
             ].name;
+            this.params.address_street_id = this.config.address_street[2][
+                e.detail.value[2]
+            ].id;
             this.init();
         },
         showModal(type, title) {

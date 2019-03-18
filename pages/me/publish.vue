@@ -53,7 +53,8 @@ export default {
                 url: "getMyHouse",
                 params: {
                     hr_id: "",
-                    is_booked: self.tab
+                    is_rented: self.tab,
+                    is_public: self.tab === 2 ? 1 : 2
                 },
                 fn: null
             });

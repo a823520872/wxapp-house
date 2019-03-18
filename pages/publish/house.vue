@@ -204,6 +204,9 @@ export default {
     onLoad(res) {
         if (res.id) {
             this.house_id = res.id;
+        } else {
+            this.setHouseTempImg([]);
+            this.setHouseImg([]);
         }
     },
     onShow() {
@@ -409,8 +412,15 @@ export default {
                         ? ((this.form.hr_id = this.form.id), "editHouse")
                         : "addHouse";
                     const { landlord_info, image_urls, ...params } = this.form;
+                    if (typeof params.images[0] === "string") {
+                        params.images = params.images.map(item => ({
+                            url: item
+                        }));
+                    }
                     this.$request[api](params).then(res => {
                         if (res && res.data) {
+                            this.setHouseTempImg([]);
+                            this.setHouseImg([]);
                             this.goPage({
                                 path: `/pages/publish/publish_succ?id=${this
                                     .form.id || res.data}`,

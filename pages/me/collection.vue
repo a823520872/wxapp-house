@@ -21,7 +21,14 @@ export default {
         this.$refs.page.init({
             url: "getMyCollection",
             params: {},
-            fn: null
+            fn(data) {
+                return data.map(item => {
+                    item.image_urls = item.image_urls
+                        ? item.image_urls.split(",")
+                        : [];
+                    return item;
+                });
+            }
         });
     },
     onPullDownRefresh() {

@@ -92,7 +92,9 @@ export default {
                     })
                     .then(res => {
                         console.log(res);
-                        res.data.phoneNumber;
+                        if (res.data && res.data.phoneNumber) {
+                            this.getInfo(true);
+                        }
                     });
             }
         },

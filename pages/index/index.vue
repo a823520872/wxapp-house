@@ -70,7 +70,7 @@
                         <template v-if="price_active">
                             <view class="house_type" v-for="(li, i) in price_active" :key="i">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false">
+                                <view class="del_btn" @tap="li.active=false,init()">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
@@ -78,7 +78,7 @@
                         <template v-if="config_base_active">
                             <view class="house_type" v-for="(li, i) in config_base_active" :key="i">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false">
+                                <view class="del_btn" @tap="li.active=false,init()">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
@@ -86,7 +86,7 @@
                         <template v-if="config_lightspot_active">
                             <view class="house_type" v-for="(li, i) in config_lightspot_active" :key="i">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false">
+                                <view class="del_btn" @tap="li.active=false,init()">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
@@ -277,19 +277,20 @@ export default {
         ...mapActions(["login", "getInfo"]),
         init() {
             const self = this;
-            // address_street_id: "",
-            // address_street: "上社",
-            // config_base_ids: "",
-            // config_base: "",
-            // rental_begin: "",
-            // rental_end: "",
-            // house_type: ""
             const house_type = this.config.house_type
                 ? this.config.house_type.filter(item => item.active)
                 : [];
             this.params.house_type = house_type
                 .map(item => item.value)
                 .join(",");
+            const price = this.config.price.filter(item => item.active)[0];
+            if (price) {
+                this.params.rental_begin = price.rental_begin || "";
+                this.params.rental_end = price.rental_end || "";
+            } else {
+                this.params.rental_begin = "";
+                this.params.rental_end = "";
+            }
             const config_base = this.config.config_base
                 ? this.config.config_base.filter(item => item.active)
                 : [];
@@ -397,6 +398,10 @@ export default {
                 key = "house_type";
             } else if (this.modalType === 2) {
                 key = "price";
+                this.config[key].map((item, k) => {
+                    item.active = j === k;
+                });
+                return;
             } else if (this.modalType === 3) {
                 key = i === 0 ? "config_base" : "config_lightspot";
             }

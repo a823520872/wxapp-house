@@ -29,7 +29,7 @@ const ajax = async (path, data, options = {}) => {
         if (res.length && res.length === 2) {
             res = res[1];
         }
-        console.log(path, res);
+        console.log(path, res.data);
 
         if (res && res.statusCode == 200) {
             let data = res.data;
@@ -61,15 +61,6 @@ const ajax = async (path, data, options = {}) => {
         if (e && e.errMsg === 'request:fail abort') return;
         return Promise.reject(e);
     };
-    // const obj = {
-    //     url,
-    //     method: options.type,
-    //     data,
-    //     header,
-    //     success,
-    //     fail
-    // }
-    // return new Promise(() => uni.request(obj))
 
     const obj = {
         url,

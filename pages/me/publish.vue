@@ -1,6 +1,6 @@
 <template>
     <view class="content">
-        <view class="hd">
+        <view class="hd" v-if="userInfo">
             <view class="avatar">
                 <image :src="userInfo.avatar" mode="aspectFit"></image>
             </view>
@@ -49,13 +49,17 @@ export default {
     methods: {
         getData() {
             const self = this;
+            const params = {
+                hr_id: ""
+            };
+            if (this.tab === 2) {
+                params.is_public = 1;
+            } else if (this.tab === 1) {
+                params.is_rented = 1;
+            }
             this.$refs.page.init({
                 url: "getMyHouse",
-                params: {
-                    hr_id: "",
-                    is_rented: self.tab,
-                    is_public: self.tab === 2 ? 1 : 2
-                },
+                params,
                 fn: null
             });
         },

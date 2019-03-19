@@ -3,13 +3,13 @@
         <view class="step_one" v-if="step === 0">
             <view class="hd">
                 <view class="bg">
-                    <image :src="houseTempImg.length ? houseTempImg[0] : '/static/image/publish/house_bg.png'" :mode="config.house_mode"></image>
+                    <image :src="houseImg[0] ? houseImg[0].url : '/static/image/publish/house_bg.png'" :mode="config.house_mode"></image>
                 </view>
                 <view class="warn">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
                 <view class="main m_flex_column m_flex_middle">
                     <view class="photo_box m_flex_column m_flex_middle m_flex_center" @tap="chooseImg">
                         <image class="photo" src="/static/image/publish/photo.png" mode="aspectFit"></image>
-                        <text>{{houseTempImg && houseTempImg.length ? '编辑' : '上传'}}照片</text>
+                        <text>{{houseImg[0] ? '编辑' : '上传'}}照片</text>
                     </view>
                     <view class="tips">上传房间、厨房、厕所、阳台、楼照租房率更高哦~</view>
                 </view>
@@ -202,23 +202,15 @@ export default {
         };
     },
     onLoad(res) {
+        this.setHouseImg([]);
         if (res.id) {
             this.house_id = res.id;
-        } else {
-            this.setHouseTempImg([]);
-            this.setHouseImg([]);
         }
     },
     onShow() {
+        this.setHouseTempImg([]);
         if (this.houseImg && this.houseImg.length) {
-            this.setHouseTempImg(
-                this.houseTempImg.filter(
-                    item => item.indexOf("zhiqiang.ink") > 0
-                )
-            );
             this.form.images = this.houseImg;
-        } else {
-            this.setHouseTempImg([]);
         }
     },
     onReady() {
@@ -281,13 +273,17 @@ export default {
                 this.$request.getHouse({ id: this.house_id }).then(res => {
                     if (res && res.data) {
                         const images = res.data.image_urls
-                            ? res.data.image_urls
-                                  .split(",")
-                                  .map(item => ({ url: item.url }))
+                            ? res.data.image_urls.split(",")
                             : [];
                         this.setHouseTempImg([...images]);
-                        this.setHouseImg([...images]);
-                        res.data.images = [...images];
+                        this.setHouseImg(
+                            images.map(item => ({
+                                url: item
+                            }))
+                        );
+                        res.data.images = images.map(item => ({
+                            url: item
+                        }));
                         this.form = { ...res.data };
                     }
                 });
@@ -304,16 +300,14 @@ export default {
         },
         chooseImg() {
             const self = this;
-            if (this.houseTempImg && this.houseTempImg.length) {
-                self.goPage(`/pages/publish/img`);
+            if (this.houseImg && this.houseImg.length) {
+                this.goPage(`/pages/publish/img`);
             } else {
                 uni.chooseImage({
                     sourceType: "album",
                     success(e) {
                         if (e.errMsg === "chooseImage:ok") {
-                            self.setHouseTempImg(
-                                e.tempFilePaths.map(item => ({ url: item.url }))
-                            );
+                            self.setHouseTempImg(e.tempFilePaths);
                             self.goPage(`/pages/publish/img`);
                         }
                     }
@@ -360,7 +354,10 @@ export default {
                 road_distance: [{ required: true, msg: "请选择路边距离" }],
                 house_type: [{ required: true, msg: "请选择房型" }],
                 floor_number: [{ required: true, msg: "请输入楼层" }],
-                images: [{ type: "array", msg: "请上传图片" }]
+                images: [
+                    { type: "array", msg: "请上传图片" },
+                    { min: 2, msg: "请至少上传2张图片" }
+                ]
             }).then(
                 () => {
                     const config_base = this.form.config_base
@@ -416,19 +413,23 @@ export default {
                 road_distance: [{ required: true, msg: "请选择路边距离" }],
                 house_type: [{ required: true, msg: "请选择房型" }],
                 floor_number: [{ required: true, msg: "请输入楼层" }],
-                images: [{ type: "array", msg: "请上传图片" }]
+                images: [
+                    { type: "array", msg: "请上传图片" },
+                    { min: 2, msg: "请至少上传2张图片" }
+                ]
             }).then(
                 () => {
                     const api = this.form.id
                         ? ((this.form.hr_id = this.form.id), "editHouse")
                         : "addHouse";
                     const { landlord_info, image_urls, ...params } = this.form;
-                    params.images.forEach(item => {
+                    params.images = params.images.map(item => {
                         if (typeof item === "string") {
                             item = {
                                 url: item
                             };
                         }
+                        return item;
                     });
                     this.$request[api](params).then(res => {
                         if (res && res.data) {

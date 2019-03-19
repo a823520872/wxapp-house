@@ -36,7 +36,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 const qiniuUploader = require("../../common/qiniuUploader.js");
 export default {
     computed: {
-        ...mapState(["houseTempImg"])
+        ...mapState(["houseTempImg", "houseImg"])
     },
     data() {
         return {
@@ -126,7 +126,6 @@ export default {
                 });
                 Promise.all(tasks)
                     .then(res => {
-                        console.log(res);
                         this.setHouseImg(res);
                         uni.hideLoading();
                         uni.navigateBack({

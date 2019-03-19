@@ -9,7 +9,7 @@
                     </view>
                     <view class="intro m_flex_item">
                         <view class="intro_cell name">{{li.house_type}}</view>
-                        <view v-if="li.is_booked === 1" class="intro_cell price">¥{{li.rental}}/月</view>
+                        <view v-if="li.is_public === 1" class="intro_cell price">¥{{li.rental}}/月</view>
                         <view class="intro_cell addr">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
                             <text>{{li.address_street + li.address_flag + li.address_detail + li.road_distance}}</text>
@@ -22,11 +22,11 @@
                 </view>
                 <view class="fd m_flex_right">
                     <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
-                    <block v-if="li.is_booked === 1">
+                    <block v-if="li.is_rented === 2">
                         <button class="m_button plain" @tap.stop="rented(li)">已租</button>
                         <button class="m_button primary" @tap.stop="getQRCode(li)">生产海报</button>
                     </block>
-                    <block v-if="li.is_rented === 1">
+                    <block v-if="li.is_public === 2">
                         <button class="m_button primary" @tap.stop="public(li)">发布</button>
                     </block>
                 </view>
@@ -138,7 +138,8 @@ export default {
             this.$request
                 .public({
                     id: li.id,
-                    is_public: 1
+                    is_public: 1,
+                    is_rented: 2
                 })
                 .then(res => {
                     if (res && res.data) {

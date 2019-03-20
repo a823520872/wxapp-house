@@ -313,19 +313,7 @@ export default {
                 url: "getHouseList",
                 params: self.params,
                 fn(data) {
-                    return data.map(
-                        item => (
-                            (item.config_base =
-                                item.config_base &&
-                                item.config_base.split(",")),
-                            (item.config_lightspot =
-                                item.config_lightspot &&
-                                item.config_lightspot.split(",")),
-                            (item.image_urls =
-                                item.image_urls && item.image_urls.split(",")),
-                            item
-                        )
-                    );
+                    return data.map(item => self.filterHouse(item));
                 }
             });
             const tk = uni.getStorageSync("tk");

@@ -79,7 +79,8 @@
                     <view class="cells_title title">房源图片</view>
                     <view class="cell">
                         <view class="house_img" v-for="(li, i) in detail.image_urls" :key="i">
-                            <image :src="li" :mode="config.house_mode"></image>
+                            <!-- <image :src="li" :mode="config.house_mode"></image> -->
+                            <image :src="li" mode="widthFix"></image>
                         </view>
                     </view>
                 </view>
@@ -177,15 +178,7 @@ export default {
         getData() {
             this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {
-                    const data = res.data;
-                    data.create_at = this.getTime(data.createtime);
-                    data.config_base =
-                        data.config_base && data.config_base.split(",");
-                    data.config_lightspot =
-                        data.config_lightspot &&
-                        data.config_lightspot.split(",");
-                    data.image_urls =
-                        data.image_urls && data.image_urls.split(",");
+                    const data = this.filterHouse(res.data);
                     this.detail = { ...data };
                 }
             });
@@ -332,8 +325,8 @@ export default {
         color: $primary-color;
     }
     .house_img {
-        height: 600upx;
-        padding-bottom: 18upx;
+        // height: 600upx;
+        padding-bottom: 24upx;
         &:last-of-type {
             padding-bottom: 30upx;
         }

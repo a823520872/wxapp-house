@@ -18,16 +18,12 @@ export default {
     },
     onLoad(res) {},
     onReady() {
+        const self = this;
         this.$refs.page.init({
             url: "getMyCollection",
             params: {},
             fn(data) {
-                return data.map(item => {
-                    item.image_urls = item.image_urls
-                        ? item.image_urls.split(",")
-                        : [];
-                    return item;
-                });
+                return data.map(item => self.filterHouse(item));
             }
         });
     },

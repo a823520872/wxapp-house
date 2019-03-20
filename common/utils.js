@@ -22,6 +22,12 @@ export default {
         }
         return v
     },
+    filterHouse(item) {
+        item.config_base = item.config_base && item.config_base.split(',')
+        item.config_lightspot = item.config_lightspot && item.config_lightspot.split(',')
+        item.image_urls = item.image_urls && item.image_urls.split(',')
+        return item
+    },
     call(v) {
         uni.makePhoneCall({
             phoneNumber: v

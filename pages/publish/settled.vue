@@ -22,11 +22,11 @@
                         <view class="m_button main btn_code" @tap="getCode">获取验证码</view>
                     </view>
                 </view> -->
-                <!-- <view class="cell m_flex">
+                <view class="cell m_flex">
                     <view class="label">房源数量</view>
                     <view class="model m_flex_middle"><input type="number" v-model="form.num" /></view>
-                </view> -->
-                <!-- <view class="cell m_flex">
+                </view>
+                <view class="cell m_flex">
                     <view class="label">房源位置</view>
                     <view class="model m_flex_middle m_flex_item">
                         <view class="addr_picker m_flex_middle m_flex_item" @tap="addrChoose">
@@ -34,7 +34,7 @@
                             <view class="addr_pull bottom_icon"></view>
                         </view>
                     </view>
-                </view> -->
+                </view>
                 <view class="cell m_flex">
                     <view class="label">
                         推荐人
@@ -44,7 +44,7 @@
                 </view>
             </view>
             <view class="m_button main btn_confirm" @tap="confirm">提交</view>
-            <view class="tips" style="color: #ccc; text-align: center;">地址如有错误，请联系村长修改</view>
+            <view class="tips" style="color: #ccc; text-align: center;">地址可联系村长修改</view>
         </view>
         <view class="fd"></view>
         <v-auth ref="auth"></v-auth>

@@ -12,16 +12,16 @@
                         <button class="m_button main plain" @tap.stop="linkLandlord(li)">联系房东</button>
                     </view>
                     <view class="intro">
-                        <view class="intro_cell m_textover">楼层：【{{li.floor_number}}楼】</view>
+                        <view class="intro_cell m_textover">楼层：<text class="intro_cell_bd">{{li.floor_number}}楼</text></view>
                         <view class="intro_cell m_textover">地址：
-                            <text v-if="li.address_street">【{{li.address_street}}】</text>
+                            <text class="intro_cell_bd" v-if="li.address_street">{{li.address_street}}</text>
                         </view>
                         <view class="intro_cell m_textover">亮点：
-                            <text v-if="li.config_base && li.config_base.length">
-                                <text v-for="(item, j) in li.config_base" :key="i">【{{item}}】</text>
+                            <text class="intro_cell_bd" v-if="li.config_base && li.config_base.length">
+                                <text v-for="(item, j) in li.config_base" :key="i">{{item}}</text>
                             </text>
-                            <text v-if="li.config_lightspot && li.config_lightspot.length">
-                                <text v-for="(item, j) in li.config_lightspot" :key="i">【{{item}}】</text>
+                            <text class="intro_cell_bd" v-if="li.config_lightspot && li.config_lightspot.length">
+                                <text v-for="(item, j) in li.config_lightspot" :key="i">{{item}}</text>
                             </text>
                         </view>
                     </view>
@@ -146,6 +146,11 @@ export default {
         font-size: 24upx;
         line-height: 42upx;
         color: $text-color-inverse;
+
+        &_cell_bd {
+            color: $text-color;
+            font-size: 28upx;
+        }
     }
 
     .bd {

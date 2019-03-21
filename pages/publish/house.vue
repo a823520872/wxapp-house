@@ -194,6 +194,7 @@ export default {
             config: {
                 house_type: null,
                 floor: null,
+                road_distance: null,
                 address_street: null,
                 address_flag: null,
                 config_base: null,
@@ -220,7 +221,7 @@ export default {
     },
     methods: {
         ...mapMutations(["setHouseTempImg", "setHouseImg", "setHomeReload"]),
-        ...mapActions(["login", "getInfo"]),
+        ...mapActions(["login", "getInfo", "checkAuth"]),
         getData() {
             this.getConfig();
             this.getAddr();
@@ -347,46 +348,50 @@ export default {
             }
         },
         next() {
-            this.$validate(this.form, {
-                rental: [{ required: true, msg: "请输入租金" }],
-                address_street: [{ required: true, msg: "请选择地址" }],
-                address_flag: [{ required: true, msg: "请选择标志建筑" }],
-                road_distance: [{ required: true, msg: "请选择路边距离" }],
-                house_type: [{ required: true, msg: "请选择房型" }],
-                floor_number: [{ required: true, msg: "请输入楼层" }],
-                images: [
-                    { type: "array", msg: "请上传图片" },
-                    { min: 2, msg: "请至少上传2张图片" }
-                ]
-            }).then(
-                () => {
-                    const config_base = this.form.config_base
-                        ? this.form.config_base.split(",")
-                        : [];
-                    const config_lightspot = this.form.config_lightspot
-                        ? this.form.config_lightspot.split(",")
-                        : [];
-                    this.config.config_base.map(item => {
-                        if (config_base.indexOf(item.value) > -1) {
-                            item.active = true;
-                        }
-                    });
-                    this.config.config_lightspot.map(item => {
-                        if (config_lightspot.indexOf(item.value) > -1) {
-                            item.active = true;
-                        }
-                    });
-                    this.step = 1;
-                },
-                e => {
-                    uni.showToast({
-                        title: e.msg,
-                        icon: "none"
-                    });
-                }
-            );
+            this.checkAuth().then(res => {
+                if (!res) return;
+
+                this.$validate(this.form, {
+                    rental: [{ required: true, msg: "请输入租金" }],
+                    address_street: [{ required: true, msg: "请选择地址" }],
+                    address_flag: [{ required: true, msg: "请选择标志建筑" }],
+                    road_distance: [{ required: true, msg: "请选择路边距离" }],
+                    house_type: [{ required: true, msg: "请选择房型" }],
+                    floor_number: [{ required: true, msg: "请输入楼层" }],
+                    images: [
+                        { type: "array", msg: "请上传图片" },
+                        { min: 2, msg: "请至少上传2张图片" }
+                    ]
+                }).then(
+                    () => {
+                        const config_base = this.form.config_base
+                            ? this.form.config_base.split(",")
+                            : [];
+                        const config_lightspot = this.form.config_lightspot
+                            ? this.form.config_lightspot.split(",")
+                            : [];
+                        this.config.config_base.map(item => {
+                            if (config_base.indexOf(item.value) > -1) {
+                                item.active = true;
+                            }
+                        });
+                        this.config.config_lightspot.map(item => {
+                            if (config_lightspot.indexOf(item.value) > -1) {
+                                item.active = true;
+                            }
+                        });
+                        this.step = 1;
+                    },
+                    e => {
+                        uni.showToast({
+                            title: e.msg,
+                            icon: "none"
+                        });
+                    }
+                );
+            });
         },
-        confirm() {
+        filterForm() {
             const config_base = this.config.config_base.filter(
                 item => item.active
             );
@@ -406,51 +411,61 @@ export default {
             this.form.config_lightspot = config_lightspot
                 .map(item => item.value)
                 .join(",");
-            this.$validate(this.form, {
-                rental: [{ required: true, msg: "请输入租金" }],
-                address_street: [{ required: true, msg: "请选择地址" }],
-                address_flag: [{ required: true, msg: "请选择标志建筑" }],
-                road_distance: [{ required: true, msg: "请选择路边距离" }],
-                house_type: [{ required: true, msg: "请选择房型" }],
-                floor_number: [{ required: true, msg: "请输入楼层" }],
-                images: [
-                    { type: "array", msg: "请上传图片" },
-                    { min: 2, msg: "请至少上传2张图片" }
-                ]
-            }).then(
-                () => {
-                    const api = this.form.id
-                        ? ((this.form.hr_id = this.form.id), "editHouse")
-                        : "addHouse";
-                    const { landlord_info, image_urls, ...params } = this.form;
-                    params.images = params.images.map(item => {
-                        if (typeof item === "string") {
-                            item = {
-                                url: item
-                            };
-                        }
-                        return item;
-                    });
-                    this.$request[api](params).then(res => {
-                        if (res && res.data) {
-                            this.setHouseTempImg([]);
-                            this.setHouseImg([]);
-                            this.setHomeReload(true);
-                            this.goPage({
-                                path: `/pages/publish/publish_succ?id=${this
-                                    .form.id || res.data}`,
-                                replace: true
-                            });
-                        }
-                    });
-                },
-                e => {
-                    uni.showToast({
-                        title: e.msg,
-                        icon: "none"
-                    });
-                }
-            );
+        },
+        confirm() {
+            this.checkAuth().then(res => {
+                if (!res) return;
+                this.filterForm();
+                this.$validate(this.form, {
+                    rental: [{ required: true, msg: "请输入租金" }],
+                    address_street: [{ required: true, msg: "请选择地址" }],
+                    address_flag: [{ required: true, msg: "请选择标志建筑" }],
+                    road_distance: [{ required: true, msg: "请选择路边距离" }],
+                    house_type: [{ required: true, msg: "请选择房型" }],
+                    floor_number: [{ required: true, msg: "请输入楼层" }],
+                    images: [
+                        { type: "array", msg: "请上传图片" },
+                        { min: 2, msg: "请至少上传2张图片" }
+                    ]
+                }).then(
+                    () => {
+                        const api = this.form.id
+                            ? ((this.form.hr_id = this.form.id), "editHouse")
+                            : "addHouse";
+                        const {
+                            landlord_info,
+                            image_urls,
+                            ...params
+                        } = this.form;
+                        params.images = params.images.map(item => {
+                            if (typeof item === "string") {
+                                item = {
+                                    url: item
+                                };
+                            }
+                            return item;
+                        });
+                        this.$request[api](params).then(res => {
+                            if (res && res.data) {
+                                this.setHouseTempImg([]);
+                                this.setHouseImg([]);
+                                this.setHomeReload(true);
+                                this.goPage({
+                                    path: `/pages/publish/publish_succ?id=${this
+                                        .form.id || res.data}`,
+                                    replace: true
+                                });
+                            }
+                        });
+                    },
+                    e => {
+                        uni.showToast({
+                            title: e.msg,
+                            icon: "none"
+                        });
+                    }
+                );
+            });
         },
         chooseCfgBase(li) {
             li.active = !li.active;

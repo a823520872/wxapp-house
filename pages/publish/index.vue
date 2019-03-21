@@ -1,8 +1,8 @@
 <template>
     <view class="content content_bg_ff">
-        <view class="not_landlord" v-if="step === 2 || step === 3">
+        <view class="not_landlord" v-if="step === 2 || step === 3 || step === 4">
             <view class="bd">
-                <view>{{userInfo && userInfo.is_landlord === 3 ? '待审核，请联系村长审核' : '您未入驻，无法发布房源'}}</view>
+                <view>{{state}}</view>
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
             <view class="fd">
@@ -71,7 +71,19 @@ export default {
         linkModal
     },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo"]),
+        state() {
+            switch (this.step) {
+                case 2:
+                    return "您未入驻，无法发布房源";
+                case 3:
+                    return "待审核，请联系村长审核";
+                case 4:
+                    return "服务已过期，如想继续使用请联系村长";
+                default:
+                    return "您未入驻，无法发布房源";
+            }
+        }
     },
     data() {
         return {
@@ -81,19 +93,31 @@ export default {
     onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
+            this.init();
+        } else {
+            this.login().then(code => {
+                if (code) {
+                    this.init();
+                }
+            });
+        }
+    },
+    methods: {
+        ...mapActions(["login", "getInfo", "checkAuth"]),
+        init() {
             this.getInfo(true).then(res => {
                 if (res && res.data) {
                     this.step = res.data.is_landlord;
+                    this.checkAuth().then(res => {
+                        if (res) {
+                            this.step = 4;
+                        }
+                    });
                 } else {
                     this.step = 2;
                 }
             });
-        } else {
-            this.login();
-        }
-    },
-    methods: {
-        ...mapActions(["login", "getInfo"]),
+        },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },

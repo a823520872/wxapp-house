@@ -62,7 +62,11 @@ export default {
                 params,
                 fn(data) {
                     return (data || []).map(
-                        item => (item.images = item.image_urls.split(","))
+                        item => (
+                            (item.images =
+                                item.image_urls && item.image_urls.split(",")),
+                            item
+                        )
                     );
                 }
             });

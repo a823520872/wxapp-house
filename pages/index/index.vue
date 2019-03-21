@@ -51,6 +51,10 @@
                     <text class="title">价格</text>
                     <text class="bottom_icon"></text>
                 </view>
+                <!-- <view class="filter_title" @tap="showModal(4, '路边距离')">
+                    <text class="title">路边距离</text>
+                    <text class="bottom_icon"></text>
+                </view> -->
                 <view class="filter_title" @tap="showModal(3, '更多')">
                     <text class="title">更多</text>
                     <text class="bottom_icon"></text>
@@ -251,6 +255,7 @@ export default {
                         tmpActive: false
                     }
                 ],
+                road_distance: null,
                 address_street: null,
                 address_flag: null,
                 config_base: null,
@@ -317,6 +322,7 @@ export default {
                         obj[item.type].push(item);
                         return obj;
                     }, {});
+                    console.log(config);
                     this.config = { ...this.config, ...config };
                 }
             });
@@ -386,6 +392,8 @@ export default {
                     this.config.config_base,
                     this.config.config_lightspot
                 ];
+            } else if (type === 4) {
+                this.modalList = [this.config.road_distance];
             }
             this.$refs.modal.show({
                 title,
@@ -431,6 +439,8 @@ export default {
                 return;
             } else if (this.modalType === 3) {
                 key = i === 0 ? "config_base" : "config_lightspot";
+            } else if (this.modalType === 4) {
+                key = "road_distance";
             }
             this.config[key][j].tmpActive = !this.config[key][j].tmpActive;
         }

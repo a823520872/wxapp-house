@@ -19,11 +19,11 @@
                             </view>
                             <view>我的收藏</view>
                         </view>
-                        <view class="tab">
+                        <view class="tab" @tap="handleClick">
                             <view class="icon">
-                                <image src="/static/image/me/praise.png" mode="aspectFit"></image>
+                                <image src="/static/image/me/person.png" mode="aspectFit"></image>
                             </view>
-                            <view>我赞过的</view>
+                            <view>{{userInfo && userInfo.is_landlord === 1 ? service ? '服务中' : '继续合作' : '申请入驻' }}</view>
                         </view>
                         <!-- <view class="tab">
                             <view class="icon">
@@ -60,16 +60,7 @@
         <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
             <view slot="content">
-                <view class="modal">
-                    <view class="link m_flex_justify">
-                        <view>手机号：13123456789</view>
-                        <button class="m_button main" plain @tap="call">拨打</button>
-                    </view>
-                    <view class="link m_flex_justify">
-                        <view>微信号：13123456789</view>
-                        <button class="m_button main" plain @tap="copy">复制</button>
-                    </view>
-                </view>
+                <link-modal :temp="temp"></link-modal>
             </view>
         </v-modal>
     </view>
@@ -77,28 +68,29 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import linkModal from "../components/link-modal";
 export default {
     computed: {
         ...mapState(["userInfo"])
     },
+    components: {
+        linkModal
+    },
     data() {
-        return {};
+        return {
+            service: false
+        };
     },
     onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
             if (!this.userInfo) {
-                this.getInfo().then(() => {
-                    this.checkAuth();
-                });
+                this.init();
             }
         } else {
             this.login().then(code => {
                 if (code) {
-                    !this.userInfo &&
-                        this.getInfo().then(() => {
-                            this.checkAuth();
-                        });
+                    this.init();
                 }
             });
         }
@@ -114,7 +106,14 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["login", "getInfo", "checkAuth"]),
+        ...mapActions(["login", "getToken", "getInfo", "checkAuth"]),
+        init() {
+            this.getInfo(true).then(() => {
+                this.checkAuth().then(res => {
+                    this.service = res;
+                });
+            });
+        },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },
@@ -127,6 +126,15 @@ export default {
                   })
                 : this.getUserInfo();
         },
+        handleClick() {
+            if (
+                this.service &&
+                this.userInfo &&
+                this.userInfo.is_landlord === 1
+            )
+                return;
+            this.to("/pages/publish/index");
+        },
         to(url) {
             this.userInfo ? this.goPage(url) : this.getUserInfo();
         },
@@ -137,7 +145,6 @@ export default {
                     url: "/pages/me/me"
                 });
             } catch (e) {
-                //TODO handle the exception
                 uni.showToast({
                     title: "清楚授权失败",
                     icon: "none"

@@ -24,7 +24,7 @@
                 </view> -->
                 <view class="cell m_flex">
                     <view class="label">房源数量</view>
-                    <view class="model m_flex_middle"><input type="number" v-model="form.num" /></view>
+                    <view class="model m_flex_middle"><input type="number" v-model="form.num" placeholder="请输入房源数量" /></view>
                 </view>
                 <!-- <view class="cell m_flex">
                     <view class="label">房源位置</view>

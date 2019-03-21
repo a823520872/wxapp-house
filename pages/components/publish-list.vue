@@ -4,7 +4,7 @@
             <view class="item" v-for="(li, i) in list" :key="i" @tap="goPage(`/pages/index/house?id=${li.id}`)">
                 <view class="bd m_flex">
                     <view class="img">
-                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
+                        <image :src="li.images && li.images[0]" :mode="config.house_mode"></image>
                         <view v-if="li.is_rented === 1" class="rent m_textover">租金：¥{{li.rental}}/月</view>
                     </view>
                     <view class="intro m_flex_item">

@@ -99,10 +99,14 @@
                     <image :src="detail.collection_status === 1 ? '/static/image/index/collected.png' : '/static/image/index/collect.png'" mode="aspectFit"></image>
                     <text>收藏</text>
                 </view>
-                <button class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" open-type="contact" plain>
+                <!-- <button class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" open-type="contact" plain>
                     <image src="/static/image/index/gift.png" mode="aspectFit"></image>
                     <text>拿乔迁礼</text>
-                </button>
+                </button> -->
+                <view class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="goPage('/pages/index/index')">
+                    <image src="/static/image/index/home.png" mode="aspectFit"></image>
+                    <text>返回首页</text>
+                </view>
                 <view class="link m_flex_column m_flex_middle m_flex_center" @tap="linkLandlord">
                     <image src="/static/image/index/tel.png" mode="aspectFit"></image>
                     <text>联系房东</text>

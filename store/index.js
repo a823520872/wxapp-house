@@ -11,7 +11,8 @@ const store = new Vuex.Store({
         hasRegister: false,
         userInfo: null,
         houseTempImg: [],
-        houseImg: []
+        houseImg: [],
+        homeReload: false
     },
     mutations: {
         setCode(state, code) {
@@ -31,6 +32,9 @@ const store = new Vuex.Store({
         },
         setHouseImg(state, arr) {
             state.houseImg = arr
+        },
+        setHomeReload(state, bl) {
+            state.homeReload = bl
         }
     },
     actions: {
@@ -70,6 +74,11 @@ const store = new Vuex.Store({
                     context.commit('setUserInfo', res.data)
                 }
                 return res
+            })
+        },
+        checkAuth(context) {
+            return api.checkAuth().then(res => {
+                return res.data
             })
         }
     }

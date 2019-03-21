@@ -29,7 +29,8 @@ export default {
     data() {
         return {
             id: "",
-            uri: ""
+            uri: "",
+            show: false
         };
     },
     onLoad(res) {
@@ -57,13 +58,16 @@ export default {
                     uni.hideLoading();
                     if (res && res.data) {
                         this.uri = res.data;
+                        this.show && this.showPoster();
                     }
                 });
         },
         showPoster() {
             if (this.uri) {
                 this.$refs.poster.show();
+                this.show = false;
             } else {
+                this.show = true;
                 uni.showLoading({
                     title: "图片正在生成",
                     mask: true

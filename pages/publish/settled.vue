@@ -26,7 +26,7 @@
                     <view class="label">房源数量</view>
                     <view class="model m_flex_middle"><input type="number" v-model="form.num" /></view>
                 </view>
-                <view class="cell m_flex">
+                <!-- <view class="cell m_flex">
                     <view class="label">房源位置</view>
                     <view class="model m_flex_middle m_flex_item">
                         <view class="addr_picker m_flex_middle m_flex_item" @tap="addrChoose">
@@ -34,17 +34,17 @@
                             <view class="addr_pull bottom_icon"></view>
                         </view>
                     </view>
-                </view>
+                </view> -->
                 <view class="cell m_flex">
                     <view class="label">
                         推荐人
-                        <text class="tips">（选填）</text>
+                        <text class="tips">（可不填）</text>
                     </view>
                     <view class="model m_flex_middle"><input type="number" v-model="form.referrer_user_mobile" placeholder="输入推荐人手机号" /></view>
                 </view>
             </view>
             <view class="m_button main btn_confirm" @tap="confirm">提交</view>
-            <view class="tips" style="color: #ccc; text-align: center;">地址可联系村长修改</view>
+            <!-- <view class="tips" style="color: #ccc; text-align: center;">可联系村长修改</view> -->
         </view>
         <view class="fd"></view>
         <v-auth ref="auth"></v-auth>
@@ -70,7 +70,7 @@ export default {
                 // postion_street: "",
                 // latitude: "",
                 // longitude: "",
-                // num: "",
+                num: "",
                 referrer_user_mobile: ""
             }
         };

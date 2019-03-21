@@ -22,9 +22,9 @@ export default {
         }
         return v
     },
-    filterHouse(item) {
-        item.config_base = item.config_base && item.config_base.split(',')
-        item.config_lightspot = item.config_lightspot && item.config_lightspot.split(',')
+    filterHouse(item, type) {
+        item.config_base = type === 'string' ? item.config_base.replace(/\,/g, '，') : item.config_base.split(',')
+        item.config_lightspot = type === 'string' ? item.config_lightspot.replace(/\,/g, '，') : item.config_lightspot.split(',')
         item.image_urls = item.image_urls && item.image_urls.split(',')
         return item
     },
@@ -46,9 +46,15 @@ export default {
     },
     goPage(value) {
         if (typeof value === 'string') {
-            uni.navigateTo({
-                url: value
-            })
+            if (value.indexOf('/pages/index/index') !== -1) {
+                uni.switchTab({
+                    url: value
+                })
+            } else {
+                uni.navigateTo({
+                    url: value
+                })
+            }
         } else if (value.replace) {
             uni.redirectTo({
                 url: value.path

@@ -22,30 +22,30 @@
                         </view>
                         <view class="intro_cell">
                             <text class="intro_hd">楼层：</text>
-                            <text class="intro_bd">【{{detail.floor_number}}楼】</text>
+                            <text class="intro_bd">{{detail.floor_number}}楼</text>
                         </view>
                         <view class="intro_cell" v-if="detail.address_flag">
                             <text class="intro_hd">标志建筑：</text>
-                            <text class="intro_bd">【{{detail.address_flag}}】</text>
+                            <text class="intro_bd">{{detail.address_flag}}</text>
                         </view>
                         <view class="intro_cell" v-if="detail.road_distance">
                             <text class="intro_hd">路边距离：</text>
-                            <text class="intro_bd">【{{detail.road_distance}}】</text>
+                            <text class="intro_bd">{{detail.road_distance}}</text>
                         </view>
                         <view class="intro_cell">
                             <text class="intro_hd">地址：</text>
                             <text class="intro_bd">
-                                <text v-if="detail.address_street">【{{detail.address_street}}】</text>
+                                <text v-if="detail.address_street">{{detail.address_street}}</text>
                             </text>
                         </view>
                         <view class="intro_cell" v-if="detail.config_base || detail.config_lightspot">
                             <text class="intro_hd">亮点：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.config_base && detail.config_base.length">
-                                    <text v-for="(li, i) in detail.config_base" :key="i">【{{li}}】</text>
+                                    <text v-for="(li, i) in detail.config_base" :key="i">{{li}}</text>
                                 </text>
                                 <text v-if="detail.config_lightspot && detail.config_lightspot.length">
-                                    <text v-for="(li, i) in detail.config_lightspot" :key="i">【{{li}}】</text>
+                                    <text v-for="(li, i) in detail.config_lightspot" :key="i">{{li}}</text>
                                 </text>
                             </text>
                         </view>
@@ -70,7 +70,7 @@
                                 <text>阅读量：500</text>
                             </view> -->
                         </view>
-                        <view class="time">
+                        <view class="time" v-if="detail.create_at">
                             {{detail.create_at}} 发布
                         </view>
                     </view>
@@ -96,7 +96,7 @@
             <view class="empty"></view>
             <view class="fd m_flex">
                 <view class="collection m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="collect">
-                    <image src="/static/image/index/collect.png" mode="aspectFit"></image>
+                    <image :src="detail.collection_status === 1 ? '/static/image/index/collected.png' : '/static/image/index/collect.png'" mode="aspectFit"></image>
                     <text>收藏</text>
                 </view>
                 <button class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" open-type="contact" plain>
@@ -178,7 +178,7 @@ export default {
         getData() {
             this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {
-                    const data = this.filterHouse(res.data);
+                    const data = this.filterHouse(res.data, "string");
                     this.detail = { ...data };
                 }
             });
@@ -196,11 +196,13 @@ export default {
         },
         collect() {
             this.userInfo
-                ? this.$request
+                ? this.detail.collection_status === 0 &&
+                  this.$request
                       .collect({
                           hr_id: this.id
                       })
                       .then(res => {
+                          this.detail.collection_status = 1;
                           uni.showToast({
                               title: "收藏成功",
                               icon: "success"

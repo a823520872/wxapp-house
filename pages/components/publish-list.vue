@@ -79,35 +79,23 @@ export default {
         },
         getQRCode(li) {
             const self = this;
+            uni.showLoading({
+                title: "图片正在生成",
+                mask: true
+            });
             this.$request
                 .getQRCode({
                     house_id: li.id
                 })
                 .then(res => {
+                    uni.hideLoading();
                     if (res && res.data) {
                         this.uri = res.data;
-                        uni.downloadFile({
-                            url: self.uri,
-                            success(res) {
-                                if (res.statusCode === 200) {
-                                    uni.saveImageToPhotosAlbum({
-                                        filePath: res.tempFilePath,
-                                        success(r) {
-                                            if (
-                                                r.errMsg ===
-                                                "saveImageToPhotosAlbum:ok"
-                                            ) {
-                                                uni.showToast({
-                                                    title: "保存成功",
-                                                    icon: "success"
-                                                });
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });
+                        this.$refs.poster.show();
                     }
+                })
+                .catch(e => {
+                    uni.hideLoading();
                 });
         },
         rented(li) {

@@ -64,7 +64,7 @@ export default {
                     const { data } = res;
                     if (data && data.data) {
                         let list = this.obj.fn(data.data);
-                        if (page <= -1) {
+                        if (page <= 1) {
                             list = [...list];
                         } else {
                             list = [...this.list, ...list];

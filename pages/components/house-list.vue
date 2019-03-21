@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="list">
-            <view v-for="(li, i) in list" :key="i" class="cell" @tap="to(`/pages/index/house?id=${li.id}`)">
+            <view v-for="(li, i) in items" :key="Math.random()" class="cell" @tap="to(`/pages/index/house?id=${li.id}`)">
                 <view class="hd">
                     <view class="m_flex_justify">
                         <view class="title m_textover">{{li.house_type}}</view>
@@ -18,9 +18,11 @@
                         </view>
                         <view class="intro_cell m_textover">亮点：
                             <text class="intro_cell_bd" v-if="li.config_base && li.config_base.length">
+                                <text>{{li.config_base}}</text>
                                 <text v-for="(item, j) in li.config_base" :key="i">{{item}}</text>
                             </text>
                             <text class="intro_cell_bd" v-if="li.config_lightspot && li.config_lightspot.length">
+                                <text>{{li.config_lightspot}}</text>
                                 <text v-for="(item, j) in li.config_lightspot" :key="i">{{item}}</text>
                             </text>
                         </view>
@@ -55,7 +57,12 @@ export default {
         }
     },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo"]),
+        items() {
+            return this.list.map(item =>
+                this.filterHouse({ ...item }, "string")
+            );
+        }
     },
     components: {
         linkModal

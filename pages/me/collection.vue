@@ -22,9 +22,7 @@ export default {
         this.$refs.page.init({
             url: "getMyCollection",
             params: {},
-            fn(data) {
-                return data.map(item => self.filterHouse(item));
-            }
+            fn: null
         });
     },
     onPullDownRefresh() {

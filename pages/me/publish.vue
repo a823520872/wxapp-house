@@ -60,7 +60,11 @@ export default {
             this.$refs.page.init({
                 url: "getMyHouse",
                 params,
-                fn: null
+                fn(data) {
+                    return (data || []).map(
+                        item => (item.images = item.image_urls.split(","))
+                    );
+                }
             });
         },
         chooseTab(v) {

@@ -31,14 +31,14 @@
                             <!-- <input class="cell_bd" type="text" v-model="form.address_street" placeholder="请输入地址" /> -->
                             <!-- </view> -->
                         </picker>
-                        <picker class="cell_box m_flex_item" :range="address_flag" @change="pickerChange('address_flag', $event)">
+                        <picker class="cell_box m_flex_item" :range="address_flag" mode="selector" @change="pickerChange('address_flag', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">标志建筑</view>
                             <view class="cell_bd">{{form.address_flag ? form.address_flag : '请选择'}}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" /> -->
                             <!-- </view> -->
                         </picker>
-                        <picker class="cell_box m_flex_item" :range="road_distance" @change="pickerChange('road_distance', $event)">
+                        <picker class="cell_box m_flex_item" :range="road_distance" mode="selector" @change="pickerChange('road_distance', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">路边距离</view>
                             <view class="cell_bd">{{form.road_distance ? form.road_distance : '请选择'}}</view>
@@ -53,14 +53,14 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <picker class="cell_box m_flex_item" :range="house_type" @change="pickerChange('house_type', $event)">
+                        <picker class="cell_box m_flex_item" :range="house_type" mode="selector" @change="pickerChange('house_type', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">房型</view>
                             <view class="cell_bd">{{form.house_type ? form.house_type : '请选择'}}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
                         </view> -->
                         </picker>
-                        <picker class="cell_box m_flex_item" :range="floor" @change="pickerChange('floor', $event)">
+                        <picker class="cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">楼层</view>
                             <view class="cell_bd">{{form.floor_number ? form.floor_number : '请选择'}}</view>
@@ -219,7 +219,7 @@ export default {
         });
     },
     methods: {
-        ...mapMutations(["setHouseTempImg", "setHouseImg"]),
+        ...mapMutations(["setHouseTempImg", "setHouseImg", "setHomeReload"]),
         ...mapActions(["login", "getInfo"]),
         getData() {
             this.getConfig();
@@ -291,7 +291,7 @@ export default {
         },
         getLandlord() {
             this.$request
-                .getLandlordDetail({ id: this.userInfo.landlord_id })
+                .getLandlordDetail({ id: this.userInfo.id })
                 .then(res => {
                     if (res && res.data) {
                         this.form.contact_mobile = res.data.mobile;
@@ -435,6 +435,7 @@ export default {
                         if (res && res.data) {
                             this.setHouseTempImg([]);
                             this.setHouseImg([]);
+                            this.setHomeReload(true);
                             this.goPage({
                                 path: `/pages/publish/publish_succ?id=${this
                                     .form.id || res.data}`,
@@ -568,7 +569,7 @@ export default {
         &_bd {
             height: 52upx;
             line-height: 52upx;
-            font-size: 25upx;
+            font-size: 30upx;
             color: $text-color-inverse;
         }
     }

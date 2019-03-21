@@ -31,7 +31,7 @@
                                 </view>
                             </view>
                         </picker> -->
-                        <picker :range="address_street" @change="pickerChange" mode="multiSelector">
+                        <picker :range="address_street" @change="pickerChange" :value="[0, 0, 0]" mode="multiSelector">
                             <view class="addr_picker last m_flex_middle">
                                 <view class="addr_item m_textover">{{params.address_street}}</view>
                                 <view class="addr_pull">
@@ -60,33 +60,33 @@
                 <scroll-view class="scroll_view" :scroll-x="true">
                     <view class="m_flex">
                         <template v-if="house_type_active">
-                            <view class="house_type" v-for="(li, i) in house_type_active" :key="i">
+                            <view class="house_type" v-for="li in house_type_active" :key="Math.random()">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false">
+                                <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
                         </template>
                         <template v-if="price_active">
-                            <view class="house_type" v-for="(li, i) in price_active" :key="i">
+                            <view class="house_type" v-for="li in price_active" :key="Math.random()">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false,init()">
+                                <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
                         </template>
                         <template v-if="config_base_active">
-                            <view class="house_type" v-for="(li, i) in config_base_active" :key="i">
+                            <view class="house_type" v-for="li in config_base_active" :key="Math.random()">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false,init()">
+                                <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
                         </template>
                         <template v-if="config_lightspot_active">
-                            <view class="house_type" v-for="(li, i) in config_lightspot_active" :key="i">
+                            <view class="house_type" v-for="li in config_lightspot_active" :key="Math.random()">
                                 <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn" @tap="li.active=false,init()">
+                                <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                 </view>
                             </view>
@@ -105,9 +105,9 @@
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal" v-if="modalList && modalList.length">
-                    <view class="modal_list m_flex_wrap" v-for="(lis, i) in modalList" :key="i">
-                        <view class="modal_item" v-for="(li, j) in lis" :key="j">
-                            <view :class="['m_button', 'main', {'plain': !li.active}]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
+                    <view class="modal_list m_flex_wrap" v-for="(lis, i) in modalList" :key="Math.random()">
+                        <view class="modal_item" v-for="(li, j) in lis" :key="Math.random()">
+                            <view :class="['m_button', 'main', {'plain': !li.tmpActive}]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
                         </view>
                     </view>
                 </view>
@@ -124,6 +124,7 @@ export default {
         HouseList
     },
     computed: {
+        ...mapState(["homeReload"]),
         address_street() {
             return (
                 this.config &&
@@ -218,31 +219,36 @@ export default {
                         rental_begin: 0,
                         rental_end: 500,
                         value: "500以下",
-                        active: false
+                        active: false,
+                        tmpActive: false
                     },
                     {
                         rental_begin: 500,
                         rental_end: 700,
                         value: "500-700",
-                        active: false
+                        active: false,
+                        tmpActive: false
                     },
                     {
                         rental_begin: 700,
                         rental_end: 900,
                         value: "700-900",
-                        active: false
+                        active: false,
+                        tmpActive: false
                     },
                     {
                         rental_begin: 900,
                         rental_end: 1200,
                         value: "900-1200",
-                        active: false
+                        active: false,
+                        tmpActive: false
                     },
                     {
                         rental_begin: 1500,
                         rental_end: "",
                         value: "1500以上",
-                        active: false
+                        active: false,
+                        tmpActive: false
                     }
                 ],
                 address_street: null,
@@ -255,7 +261,12 @@ export default {
         };
     },
     onLoad(res) {},
-    onShow() {},
+    onShow() {
+        if (this.homeReload) {
+            this.setHomeReload(false);
+            this.init();
+        }
+    },
     onPullDownRefresh() {
         this.$refs.page.getData(1);
     },
@@ -263,6 +274,15 @@ export default {
         this.$refs.page.next();
     },
     onReady() {
+        const tk = uni.getStorageSync("tk");
+        if (tk) {
+            if (!this.userInfo) {
+                this.getInfo();
+            }
+        } else {
+            this.login();
+            this.$refs.auth.getUserInfo();
+        }
         this.init();
         this.getData();
     },
@@ -274,9 +294,44 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["login", "getInfo"]),
+        ...mapActions(["login", "getInfo", "setHomeReload"]),
         init() {
             const self = this;
+            this.filterParams();
+            this.$refs.page &&
+                this.$refs.page.init({
+                    url: "getHouseList",
+                    params: self.params,
+                    fn: null
+                });
+        },
+        getData() {
+            this.$request.getConfig().then(res => {
+                if (res.data) {
+                    const config = res.data.reduce((obj, item) => {
+                        if (!obj[item.type]) {
+                            obj[item.type] = [];
+                        }
+                        item.active = false;
+                        item.tmpActive = false;
+                        obj[item.type].push(item);
+                        return obj;
+                    }, {});
+                    this.config = { ...this.config, ...config };
+                }
+            });
+            this.$request.getAddrList().then(res => {
+                if (res.data) {
+                    const address_street = res.data || [];
+                    this.config = {
+                        ...this.config,
+                        address_street
+                    };
+                    this.params.address_street = address_street[2][0].name;
+                }
+            });
+        },
+        filterParams() {
             const house_type = this.config.house_type
                 ? this.config.house_type.filter(item => item.active)
                 : [];
@@ -309,46 +364,6 @@ export default {
             this.params.config_lightspot_id = config_lightspot
                 .map(item => item.id)
                 .join(",");
-            this.$refs.page.init({
-                url: "getHouseList",
-                params: self.params,
-                fn(data) {
-                    return data.map(item => self.filterHouse(item));
-                }
-            });
-            const tk = uni.getStorageSync("tk");
-            if (tk) {
-                if (!this.userInfo) {
-                    this.getInfo();
-                }
-            } else {
-                this.login();
-                this.$refs.auth.getUserInfo();
-            }
-        },
-        getData() {
-            this.$request.getConfig().then(res => {
-                if (res.data) {
-                    const config = res.data.reduce((obj, item) => {
-                        if (!obj[item.type]) {
-                            obj[item.type] = [];
-                        }
-                        item.active = false;
-                        obj[item.type].push(item);
-                        return obj;
-                    }, {});
-                    this.config = { ...this.config, ...config };
-                }
-            });
-            this.$request.getAddrList().then(res => {
-                if (res.data) {
-                    const address_street = res.data || [];
-                    this.config = {
-                        ...this.config,
-                        address_street
-                    };
-                }
-            });
         },
         pickerChange(e) {
             this.params.address_street = this.config.address_street[2][
@@ -376,9 +391,33 @@ export default {
                 title,
                 confirmText: "确定",
                 success() {
+                    let key = "";
+                    if (self.modalType === 1) {
+                        key = "house_type";
+                        self.config.house_type.map(item => {
+                            item.active = item.tmpActive;
+                        });
+                    } else if (self.modalType === 2) {
+                        self.config.price.map(item => {
+                            item.active = item.tmpActive;
+                        });
+                    } else if (self.modalType === 3) {
+                        self.config.config_base.map(item => {
+                            item.active = item.tmpActive;
+                        });
+                        self.config.config_lightspot.map(item => {
+                            item.active = item.tmpActive;
+                        });
+                    }
                     self.init();
-                }
+                },
+                fail() {}
             });
+        },
+        delParams(li) {
+            li.tmpActive = false;
+            li.active = false;
+            this.init();
         },
         toggleList(i, j) {
             let key = "";
@@ -387,13 +426,13 @@ export default {
             } else if (this.modalType === 2) {
                 key = "price";
                 this.config[key].map((item, k) => {
-                    item.active = j === k;
+                    item.tmpActive = j === k;
                 });
                 return;
             } else if (this.modalType === 3) {
                 key = i === 0 ? "config_base" : "config_lightspot";
             }
-            this.config[key][j].active = !this.config[key][j].active;
+            this.config[key][j].tmpActive = !this.config[key][j].tmpActive;
         }
     }
 };

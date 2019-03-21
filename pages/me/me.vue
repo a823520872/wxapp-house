@@ -25,6 +25,12 @@
                             </view>
                             <view>我赞过的</view>
                         </view>
+                        <!-- <view class="tab">
+                            <view class="icon">
+                                <image src="/static/image/me/praise.png" mode="aspectFit"></image>
+                            </view>
+                            <view>我赞过的</view>
+                        </view> -->
                     </view>
                 </view>
             </view>
@@ -41,7 +47,7 @@
             </view> -->
             <view class="cell m_flex_justify m_flex_middle">
                 <view class="cell_hd">推荐好友</view>
-                <button class="cell_fd m_button plain" open-type="share">{{userInfo && userInfo.is_landlord === 1 ? '邀请入驻2人同享1月免费服务' : '获得88元分享基金'}}</button>
+                <button class="cell_fd m_button plain" open-type="share">{{userInfo && userInfo.is_landlord === 1 ? '邀请入驻2人同享1月免费服务' : ''}}</button>
             </view>
             <view class="cell m_flex_justify m_flex_middle">
                 <view class="cell_hd">联系村长</view>
@@ -82,12 +88,17 @@ export default {
         const tk = uni.getStorageSync("tk");
         if (tk) {
             if (!this.userInfo) {
-                this.getInfo();
+                this.getInfo().then(() => {
+                    this.checkAuth();
+                });
             }
         } else {
             this.login().then(code => {
                 if (code) {
-                    !this.userInfo && this.getInfo();
+                    !this.userInfo &&
+                        this.getInfo().then(() => {
+                            this.checkAuth();
+                        });
                 }
             });
         }
@@ -103,7 +114,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["login", "getInfo"]),
+        ...mapActions(["login", "getInfo", "checkAuth"]),
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);
         },

@@ -13,7 +13,10 @@
                         <!-- <view v-if="li.is_public === 1" class="intro_cell price">¥{{li.rental}}/月</view> -->
                         <view class="intro_cell addr">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
-                            <text>{{li.address_street + li.address_flag + li.address_detail + li.road_distance}}</text>
+                            <text v-if="li.address_street">{{li.address_street}}</text>
+                            <text v-if="li.address_flag">{{li.address_flag}}</text>
+                            <text v-if="li.address_detail">{{li.address_detail}}</text>
+                            <text v-if="li.road_distance">{{li.road_distance}}</text>
                         </view>
                         <!-- <view v-if="li.is_rented === 1" class="intro_cell addr">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
@@ -113,12 +116,12 @@ export default {
                             })
                             .then(res => {
                                 if (res && res.data) {
-                                    this.setHomeReload(true);
+                                    self.$emit("reload");
+                                    self.setHomeReload(true);
                                     uni.showToast({
                                         title: "操作成功",
                                         icon: "success"
                                     });
-                                    self.$emit("reload");
                                 }
                             });
                     }
@@ -134,12 +137,12 @@ export default {
                 })
                 .then(res => {
                     if (res && res.data) {
+                        this.$emit("reload");
                         this.setHomeReload(true);
                         uni.showToast({
                             title: "操作成功",
                             icon: "success"
                         });
-                        this.$emit("reload");
                     }
                 });
         }

@@ -560,6 +560,7 @@ export default {
 .scroll_view {
     padding: 0 30upx;
     line-height: 1;
+    box-sizing: border-box;
     .house_type {
         position: relative;
         width: 200upx;

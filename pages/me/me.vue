@@ -23,7 +23,7 @@
                             <view class="icon">
                                 <image src="/static/image/me/person.png" mode="aspectFit"></image>
                             </view>
-                            <view>{{userInfo && userInfo.is_landlord === 1 ? service ? '服务中' : '继续合作' : '申请入驻' }}</view>
+                            <view>{{userInfo && userInfo.is_landlord === 1 ? (service ? '服务中' : '继续合作') : '申请入驻' }}</view>
                         </view>
                         <!-- <view class="tab">
                             <view class="icon">
@@ -88,9 +88,7 @@ export default {
     onShow() {
         const tk = uni.getStorageSync("tk");
         if (tk) {
-            if (!this.userInfo) {
-                this.init();
-            }
+            this.init();
         } else {
             this.login().then(code => {
                 if (code) {
@@ -115,7 +113,7 @@ export default {
             this.getInfo(true).then(() => {
                 if (this.userInfo && this.userInfo.is_landlord === 1) {
                     this.checkAuth().then(res => {
-                        this.service = res;
+                        this.service = !!res;
                     });
                 }
             });

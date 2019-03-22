@@ -5,7 +5,7 @@
                 <view class="cells">
                     <view class="cell intro m_flex_wrap">
                         <view class="house_name m_flex_justify">
-                            <view class="title">{{detail.house_type}}</view>
+                            <view class="title">{{detail.address_street}} · {{detail.house_type}}</view>
                             <button class="share m_button plain m_flex_middle" open-type="share">
                                 <image src="/static/image/index/share.png" mode="aspectFit"></image>
                                 <text>分享</text>
@@ -80,7 +80,7 @@
                     <view class="cell">
                         <view class="house_img" v-for="(li, i) in detail.image_urls" :key="i">
                             <!-- <image :src="li" :mode="config.house_mode"></image> -->
-                            <image :src="li" mode="widthFix"></image>
+                            <image :src="li" mode="widthFix" @tap="showImg(li)"></image>
                         </view>
                     </view>
                 </view>
@@ -198,6 +198,12 @@ export default {
         getPhone(e) {
             this.$refs.auth.getPhone(e);
         },
+        showImg(li) {
+            uni.previewImage({
+                current: li,
+                urls: this.detail.image_urls
+            });
+        },
         collect() {
             this.userInfo
                 ? this.detail.collection_status === 0 &&
@@ -299,6 +305,10 @@ export default {
 
         &_hd {
             color: $text-color-inverse;
+        }
+
+        &_bd {
+            font-size: 28upx;
         }
     }
     .avatar {

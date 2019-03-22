@@ -45,14 +45,18 @@
                 <view class="cell_hd">推荐好友</view>
                 <view class="cell_fd">获得88元分享基金</view>
             </view> -->
-            <view class="cell m_flex_justify m_flex_middle">
-                <view class="cell_hd">推荐好友</view>
-                <button class="cell_fd m_button plain" open-type="share">{{userInfo && userInfo.is_landlord === 1 ? '邀请入驻2人同享1月免费服务' : ''}}</button>
-            </view>
-            <view class="cell m_flex_justify m_flex_middle">
-                <view class="cell_hd">联系村长</view>
-                <button class="cell_fd m_button plain" open-type="contact">智能找房、意见反馈、入驻咨询</button>
-            </view>
+            <button class="m_button plain long" open-type="share">
+                <view class="cell m_flex_justify m_flex_middle">
+                    <view class="cell_hd">推荐好友</view>
+                    <view class="cell_fd">{{userInfo && userInfo.is_landlord === 1 ? '邀请入驻2人同享1月免费服务' : ''}}</view>
+                </view>
+            </button>
+            <button class="m_button plain long" open-type="contact">
+                <view class="cell m_flex_justify m_flex_middle">
+                    <view class="cell_hd">联系村长</view>
+                    <view class="cell_fd">智能找房、意见反馈、入驻咨询</view>
+                </view>
+            </button>
             <view class="cell m_flex_justify m_flex_middle" @tap="clear">
                 <view class="cell_hd">清楚授权</view>
             </view>
@@ -109,9 +113,11 @@ export default {
         ...mapActions(["login", "getToken", "getInfo", "checkAuth"]),
         init() {
             this.getInfo(true).then(() => {
-                this.checkAuth().then(res => {
-                    this.service = res;
-                });
+                if (this.userInfo && this.userInfo.is_landlord === 1) {
+                    this.checkAuth().then(res => {
+                        this.service = res;
+                    });
+                }
             });
         },
         getUserInfo(e) {
@@ -241,6 +247,9 @@ export default {
             font-size: 25upx;
             color: $text-color-inverse;
         }
+    }
+    .m_button {
+        padding: 0;
     }
 }
 </style>

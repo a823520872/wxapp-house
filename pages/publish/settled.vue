@@ -24,7 +24,7 @@
                 </view> -->
                 <view class="cell m_flex">
                     <view class="label">房源数量</view>
-                    <view class="model m_flex_middle"><input type="number" v-model="form.num" placeholder="请输入房源数量" /></view>
+                    <view class="model m_flex_middle"><input type="number" v-model="form.house_num" placeholder="请输入房源数量" /></view>
                 </view>
                 <!-- <view class="cell m_flex">
                     <view class="label">房源位置</view>
@@ -70,7 +70,7 @@ export default {
                 // postion_street: "",
                 // latitude: "",
                 // longitude: "",
-                num: "",
+                house_num: "",
                 referrer_user_mobile: ""
             }
         };

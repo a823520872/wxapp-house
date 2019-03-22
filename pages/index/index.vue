@@ -51,10 +51,10 @@
                     <text class="title">价格</text>
                     <text class="bottom_icon"></text>
                 </view>
-                <!-- <view class="filter_title" @tap="showModal(4, '路边距离')">
+                <view class="filter_title" @tap="showModal(4, '路边距离')">
                     <text class="title">路边距离</text>
                     <text class="bottom_icon"></text>
-                </view> -->
+                </view>
                 <view class="filter_title" @tap="showModal(3, '更多')">
                     <text class="title">更多</text>
                     <text class="bottom_icon"></text>
@@ -73,6 +73,14 @@
                         </template>
                         <template v-if="price_active">
                             <view class="house_type" v-for="li in price_active" :key="Math.random()">
+                                <view class="btn active">{{li.value}}</view>
+                                <view class="del_btn" @tap="delParams(li)">
+                                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                </view>
+                            </view>
+                        </template>
+                        <template v-if="road_distance_active">
+                            <view class="house_type" v-for="li in road_distance_active" :key="Math.random()">
                                 <view class="btn active">{{li.value}}</view>
                                 <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/del.png" mode="aspectFit"></image>
@@ -176,6 +184,18 @@ export default {
                 }, [])
             );
         },
+        road_distance_active() {
+            return (
+                this.config &&
+                this.config.road_distance &&
+                this.config.road_distance.reduce((arr, li) => {
+                    if (li.active) {
+                        arr.push(li);
+                    }
+                    return arr;
+                }, [])
+            );
+        },
         config_base_active() {
             return (
                 this.config &&
@@ -206,13 +226,15 @@ export default {
             params: {
                 address_street_id: "",
                 address_street: "",
+                house_type_id: "",
+                // house_type: "",
+                road_distance_ids: "",
+                rental_begin: "",
+                rental_end: "",
                 // config_base_ids: "",
                 config_base: "",
                 // config_lightspot_ids: "",
-                config_lightspot: "",
-                rental_begin: "",
-                rental_end: "",
-                house_type: ""
+                config_lightspot: ""
             },
             list: [],
             config: {
@@ -322,7 +344,6 @@ export default {
                         obj[item.type].push(item);
                         return obj;
                     }, {});
-                    console.log(config);
                     this.config = { ...this.config, ...config };
                 }
             });
@@ -341,10 +362,22 @@ export default {
             const house_type = this.config.house_type
                 ? this.config.house_type.filter(item => item.active)
                 : [];
-            this.params.house_type = house_type
-                .map(item => item.value)
-                .join(",");
             const price = this.config.price.filter(item => item.active)[0];
+            const road_distance = this.config.road_distance
+                ? this.config.road_distance.filter(item => item.active)
+                : [];
+            const config_base = this.config.config_base
+                ? this.config.config_base.filter(item => item.active)
+                : [];
+            const config_lightspot = this.config.config_lightspot
+                ? this.config.config_lightspot.filter(item => item.active)
+                : [];
+            // this.params.house_type = house_type
+            //     .map(item => item.value)
+            //     .join(",");
+            this.params.house_type_id = house_type
+                .map(item => item.id)
+                .join(",");
             if (price) {
                 this.params.rental_begin = price.rental_begin || "";
                 this.params.rental_end = price.rental_end || "";
@@ -352,21 +385,18 @@ export default {
                 this.params.rental_begin = "";
                 this.params.rental_end = "";
             }
-            const config_base = this.config.config_base
-                ? this.config.config_base.filter(item => item.active)
-                : [];
-            this.params.config_base = config_base
-                .map(item => item.value)
+            this.params.road_distance_ids = road_distance
+                .map(item => item.id)
                 .join(",");
+            // this.params.config_base = config_base
+            //     .map(item => item.value)
+            //     .join(",");
             this.params.config_base_ids = config_base
                 .map(item => item.id)
                 .join(",");
-            const config_lightspot = this.config.config_lightspot
-                ? this.config.config_lightspot.filter(item => item.active)
-                : [];
-            this.params.config_lightspot = config_lightspot
-                .map(item => item.value)
-                .join(",");
+            // this.params.config_lightspot = config_lightspot
+            //     .map(item => item.value)
+            //     .join(",");
             this.params.config_lightspot_id = config_lightspot
                 .map(item => item.id)
                 .join(",");
@@ -380,47 +410,42 @@ export default {
             ].id;
             this.init();
         },
+        filterType(type) {
+            switch (type) {
+                case 1:
+                    return ["house_type"];
+                case 2:
+                    return ["price"];
+                case 3:
+                    return ["config_base", "config_lightspot"];
+                case 4:
+                    return ["road_distance"];
+                default:
+                    return [];
+            }
+        },
         showModal(type, title) {
             const self = this;
+            const key = this.filterType(type);
             this.modalType = type;
-            if (type === 1) {
-                this.modalList = [this.config.house_type];
-            } else if (type === 2) {
-                this.modalList = [this.config.price];
-            } else if (type === 3) {
-                this.modalList = [
-                    this.config.config_base,
-                    this.config.config_lightspot
-                ];
-            } else if (type === 4) {
-                this.modalList = [this.config.road_distance];
-            }
-            this.$refs.modal.show({
-                title,
-                confirmText: "确定",
-                success() {
-                    let key = "";
-                    if (self.modalType === 1) {
-                        key = "house_type";
-                        self.config.house_type.map(item => {
-                            item.active = item.tmpActive;
-                        });
-                    } else if (self.modalType === 2) {
-                        self.config.price.map(item => {
-                            item.active = item.tmpActive;
-                        });
-                    } else if (self.modalType === 3) {
-                        self.config.config_base.map(item => {
-                            item.active = item.tmpActive;
-                        });
-                        self.config.config_lightspot.map(item => {
-                            item.active = item.tmpActive;
-                        });
-                    }
-                    self.init();
-                },
-                fail() {}
+            this.modalList = key.map(item => {
+                return this.config[item];
             });
+            if (key && key.length) {
+                this.$refs.modal.show({
+                    title,
+                    confirmText: "确定",
+                    success() {
+                        key.map(item => {
+                            self.config[item].map(it => {
+                                it.active = it.tmpActive;
+                            });
+                        });
+                        self.init();
+                    },
+                    fail() {}
+                });
+            }
         },
         delParams(li) {
             li.tmpActive = false;
@@ -428,21 +453,28 @@ export default {
             this.init();
         },
         toggleList(i, j) {
-            let key = "";
-            if (this.modalType === 1) {
-                key = "house_type";
-            } else if (this.modalType === 2) {
-                key = "price";
-                this.config[key].map((item, k) => {
-                    item.tmpActive = j === k;
-                });
-                return;
-            } else if (this.modalType === 3) {
-                key = i === 0 ? "config_base" : "config_lightspot";
-            } else if (this.modalType === 4) {
-                key = "road_distance";
-            }
-            this.config[key][j].tmpActive = !this.config[key][j].tmpActive;
+            const key = this.filterType(this.modalType);
+            key.map(item => {
+                if (item === "price") {
+                    this.config[item].map((it, k) => {
+                        if (j === k) {
+                            this.config[item][j].tmpActive = !this.config[item][
+                                j
+                            ].tmpActive;
+                        } else {
+                            this.config[item][k].tmpActive = false;
+                        }
+                    });
+                    return;
+                }
+                if (
+                    (item === "config_base" && i === 0) ||
+                    (item === "config_lightspot" && i === 1)
+                )
+                    return;
+                this.config[item][j].tmpActive = !this.config[item][j]
+                    .tmpActive;
+            });
         }
     }
 };

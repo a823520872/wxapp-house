@@ -302,8 +302,8 @@ export default {
         }
     }
     .avatar {
-        width: 140upx;
-        height: 140upx;
+        width: 100upx;
+        height: 100upx;
         margin-top: 28upx;
         margin-right: 24upx;
         margin-bottom: 28upx;

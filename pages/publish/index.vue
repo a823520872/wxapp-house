@@ -6,7 +6,7 @@
                 <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
             </view>
             <view class="fd">
-                <button class="m_button plain" open-type="contact">咨询村长</button>
+                <button class="m_button main" open-type="contact">咨询村长</button>
             </view>
             <button v-if="step === 2" class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
                 <view>申请</view>
@@ -108,11 +108,15 @@ export default {
             this.getInfo(true).then(res => {
                 if (res && res.data) {
                     this.step = res.data.is_landlord;
-                    this.checkAuth().then(res => {
-                        if (res) {
-                            this.step = 4;
-                        }
-                    });
+                    if (this.userInfo && this.userInfo.is_landlord === 1) {
+                        this.checkAuth().then(res => {
+                            if (!res) {
+                                this.step = 4;
+                            } else {
+                                this.step = 1;
+                            }
+                        });
+                    }
                 } else {
                     this.step = 2;
                 }
@@ -152,6 +156,11 @@ export default {
         text-decoration: underline;
         text-align: center;
         color: #0404ff;
+
+        .m_button {
+            padding: 16upx 30upx;
+            border-radius: 0;
+        }
     }
     .btn_add {
         display: flex;

@@ -9,7 +9,10 @@
         <view class="bd">
             生成定制海报，分享到朋友圈， 可大大增加租房率哦~
         </view>
-        <view class="fd" @tap="showPoster">生成定制海报</view>
+        <view class="fd">
+            <button class="m_button primary" @tap="showPoster">生成定制海报</button>
+            <button class="m_button plain primary" @tap="goPage('/pages/me/publish')">查看我的发布</button>
+        </view>
         <poster ref="poster" :uri="uri"></poster>
     </view>
 </template>
@@ -68,6 +71,7 @@ export default {
                 this.show = false;
             } else {
                 this.show = true;
+                this.getDetail();
                 uni.showLoading({
                     title: "图片正在生成",
                     mask: true
@@ -108,14 +112,19 @@ export default {
     }
 }
 .fd {
-    height: 100upx;
     margin: 107upx 30upx;
-    line-height: 100upx;
-    background-color: $primary-color;
     text-align: center;
-    font-size: 33upx;
-    border-radius: 8upx;
-    color: #fff;
+    // border-radius: 8upx;
+    // color: #fff;
+
+    .m_button {
+        display: block;
+        // height: 100upx;
+        margin-bottom: 30upx;
+        border-radius: 8upx;
+        line-height: 80upx;
+        font-size: 30upx;
+    }
 }
 .none {
     display: none;

@@ -123,6 +123,10 @@ image {
     box-sizing: border-box;
     color: $text-color;
 
+    &.long {
+        display: block;
+    }
+
     &.primary {
         background-color: $primary-color;
         border: 1upx solid $primary-color;

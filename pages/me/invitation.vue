@@ -14,9 +14,12 @@ export default {
         return {
             title: "邀请入驻",
             path:
-                this.userInfo.is_landlord === 1
-                    ? `/pages/publish/index?rid=${this.userInfo.id}`
-                    : `/pages/index/index?rid=${this.userInfo.id}`
+                `/pages/index/index?p=` +
+                encodeURIComponent(
+                    this.userInfo.is_landlord === 1
+                        ? `/pages/publish/index?uid=${this.userInfo.id}`
+                        : `/pages/index/index?uid=${this.userInfo.id}`
+                )
         };
     }
 };

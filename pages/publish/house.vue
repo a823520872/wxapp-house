@@ -49,7 +49,7 @@
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">具体地址</view>
-                            <input class="cell_bd" type="text" v-model="form.address_detail" placeholder="请输入具体地址" />
+                            <input class="cell_bd" type="text" v-model="form.address_detail" placeholder="可不填" />
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
@@ -220,13 +220,18 @@ export default {
         });
     },
     methods: {
-        ...mapMutations(["setHouseTempImg", "setHouseImg", "setHomeReload"]),
+        ...mapMutations([
+            "setHouseTempImg",
+            "setHouseImg",
+            "setHomeReload",
+            "setCollectReload"
+        ]),
         ...mapActions(["login", "getInfo", "checkAuth"]),
         getData() {
             this.getConfig();
             this.getAddr();
             this.getHouse();
-            this.getLandlord();
+            // this.getLandlord();
         },
         getConfig() {
             this.$request.getConfig().then(res => {
@@ -288,29 +293,32 @@ export default {
                         this.form = { ...res.data };
                     }
                 });
+            } else {
+                console.log(213);
+                this.form.contact_mobile = this.userInfo.landlord_mobile;
             }
         },
         getLandlord() {
             this.$request
-                .getLandlordDetail({ id: this.userInfo.id })
+                .getLandlordDetail({ id: this.userInfo.landlord_id })
                 .then(res => {
                     if (res && res.data) {
-                        this.form.contact_mobile = res.data.mobile;
+                        // this.form.contact_mobile =
+                        //     res.data.landlord_mobile || "";
                     }
                 });
         },
         chooseImg() {
-            const self = this;
             if (this.houseImg && this.houseImg.length) {
                 this.goPage(`/pages/publish/img`);
             } else {
-                uni.chooseImage({
-                    sourceType: "album",
-                    success(e) {
-                        if (e.errMsg === "chooseImage:ok") {
-                            self.setHouseTempImg(e.tempFilePaths);
-                            self.goPage(`/pages/publish/img`);
-                        }
+                this.chooseImage().then(e => {
+                    if (e.errMsg === "chooseImage:ok") {
+                        // this.compressImage(e.tempFilePaths).then(res => {
+                        //     console.log(res);
+                        // });
+                        this.setHouseTempImg(e.tempFilePaths);
+                        this.goPage(`/pages/publish/img`);
                     }
                 });
             }
@@ -450,6 +458,7 @@ export default {
                                 this.setHouseTempImg([]);
                                 this.setHouseImg([]);
                                 this.setHomeReload(true);
+                                this.setCollectReload(true);
                                 this.goPage({
                                     path: `/pages/publish/publish_succ?id=${this
                                         .form.id || res.data}`,

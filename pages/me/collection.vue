@@ -6,8 +6,12 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 import HouseList from "../components/house-list";
 export default {
+    computed: {
+        ...mapState(["userInfo", "collectReload"])
+    },
     components: {
         HouseList
     },
@@ -17,13 +21,14 @@ export default {
         };
     },
     onLoad(res) {},
+    onShow() {
+        if (this.collectReload) {
+            this.setCollectReload(false);
+            this.getData();
+        }
+    },
     onReady() {
-        const self = this;
-        this.$refs.page.init({
-            url: "getMyCollection",
-            params: {},
-            fn: null
-        });
+        this.getData();
     },
     onPullDownRefresh() {
         this.$refs.page.getData(1);
@@ -31,7 +36,17 @@ export default {
     onReachBottom() {
         this.$refs.page.next();
     },
-    methods: {}
+    methods: {
+        ...mapMutations(["setCollectReload"]),
+        getData() {
+            const self = this;
+            this.$refs.page.init({
+                url: "getMyCollection",
+                params: {},
+                fn: null
+            });
+        }
+    }
 };
 </script>
 

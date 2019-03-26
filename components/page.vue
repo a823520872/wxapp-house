@@ -78,6 +78,7 @@ export default {
                         }
                     }
                     uni.stopPullDownRefresh();
+                    return res;
                 })
                 .catch(e => {
                     console.log(e);

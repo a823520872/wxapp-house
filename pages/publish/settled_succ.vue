@@ -6,25 +6,23 @@
             </view>
             <view class="title">信息已提交成功！</view>
             <view class="tips">
-                <view>
-                    <text>请耐心等待，村长将在2小时内联系您；</text>
-                </view>
-                <view>
-                    <text class="strong">在您完成审核后</text>
-                    <text>我们将为您开通房东权限。</text>
-                </view>
+                <text>请耐心等待，保持手机畅通\n</text>
+                <!-- <text class="strong">在您完成审核后</text> -->
+                <text>客服将尽快联系您为您审核</text>
             </view>
         </view>
         <view class="bd">
-            <view class="title">联系村长快速审核</view>
-            <view class="cells">
-                <view class="cell m_flex_middle" @tap="copy(config.wechat_number)">
-                    <view class="label m_flex_item">村长微信：</view>
-                    <view class="model m_flex_item">{{config.wechat_number}}</view>
-                </view>
-                <view class="cell m_flex_middle" @tap="call(config.contact_mobile)">
-                    <view class="label m_flex_item">村长联系电话：</view>
-                    <view class="model m_flex_item">{{config.contact_mobile}}</view>
+            <view class="title">联系客服快速审核</view>
+            <view class="cells m_flex_center">
+                <view class="">
+                    <view class="cell" @tap="copy(config.wechat_number)">
+                        <text class="label m_flex_item">客服微信：</text>
+                        <text class="model m_flex_item">{{config.wechat_number}}</text>
+                    </view>
+                    <view class="cell" @tap="call(config.contact_mobile)">
+                        <text class="label m_flex_item">客服联系电话：</text>
+                        <text class="model m_flex_item">{{config.contact_mobile}}</text>
+                    </view>
                 </view>
             </view>
         </view>
@@ -53,6 +51,7 @@ export default {};
 
     .tips {
         margin: 90upx auto;
+        font-size: 25upx;
         line-height: 42upx;
     }
 
@@ -75,11 +74,15 @@ export default {};
     }
 
     .label {
+        display: inline-block;
+        width: 180upx;
         text-align: right;
         color: $text-color-inverse;
     }
 
     .model {
+        display: inline-block;
+        width: 220upx;
         font-size: 30upx;
         text-decoration: underline;
         color: #368aff;

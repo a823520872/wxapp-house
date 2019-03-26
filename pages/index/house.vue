@@ -33,45 +33,47 @@
                             <text class="intro_bd">{{detail.road_distance}}</text>
                         </view>
                         <view class="intro_cell">
-                            <text class="intro_hd">地址：</text>
+                            <text class="intro_hd">具体地址：</text>
                             <text class="intro_bd">
-                                <text v-if="detail.address_street">{{detail.address_street}}</text>
+                                <text v-if="detail.address_detail">{{detail.address_detail}}</text>
+                                <text v-else>{{detail.address_flag}}附近</text>
                             </text>
                         </view>
-                        <view class="intro_cell" v-if="detail.config_base || detail.config_lightspot">
-                            <text class="intro_hd">亮点：</text>
+                        <view class="intro_cell" v-if="detail.config_base">
+                            <text class="intro_hd">基础设施：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.config_base && detail.config_base.length">
                                     <text v-for="(li, i) in detail.config_base" :key="i">{{li}}</text>
                                 </text>
+                            </text>
+                        </view>
+                        <view class="intro_cell" v-if="detail.config_lightspot">
+                            <text class="intro_hd">亮点：</text>
+                            <text class="intro_bd">
                                 <text v-if="detail.config_lightspot && detail.config_lightspot.length">
                                     <text v-for="(li, i) in detail.config_lightspot" :key="i">{{li}}</text>
                                 </text>
                             </text>
                         </view>
-                        <view class="intro_cell" v-if="detail.address">
-                            <text class="intro_hd">具体地址：</text>
-                            <text class="intro_bd">{{detail.address}}</text>
-                        </view>
-                        <view class="intro_cell" v-if="detail.supplement">
+                        <view class="intro_cell" v-if="detail.remark">
                             <text class="intro_hd">备注：</text>
-                            <text class="intro_bd">{{detail.supplement}}</text>
+                            <text class="intro_bd">{{detail.remark}}</text>
                         </view>
                     </view>
                 </view>
                 <view class="cells">
-                    <view class="cell m_flex_middle">
+                    <view class="cell m_flex_middle" @tap="viewLandlord">
                         <view class="avatar">
                             <image :src="detail.landlord_info.avatar" mode="aspectFit"></image>
                         </view>
                         <view class="user m_flex_item">
                             <view class="name">{{detail.landlord_info.nickname}}</view>
-                            <!-- <view class="m_flex_middle">
-                                <text>阅读量：500</text>
-                            </view> -->
+                            <view class="m_flex_middle">
+                                <text>阅读量：{{detail.virtual_number + detail.real_number}}</text>
+                            </view>
                         </view>
-                        <view class="time" v-if="detail.create_at">
-                            {{detail.create_at}} 发布
+                        <view class="time" v-if="detail.public_time">
+                            {{detail.public_time}} 发布
                         </view>
                     </view>
                 </view>
@@ -84,20 +86,22 @@
                         </view>
                     </view>
                 </view>
-                <view class="cells">
-                    <view class="cells_title title">房源位置<text class="intro">（房源在定位附件）</text></view>
+                <view class="cells" v-if="detail.location && detail.location.lng && detail.location.lat">
+                    <view class="cells_title title">房源位置
+                        <text class="intro">（房源在</text>
+                        <image src="/static/image/index/marker.png" mode="aspectFit"></image>
+                        <text class="intro">附近）</text>
+                    </view>
                     <view class="cell map">
-                        <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
+                        <map :longitude="detail.location.lng" :latitude="detail.location.lat" :scale="18" :markers="markers" :enable-scroll="false" :enable-zoom="false" @tap="showMap"></map>
                     </view>
                 </view>
-                <view class="official-account"></view>
-                <official-account></official-account>
             </view>
             <view class="empty"></view>
             <view class="fd m_flex">
-                <view class="collection m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="collect">
+                <view class="collection m_flex_column m_flex_middle m_flex_center m_flex_item" @tap=" collect">
                     <image :src="detail.collection_status === 1 ? '/static/image/index/collected.png' : '/static/image/index/collect.png'" mode="aspectFit"></image>
-                    <text>收藏</text>
+                    <text>{{detail.collection_status === 1 ? '取消收藏' : '收藏'}}</text>
                 </view>
                 <!-- <button class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" open-type="contact" plain>
                     <image src="/static/image/index/gift.png" mode="aspectFit"></image>
@@ -115,16 +119,6 @@
             <v-modal ref="modal">
                 <view slot="content">
                     <link-modal :temp="detail"></link-modal>
-                    <!-- <view class="modal">
-                        <view v-if="detail.contact_mobile" class="link m_flex_justify">
-                            <view>手机号：{{detail.contact_mobile}}</view>
-                            <button class="m_button main" plain @tap="call(detail.contact_mobile)">拨打</button>
-                        </view>
-                        <view v-if="detail.wechat_number" class="link m_flex_justify">
-                            <view>微信号：{{detail.wechat_number}}</view>
-                            <button class="m_button main" plain @tap="copy(detail.wechat_number)">复制</button>
-                        </view>
-                    </view> -->
                 </view>
             </v-modal>
         </view>
@@ -145,25 +139,30 @@ export default {
     data() {
         return {
             id: "",
-            detail: null
+            detail: null,
+            markers: null
         };
     },
     onShareAppMessage(obj) {
         return {
             title: "房源详情",
             path:
-                `/pages/index/house?id=${this.id}` + this.userInfo
-                    ? `&rid=${this.userInfo.id}`
-                    : ``
+                `/pages/index/index?p=` +
+                encodeURIComponent(
+                    `/pages/index/house?id=${this.id}` +
+                        (this.userInfo ? `&uid=${this.userInfo.id}` : ``)
+                )
         };
     },
     onLoad(res) {
+        console.log(res);
         if (res.id) {
             this.id = res.id;
-        }
-        if (res.scene) {
-            const params = decodeURIComponent(res.scene);
-            this.id = params.split("=")[1];
+        } else {
+            uni.showToast({
+                title: "地址错误",
+                icon: "none"
+            });
         }
     },
     onShow() {
@@ -172,23 +171,67 @@ export default {
             if (!this.userInfo) {
                 this.getInfo();
             }
-        } else {
-            this.login();
+            // } else {
+            //     this.login();
         }
+    },
+    onReady() {
         this.getData();
     },
     methods: {
+        ...mapMutations(["setCollectReload"]),
         ...mapActions(["login", "getInfo"]),
         getData() {
-            this.$request.getHouse({ id: this.id }).then(res => {
+            console.log(this.id);
+            const params = {
+                id: this.id
+            };
+            if (this.userInfo) {
+                params.user_id = this.userInfo.user_id;
+            }
+            this.$request.getHouse(params).then(res => {
                 if (res && res.data) {
                     const data = this.filterHouse(res.data, "string");
+                    // 数据库数据经纬度传反了
+                    // 这里对调一下
+                    const tmp = +data.location.lng;
+                    data.location.lng = +data.location.lat;
+                    data.location.lat = +tmp;
                     this.detail = { ...data };
+                    if (
+                        this.detail.location &&
+                        this.detail.location.lng &&
+                        this.detail.location.lat
+                    ) {
+                        this.markers = [
+                            {
+                                id: 0,
+                                latitude: this.detail.location.lat,
+                                longitude: this.detail.location.longitude,
+                                title: this.detail.address_flag,
+                                iconPath: "/static/image/index/marker.png",
+                                width: 15,
+                                height: 20
+                            }
+                        ];
+                    }
                 }
             });
         },
+        showMap(e) {
+            uni.openLocation({
+                longitude: this.detail.location.lng,
+                latitude: this.detail.location.lat
+            });
+        },
         addReader() {
-            this.$request.addReader({ id: this.id }).then(res => {
+            const params = {
+                id: this.id
+            };
+            if (this.userInfo) {
+                params.user_id = this.userInfo.user_id;
+            }
+            this.$request.addReader(params).then(res => {
                 console.log(res);
             });
         },
@@ -204,30 +247,52 @@ export default {
                 urls: this.detail.image_urls
             });
         },
+        viewLandlord() {
+            this.goPage(`/pages/me/publish?user_id=${this.detail.user_id}`);
+        },
         collect() {
-            this.userInfo
-                ? this.detail.collection_status === 0 &&
-                  this.$request
-                      .collect({
-                          hr_id: this.id
-                      })
-                      .then(res => {
-                          this.detail.collection_status = 1;
-                          uni.showToast({
-                              title: "收藏成功",
-                              icon: "success"
-                          });
-                      })
-                : this.getUserInfo();
+            if (this.userInfo) {
+                if (this.detail.collection_status === 0) {
+                    this.$request
+                        .collect({
+                            hr_id: this.id
+                        })
+                        .then(() => {
+                            this.detail.collection_status = 1;
+                            uni.showToast({
+                                title: "收藏成功",
+                                icon: "success"
+                            });
+                        });
+                } else if (this.detail.collection_status === 1) {
+                    this.$request
+                        .cancelCollect({
+                            id: this.id
+                        })
+                        .then(() => {
+                            this.detail.collection_status = 0;
+                            uni.showToast({
+                                title: "取消成功",
+                                icon: "success"
+                            });
+                        });
+                }
+                this.setCollectReload(true);
+            } else {
+                this.getUserInfo();
+            }
         },
         linkLandlord() {
             this.userInfo
                 ? this.userInfo.mobile
-                    ? this.$refs.modal.show({
+                    ? (this.$refs.modal.show({
                           title: "联系方式",
                           confirmText: "确定",
                           success() {}
-                      })
+                      }),
+                      this.$request.viewPhone({
+                          id: this.id
+                      }))
                     : this.getPhone()
                 : this.getUserInfo();
         }
@@ -268,6 +333,12 @@ export default {
 
             .intro {
                 font-size: 25upx;
+            }
+
+            image {
+                width: 25upx;
+                height: 25upx;
+                vertical-align: middle;
             }
         }
     }
@@ -334,7 +405,7 @@ export default {
         color: $text-color;
     }
     .time {
-        width: 140upx;
+        width: 160upx;
         color: $text-color-inverse;
     }
     .has {
@@ -352,6 +423,11 @@ export default {
         height: 321upx;
         padding: 0;
         padding-bottom: 18upx;
+
+        map {
+            width: 100%;
+            height: 100%;
+        }
     }
     .other {
         height: 100upx;
@@ -374,6 +450,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 10;
     height: 100upx;
     background-color: #fff;
     font-size: 20upx;

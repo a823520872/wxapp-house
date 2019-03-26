@@ -15,25 +15,9 @@
                         <image src="/static/image/index/addr.png" mode="aspectFit"></image>
                     </view>
                     <view class="addr_box m_flex">
-                        <!-- <picker :range="[]" @change="">
-                            <view class="addr_picker m_flex_middle">
-                                <view class="addr_item m_textover">广州市</view>
-                                <view class="addr_pull">
-                                    <image src="/static/image/index/pull.png" mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </picker>
-                        <picker :range="[]" @change="">
-                            <view class="addr_picker m_flex_middle">
-                                <view class="addr_item m_textover">天河区</view>
-                                <view class="addr_pull">
-                                    <image src="/static/image/index/pull.png" mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </picker> -->
-                        <picker :range="address_street" @change="pickerChange" :value="[0, 0, 0]" mode="multiSelector">
+                        <picker :range="address_street" @change="pickerChange" mode="multiSelector">
                             <view class="addr_picker last m_flex_middle">
-                                <view class="addr_item m_textover">{{params.address_street}}</view>
+                                <view class="addr_item m_textover">{{params.address_street || '选择村'}}</view>
                                 <view class="addr_pull">
                                     <image src="/static/image/index/pull.png" mode="aspectFit"></image>
                                 </view>
@@ -110,16 +94,18 @@
         <view class="list">
             <house-list :list.sync="list"></house-list>
             <v-page ref="page" :list.sync="list"></v-page>
-            <view class="official-account"></view>
-            <official-account></official-account>
+            <view v-if="hasFocus" class="official-account"></view>
+            <official-account @load="viewSucc"></official-account>
         </view>
         <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal" v-if="modalList && modalList.length">
-                    <view class="modal_list m_flex_wrap" v-for="(lis, i) in modalList" :key="Math.random()">
-                        <view class="modal_item" v-for="(li, j) in lis" :key="Math.random()">
-                            <view :class="['m_button', 'main', {'plain': !li.tmpActive}]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
+                    <view class="m_flex_center" v-for="(lis, i) in modalList" :key="Math.random()">
+                        <view class="modal_list m_flex_wrap">
+                            <view class="modal_item" v-for="(li, j) in lis" :key="Math.random()">
+                                <view :class="['m_button', 'main', {'plain': !li.tmpActive}]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
+                            </view>
                         </view>
                     </view>
                 </view>
@@ -231,10 +217,10 @@ export default {
                 road_distance_ids: "",
                 rental_begin: "",
                 rental_end: "",
-                // config_base_ids: "",
-                config_base: "",
-                // config_lightspot_ids: "",
-                config_lightspot: ""
+                config_base_ids: "",
+                // config_base: "",
+                config_lightspot_ids: ""
+                // config_lightspot: ""
             },
             list: [],
             config: {
@@ -284,11 +270,27 @@ export default {
                 config_lightspot: null
             },
             modalType: null,
-            modalList: null
+            modalList: null,
+            hasFocus: false
         };
     },
-    onLoad(res) {},
+    onLoad(res) {
+        if (res.scene) {
+            const scene = decodeURIComponent(res.scene);
+            console.log("scene", scene);
+            if (scene) {
+                res.p = scene.replace("page=", "");
+            }
+            console.log("res.p", res.p);
+        } else if (res.p) {
+            res.p = decodeURIComponent(res.p);
+        }
+        if (res.p) {
+            this.goPage(res.p);
+        }
+    },
     onShow() {
+        this.login();
         if (this.homeReload) {
             this.setHomeReload(false);
             this.init();
@@ -307,7 +309,6 @@ export default {
                 this.getInfo();
             }
         } else {
-            this.login();
             this.$refs.auth.getUserInfo();
         }
         this.init();
@@ -321,7 +322,8 @@ export default {
         };
     },
     methods: {
-        ...mapActions(["login", "getInfo", "setHomeReload"]),
+        ...mapMutations(["setHomeReload"]),
+        ...mapActions(["login", "getInfo"]),
         init() {
             const self = this;
             this.filterParams();
@@ -354,9 +356,12 @@ export default {
                         ...this.config,
                         address_street
                     };
-                    this.params.address_street = address_street[2][0].name;
+                    // this.params.address_street = address_street[2][0].name;
                 }
             });
+        },
+        viewSucc(e) {
+            this.hasFocus = true;
         },
         filterParams() {
             const house_type = this.config.house_type
@@ -397,7 +402,7 @@ export default {
             // this.params.config_lightspot = config_lightspot
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_lightspot_id = config_lightspot
+            this.params.config_lightspot_ids = config_lightspot
                 .map(item => item.id)
                 .join(",");
         },
@@ -417,7 +422,8 @@ export default {
                 case 2:
                     return ["price"];
                 case 3:
-                    return ["config_base", "config_lightspot"];
+                    // return ["config_base", "config_lightspot"];
+                    return ["config_lightspot"];
                 case 4:
                     return ["road_distance"];
                 default:
@@ -467,11 +473,11 @@ export default {
                     });
                     return;
                 }
-                if (
-                    (item === "config_base" && i === 0) ||
-                    (item === "config_lightspot" && i === 1)
-                )
-                    return;
+                //                 if (
+                //                     (item === "config_base" && i === 0) ||
+                //                     (item === "config_lightspot" && i === 1)
+                //                 )
+                //                     return;
                 this.config[item][j].tmpActive = !this.config[item][j]
                     .tmpActive;
             });
@@ -595,17 +601,23 @@ export default {
     margin-top: 22upx;
 }
 .modal {
+    &_list {
+        width: 380upx;
+        padding-left: 30upx;
+    }
     &_item {
         margin-top: 15upx;
         margin-right: 30upx;
         margin-bottom: 15upx;
+        text-align: center;
     }
     .m_button {
-        min-width: 120upx;
+        width: 160upx;
         height: 56upx;
         line-height: 54upx;
         padding: 0 14upx;
         border-radius: 4upx;
+        overflow: hidden;
     }
 }
 </style>

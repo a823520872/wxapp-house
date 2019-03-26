@@ -6,8 +6,14 @@
             </view>
             <view class="main">
                 <view class="box">
-                    <view class="name m_textover">
-                        <view v-if="userInfo">{{ userInfo.nickname }}</view>
+                    <view>
+                        <view v-if="userInfo" class="name m_flex m_flex_column m_textover">
+                            <view>{{ userInfo.nickname }}</view>
+                            <view v-if="userInfo.is_landlord === 1">
+                                <view v-if="service" class="service">{{service}} 服务结束</view>
+                                <view v-else>服务结束</view>
+                            </view>
+                        </view>
                         <button v-else class="m_button" type="primary" plain open-type="getUserInfo" @getuserinfo="getUserInfo">
                             点击登录
                         </button>
@@ -53,7 +59,7 @@
             </button>
             <button class="m_button plain long" open-type="contact">
                 <view class="cell m_flex_justify m_flex_middle">
-                    <view class="cell_hd">联系村长</view>
+                    <view class="cell_hd">联系客服</view>
                     <view class="cell_fd">智能找房、意见反馈、入驻咨询</view>
                 </view>
             </button>
@@ -91,30 +97,37 @@ export default {
             this.init();
         } else {
             this.login().then(code => {
-                if (code) {
-                    this.init();
-                }
+                this.init();
             });
         }
     },
     onShareAppMessage() {
         return {
             title: "邀请入驻",
-            path: this.userInfo
-                ? this.userInfo.is_landlord === 1
-                    ? `/pages/publish/index?rid=${this.userInfo.id}`
-                    : `/pages/index/index?rid=${this.userInfo.id}`
-                : `/pages/index/index`
+            path:
+                `/pages/index/index?p=` +
+                encodeURIComponent(
+                    this.userInfo
+                        ? this.userInfo.is_landlord === 1
+                            ? `/pages/publish/index?uid=${this.userInfo.id}`
+                            : `/pages/index/index?uid=${this.userInfo.id}`
+                        : `/pages/index/index`
+                )
         };
     },
     methods: {
-        ...mapActions(["login", "getToken", "getInfo", "checkAuth"]),
+        ...mapActions(["login", "getInfo", "checkAuth"]),
         init() {
             this.getInfo(true).then(() => {
                 if (this.userInfo && this.userInfo.is_landlord === 1) {
-                    this.checkAuth().then(res => {
-                        this.service = !!res;
-                    });
+                    this.checkAuth().then(
+                        res => {
+                            this.service = res;
+                        },
+                        e => {
+                            this.service = false;
+                        }
+                    );
                 }
             });
         },
@@ -140,7 +153,16 @@ export default {
             this.to("/pages/publish/index");
         },
         to(url) {
-            this.userInfo ? this.goPage(url) : this.getUserInfo();
+            this.userInfo
+                ? url === "/pages/me/publish"
+                    ? this.service
+                        ? this.goPage(url)
+                        : uni.showToast({
+                              title: "服务已结束",
+                              icon: "none"
+                          })
+                    : this.goPage(url)
+                : this.getUserInfo();
         },
         clear() {
             try {
@@ -198,9 +220,14 @@ export default {
     .name {
         height: 95upx;
         padding-top: 10upx;
-        line-height: 95upx;
+        // line-height: 48upx;
         text-align: center;
         color: $text-color;
+    }
+
+    .service {
+        margin-top: 10upx;
+        font-size: 24upx;
     }
 
     .m_button {
@@ -216,9 +243,11 @@ export default {
         padding: 10upx 30upx;
         justify-content: space-around;
         line-height: 49upx;
+        text-align: center;
         color: $text-color;
     }
     .tab {
+        width: 36%;
         padding: 20upx 30upx 15upx;
     }
     .icon {

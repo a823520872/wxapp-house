@@ -18,17 +18,17 @@
                             <text v-if="li.address_detail">{{li.address_detail}}</text>
                             <text v-if="li.road_distance">{{li.road_distance}}</text>
                         </view>
-                        <!-- <view v-if="li.is_rented === 1" class="intro_cell addr">
+                        <view class="intro_cell addr">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
                             <text>{{li.floor_number}}楼</text>
-                        </view> -->
+                        </view>
                     </view>
                 </view>
                 <view class="fd m_flex_right">
                     <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
                         <button class="m_button plain" @tap.stop="rented(li)">已租</button>
-                        <button class="m_button primary" @tap.stop="getQRCode(li)">生产海报</button>
+                        <button class="m_button primary" @tap.stop="getQRCode(li)">生成海报</button>
                     </block>
                     <block v-if="li.is_public === 2">
                         <button class="m_button primary" @tap.stop="public(li)">发布</button>
@@ -43,11 +43,11 @@
                     <radio-group>
                         <view class="link m_flex_justify">
                             <label @tap="rent_type = 1">
-                                <radio :checked="rent_type === 1" />村长带给您的人</label>
+                                <radio :checked="rent_type === 1" />住户来自平台</label>
                         </view>
                         <view class="link m_flex_justify">
                             <label @tap="rent_type = 2">
-                                <radio :checked="rent_type === 2" />您自己租的</label>
+                                <radio :checked="rent_type === 2" />住户来自您</label>
                         </view>
                     </radio-group>
                 </view>
@@ -131,9 +131,7 @@ export default {
         public(li) {
             this.$request
                 .public({
-                    id: li.id,
-                    is_public: 1,
-                    is_rented: 2
+                    id: li.id
                 })
                 .then(res => {
                     if (res && res.data) {

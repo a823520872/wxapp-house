@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         ...mapMutations(["setUserInfo"]),
-        ...mapActions(["login", "getToken"]),
+        ...mapActions(["login", "getToken", "getInfo"]),
         signUp(data) {
             this.getToken(data);
             // .then(res => {
@@ -84,18 +84,16 @@ export default {
             const { errMsg, encryptedData, iv } = e.detail;
             this.$refs.phone_modal.hide();
             if (errMsg === "getPhoneNumber:ok") {
-                this.$request
-                    .bindMobile({
-                        // session3rd: self.session3rd,
-                        encryptedData,
-                        iv
-                    })
-                    .then(res => {
-                        console.log(res);
-                        if (res.data && res.data.phoneNumber) {
-                            this.getInfo(true);
-                        }
-                    });
+                const data = {
+                    encryptedData,
+                    iv
+                };
+                if (this.code) {
+                    data.code = this.code;
+                }
+                this.$request.bindMobile(data).then(res => {
+                    this.getInfo(true);
+                });
             }
         },
         getPhone(e) {
@@ -193,6 +191,6 @@ export default {
     line-height: 96upx;
     font-size: 36upx;
     padding: 0;
-    color: $uni-color-success;
+    color: $main-color;
 }
 </style>

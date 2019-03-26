@@ -3,7 +3,7 @@
         <view class="list">
             <view v-for="(li, i) in items" :key="Math.random()" class="cell" @tap="to(`/pages/index/house?id=${li.id}`)">
                 <view class="hd">
-                    <view class="m_flex_justify">
+                    <view class="m_flex_justify m_flex_middle">
                         <view class="title m_textover">{{li.address_street}} · {{li.house_type}}</view>
                         <view class="price">
                             <text class="num">{{li.rental}}</text>
@@ -93,6 +93,9 @@ export default {
                             self.temp = null;
                         }
                     });
+                    this.$request.viewPhone({
+                        id: li.id
+                    });
                 } else {
                     this.getPhone();
                 }
@@ -122,16 +125,18 @@ export default {
     }
 
     .price {
-        align-self: flex-end;
+        // align-self: flex-end;
         color: $primary-color;
+        font-size: 28upx;
     }
 
     .num {
-        font-size: 25upx;
+        // font-size: 25upx;
+        font-weight: bold;
     }
 
     .unit {
-        font-size: 15upx;
+        // font-size: 15upx;
     }
 
     .m_button {

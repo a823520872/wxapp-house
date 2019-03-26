@@ -48,7 +48,7 @@ export default {
         };
     },
     onShow() {
-        this.getQiniuToken();
+        this.option.uptoken || this.getQiniuToken();
     },
     methods: {
         ...mapMutations(["setHouseTempImg", "setHouseImg"]),
@@ -80,16 +80,11 @@ export default {
             });
         },
         chooseImg() {
-            const self = this;
             const num = 9 - this.houseTempImg.length;
-            uni.chooseImage({
-                sourceType: "album",
-                count: num,
-                success(e) {
-                    if (e.errMsg === "chooseImage:ok") {
-                        const list = [...self.houseTempImg, ...e.tempFilePaths];
-                        self.setHouseTempImg(list);
-                    }
+            this.chooseImage(num).then(e => {
+                if (e.errMsg === "chooseImage:ok") {
+                    const list = [...this.houseTempImg, ...e.tempFilePaths];
+                    this.setHouseTempImg(list);
                 }
             });
         },
@@ -116,6 +111,13 @@ export default {
             });
         },
         confirm() {
+            if (this.houseTempImg.length < 2) {
+                uni.showToast({
+                    title: "至少上传两张图片",
+                    icon: "none"
+                });
+                return;
+            }
             if (this.option.uptoken) {
                 uni.showLoading({
                     title: "正在上传中……",

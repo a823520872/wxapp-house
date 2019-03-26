@@ -43,11 +43,9 @@ export default {
     },
     onReady() {
         this.login().then(code => {
-            if (code) {
-                this.getInfo().then(res => {
-                    this.getDetail();
-                });
-            }
+            this.getInfo().then(res => {
+                this.getDetail();
+            });
         });
     },
     methods: {
@@ -71,7 +69,7 @@ export default {
                 this.show = false;
             } else {
                 this.show = true;
-                this.getDetail();
+                // this.getDetail();
                 uni.showLoading({
                     title: "图片正在生成",
                     mask: true

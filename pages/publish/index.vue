@@ -1,28 +1,10 @@
 <template>
     <view class="content content_bg_ff">
-        <view class="not_landlord" v-if="step === 2 || step === 3 || step === 4">
-            <view class="bd">
-                <view>{{state}}</view>
-                <image class="m_flex_item" src="/static/image/publish/intro.png" mode="aspectFit"></image>
-            </view>
-            <view class="fd">
-                <button class="m_button main" open-type="contact">咨询村长</button>
-            </view>
-            <button v-if="step === 2" class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
-                <view>申请</view>
-                <view>入驻</view>
-            </button>
-            <v-modal ref="modal">
-                <view slot="content">
-                    <link-modal :temp="config"></link-modal>
-                </view>
-            </v-modal>
-        </view>
         <view class="is_landlord" v-if="step === 1">
             <view class="hd">
                 <view class="title">发帖真实性承诺</view>
                 <view class="con">为维护真房源环境，请据实发帖</view>
-                <view class="con">如发现虚假，平台将删帖并扣除保证金。</view>
+                <view class="con">如发现虚假，平台将删帖。</view>
             </view>
             <view class="bd">
                 <view class="cells">
@@ -50,14 +32,40 @@
                         </view>
                         <view class="m_flex_item">
                             <view>房租标价合理</view>
-                            <view>标明实际租住价格，承诺不收取额外费用</view>
+                            <view>标明实际租住价格</view>
+                        </view>
+                    </view>
+                    <view class="cell m_flex_middle">
+                        <view class="img">
+                            <image src="/static/image/publish/policy.png" mode="aspectFit"></image>
+                        </view>
+                        <view class="m_flex_item">
+                            <view>责任声明</view>
+                            <view>用户与房东一切除看信息行为与本平台无关</view>
                         </view>
                     </view>
                 </view>
             </view>
             <view class="fd m_button primary" @tap="to(`/pages/publish/house`)">我承诺并立即发布</view>
         </view>
-        <view class="official-account"></view>
+        <view class="not_landlord" v-else>
+            <view class="bd">
+                <view>{{state}}</view>
+                <image src="/static/image/publish/intro.png" mode="widthFix"></image>
+            </view>
+            <view class="fd">
+                <button class="m_button main" open-type="contact">联系客服</button>
+            </view>
+            <button v-if="step === 2" class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
+                <view>申请</view>
+                <view>入驻</view>
+            </button>
+            <v-modal ref="modal">
+                <view slot="content">
+                    <link-modal :temp="config"></link-modal>
+                </view>
+            </v-modal>
+        </view>
         <official-account></official-account>
         <v-auth ref="auth"></v-auth>
     </view>
@@ -75,13 +83,13 @@ export default {
         state() {
             switch (this.step) {
                 case 2:
-                    return "您未入驻，无法发布房源";
+                    return "您未入驻，暂无法发布房源";
                 case 3:
-                    return "待审核，请联系村长审核";
+                    return "正在审核，加快审核请联系客服";
                 case 4:
-                    return "服务已过期，如想继续使用请联系村长";
+                    return "服务已结束，如想继续使用请联系客服";
                 default:
-                    return "您未入驻，无法发布房源";
+                    return "您未入驻，暂无法发布房源";
             }
         }
     },
@@ -96,9 +104,7 @@ export default {
             this.init();
         } else {
             this.login().then(code => {
-                if (code) {
-                    this.init();
-                }
+                this.init();
             });
         }
     },
@@ -107,15 +113,21 @@ export default {
         init() {
             this.getInfo(true).then(res => {
                 if (res && res.data) {
-                    this.step = res.data.is_landlord;
-                    if (this.userInfo && this.userInfo.is_landlord === 1) {
-                        this.checkAuth().then(res => {
-                            if (!res) {
+                    if (this.userInfo.is_landlord === 1) {
+                        this.checkAuth().then(
+                            res => {
+                                if (res) {
+                                    this.step = 1;
+                                } else {
+                                    this.step = 4;
+                                }
+                            },
+                            e => {
                                 this.step = 4;
-                            } else {
-                                this.step = 1;
                             }
-                        });
+                        );
+                    } else {
+                        this.step = this.userInfo.is_landlord;
                     }
                 } else {
                     this.step = 2;
@@ -144,15 +156,15 @@ export default {
 .not_landlord {
     .bd {
         width: 750upx;
-        height: 2228upx;
+        // height: 2228upx;
         padding-top: 70upx;
         text-align: center;
         line-height: 40upx;
+        overflow: hidden;
     }
 
     .fd {
-        height: 100upx;
-        line-height: 100upx;
+        margin: 30upx 0;
         text-decoration: underline;
         text-align: center;
         color: #0404ff;
@@ -191,7 +203,7 @@ export default {
     }
 
     .bd {
-        padding: 90upx 0;
+        padding: 20upx 0 0;
         line-height: 1.77;
         font-size: 26upx;
 

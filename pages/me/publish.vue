@@ -1,18 +1,18 @@
 <template>
     <view class="content">
-        <view class="hd" v-if="userInfo">
+        <view class="hd" v-if="user_info">
             <view class="avatar">
-                <image :src="userInfo.avatar" mode="aspectFit"></image>
+                <image :src="user_info.avatar" mode="aspectFit"></image>
             </view>
-            <view class="name">{{userInfo.nickname}}</view>
-            <!-- <view class="tips">已发布29套 还有2套空房</view> -->
+            <view class="name">{{user_info.nickname}}</view>
+            <view class="tips" v-if="user_info.public_num || user_info.rented_num">发布中:{{user_info.public_num}}套&nbsp;&nbsp;&nbsp;&nbsp;未发布:{{user_info.rented_num}}套</view>
         </view>
         <view class="tabs m_flex">
             <view class="m_flex_item">
-                <view :class="{'tab': true, 'active' : tab === 2}" @tap="chooseTab(2)">空房（发布中）</view>
+                <view :class="{'tab': true, 'active' : tab === 2}" @tap="chooseTab(2)">发布中</view>
             </view>
             <view class="m_flex_item">
-                <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">已租（未发布）</view>
+                <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">未发布</view>
             </view>
         </view>
         <publish-list :list.sync="list" @reload="getData"></publish-list>
@@ -21,22 +21,44 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import publishList from "../components/publish-list.vue";
 export default {
     components: {
         publishList
     },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo", "collectReload"])
     },
     data() {
         return {
             tab: 2,
-            list: []
+            list: [],
+            user_id: "",
+            user_info: null
         };
     },
-    onLoad(res) {},
+    onLoad(res) {
+        if (res.user_id) {
+            this.user_id = res.user_id;
+            uni.setNavigationBarTitle({
+                title: "房源列表"
+            });
+        } else if (this.userInfo.is_landlord === 1) {
+            this.user_id = this.userInfo.user_id;
+        } else {
+            uni.showToast({
+                title: "页面错误",
+                icon: "none"
+            });
+        }
+    },
+    onShow() {
+        if (this.collectReload) {
+            this.setCollectReload(false);
+            this.getData();
+        }
+    },
     onReady() {
         this.getData();
     },
@@ -47,29 +69,41 @@ export default {
         this.$refs.page.next();
     },
     methods: {
+        ...mapMutations(["setCollectReload"]),
         getData() {
             const self = this;
             const params = {
-                hr_id: ""
+                user_id: this.user_id
             };
+            if (this.user_id) {
+                params.user_id = this.user_id;
+            }
             if (this.tab === 2) {
                 params.is_public = 1;
             } else if (this.tab === 1) {
                 params.is_rented = 1;
             }
-            this.$refs.page.init({
-                url: "getMyHouse",
-                params,
-                fn(data) {
-                    return (data || []).map(
-                        item => (
-                            (item.images =
-                                item.image_urls && item.image_urls.split(",")),
-                            item
-                        )
-                    );
-                }
-            });
+            this.$refs.page &&
+                this.$refs.page
+                    .init({
+                        url: "getUserHouse",
+                        params,
+                        fn(data) {
+                            return (data || []).map(
+                                item => (
+                                    (item.images =
+                                        item.image_urls &&
+                                        item.image_urls.split(",")),
+                                    item
+                                )
+                            );
+                        }
+                    })
+                    .then(res => {
+                        if (res && res.data) {
+                            this.user_info = res.data.user_info;
+                        }
+                    });
         },
         chooseTab(v) {
             this.tab = v;

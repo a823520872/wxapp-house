@@ -15,13 +15,14 @@
                     <view class="label">手机号</view>
                     <view class="model m_flex_middle"><input type="number" v-model="form.mobile" placeholder="请输入您的手机号" /></view>
                 </view>
-                <!-- <view class="cell m_flex">
+                <view class="cell m_flex">
                     <view class="label">验证码</view>
                     <view class="model m_flex_middle">
-                        <input class="m_flex_item" type="number" v-model="form.code" placeholder="请输入短信验证码" />
-                        <view class="m_button main btn_code" @tap="getCode">获取验证码</view>
+                        <input class="m_flex_item" type="number" v-model="form.mobile_code" placeholder="请输入短信验证码" />
+                        <view v-if="time === -1" class="m_button main btn_code" @tap="getCode">获取验证码</view>
+                        <view v-else class="m_button btn_code">{{time + 's后可再次获取'}}</view>
                     </view>
-                </view> -->
+                </view>
                 <view class="cell m_flex">
                     <view class="label">房源数量</view>
                     <view class="model m_flex_middle"><input type="number" v-model="form.house_num" placeholder="请输入房源数量" /></view>
@@ -59,7 +60,7 @@ export default {
             form: {
                 name: "",
                 mobile: "",
-                // code: "",
+                mobile_code: "",
                 // position_province_id: "",
                 // position_province: "",
                 // position_city_id: "",
@@ -72,7 +73,8 @@ export default {
                 // longitude: "",
                 house_num: "",
                 referrer_user_mobile: ""
-            }
+            },
+            time: -1
         };
     },
     computed: {
@@ -119,13 +121,64 @@ export default {
                 }
             );
         },
+        getCode() {
+            this.$validate(this.form, {
+                mobile: [
+                    { required: true, msg: "请输入手机号码" },
+                    { type: "mobile", msg: "手机号码不正确" }
+                ]
+            }).then(
+                () => {
+                    this.countDown();
+                    this.$request
+                        .sendSms({
+                            mobile: this.form.mobile
+                        })
+                        .then(
+                            res => {
+                                uni.showToast({
+                                    title: "获取成功",
+                                    icon: "success"
+                                });
+                            },
+                            e => {
+                                this.time = -1;
+                                uni.showToast({
+                                    title: "获取失败",
+                                    icon: "none"
+                                });
+                            }
+                        );
+                },
+                e => {
+                    uni.showToast({
+                        title: e.msg,
+                        icon: "none"
+                    });
+                }
+            );
+        },
+        countDown() {
+            const self = this;
+            this.time = 61;
+            function cd() {
+                if (self.time < 0) {
+                    return;
+                }
+                if (self.time-- >= 0) {
+                    setTimeout(cd, 1000);
+                }
+            }
+            cd();
+        },
         confirm() {
             this.$validate(this.form, {
                 name: [{ required: true, msg: "请输入姓名" }],
                 mobile: [
                     { required: true, msg: "请输入手机号码" },
                     { type: "mobile", msg: "手机号码不正确" }
-                ]
+                ],
+                mobile_code: [{ required: true, msg: "请输入验证码" }]
                 // postion_street: [{ required: true, msg: "请选择地址" }]
             }).then(
                 () => {

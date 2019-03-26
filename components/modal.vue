@@ -161,8 +161,8 @@ export default {
         top: 0;
         right: 0;
         height: 1upx;
-        border-top: 1upx solid $uni-border-color;
-        color: $uni-border-color;
+        border-top: 1upx solid $border-color;
+        color: $border-color;
     }
 
     &__btn {
@@ -193,8 +193,8 @@ export default {
         top: 0;
         width: 1upx;
         bottom: 0;
-        border-left: 1upx solid $uni-border-color;
-        color: $uni-border-color;
+        border-left: 1upx solid $border-color;
+        color: $border-color;
     }
 
     &__btn:first-child:after {
@@ -206,7 +206,7 @@ export default {
     }
 
     &__btn_primary {
-        color: $uni-color-success;
+        color: $main-color;
         background-color: #fff;
     }
 }

@@ -12,7 +12,8 @@ const store = new Vuex.Store({
         userInfo: null,
         houseTempImg: [],
         houseImg: [],
-        homeReload: false
+        homeReload: false,
+        collectReload: false
     },
     mutations: {
         setCode(state, code) {
@@ -35,21 +36,27 @@ const store = new Vuex.Store({
         },
         setHomeReload(state, bl) {
             state.homeReload = bl;
+        },
+        setCollectReload(state, bl) {
+            state.collectReload = bl;
         }
     },
     actions: {
         login(context) {
             return new Promise((resolve, reject) => {
-                if (context.state.code) {
-                    resolve(context.state.code);
-                } else {
-                    uni.login({
-                        success(res) {
-                            context.commit('setCode', res.code);
-                            resolve(res.code);
-                        }
-                    });
-                }
+                uni.checkSession({
+                    success() {
+                        resolve();
+                    },
+                    fail() {
+                        uni.login({
+                            success(res) {
+                                context.commit('setCode', res.code);
+                                resolve(res.code);
+                            }
+                        });
+                    }
+                });
             });
         },
         getToken(context, data = {}) {
@@ -78,7 +85,7 @@ const store = new Vuex.Store({
         },
         checkAuth(context) {
             return api.checkAuth().then(res => {
-                return res.data === '';
+                return res.data;
             });
         }
     }

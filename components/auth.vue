@@ -58,6 +58,7 @@ export default {
             } = e.detail;
             if (errMsg === "getUserInfo:ok") {
                 this.$refs.user_modal.hide();
+                console.log(213);
                 this.signUp({
                     code: self.code,
                     rawData,
@@ -72,10 +73,11 @@ export default {
                 if (e) {
                     this.getUserInfoByBtn(e);
                 } else {
-                    this.$refs.user_modal.show({
-                        content: "为了更好的用户体验，需要获取您的个人信息",
-                        cancelText: "取消"
-                    });
+                    !this.userInfo &&
+                        this.$refs.user_modal.show({
+                            content: "为了更好的用户体验，需要获取您的个人信息",
+                            cancelText: "取消"
+                        });
                 }
             });
         },

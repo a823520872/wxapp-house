@@ -68,7 +68,7 @@ export default {
             }
         },
         getUserInfo(e) {
-            this.login().then(code => {
+            this.login(true).then(code => {
                 if (e) {
                     this.getUserInfoByBtn(e);
                 } else {

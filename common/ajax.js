@@ -1,3 +1,5 @@
+import utils from './utils';
+import store from '../store';
 const ajax = (path, data, options = {}) => {
     const urlPrefix = 'https://house.zhiqiang.ink';
     const url = urlPrefix + path;
@@ -30,19 +32,23 @@ const ajax = (path, data, options = {}) => {
         if (res.length && res.length === 2) {
             res = res[1];
         }
-        console.log(path, res.data);
+        utils.log(path, data, token, res.data);
 
         if (res && res.statusCode == 200) {
             let data = res.data;
             if (data.code && data.code === 1) {
                 if (data.data && data.data.message && data.data.message === '请求Token失败') {
-                    uni.showToast({
-                        title: '登录失败',
-                        icon: 'none'
-                    });
-                    return Promise.reject({
-                        msg: '请先登录小程序'
-                    });
+                    return store
+                        .dispatch('login', true)
+                        .then(() => {
+                            return uni.request(obj).then(success, fail);
+                        })
+                        .catch(e => {
+                            uni.showToast({
+                                title: '登录失败',
+                                icon: 'none'
+                            });
+                        });
                 }
                 return Promise.resolve(data);
             } else {
@@ -55,7 +61,7 @@ const ajax = (path, data, options = {}) => {
         }
     };
     const fail = e => {
-        console.log(path, e);
+        utils.log(path, data, token, e);
         options.loading && uni.hideLoading();
         !options.noAlert &&
             uni.showToast({

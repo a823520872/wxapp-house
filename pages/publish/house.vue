@@ -269,7 +269,7 @@ export default {
                             address_flag: res.data
                         };
                     } catch (error) {
-                        console.log(error);
+                        this.log(error);
                     }
                 }
             });
@@ -294,7 +294,7 @@ export default {
                     }
                 });
             } else {
-                console.log(213);
+                this.log(213);
                 this.form.contact_mobile = this.userInfo.landlord_mobile;
             }
         },
@@ -312,13 +312,13 @@ export default {
             if (this.houseImg && this.houseImg.length) {
                 this.goPage(`/pages/publish/img`);
             } else {
-                this.chooseImage().then(e => {
-                    if (e.errMsg === "chooseImage:ok") {
-                        // this.compressImage(e.tempFilePaths).then(res => {
-                        //     console.log(res);
-                        // });
-                        this.setHouseTempImg(e.tempFilePaths);
-                        this.goPage(`/pages/publish/img`);
+                uni.chooseImage({
+                    sourceType: "album",
+                    success(e) {
+                        if (e.errMsg === "chooseImage:ok") {
+                            self.setHouseTempImg(e.tempFilePaths);
+                            self.goPage(`/pages/publish/img`);
+                        }
                     }
                 });
             }

@@ -5,10 +5,10 @@ export default {
         return ajax('/api/user/checkLogin', data, { noToken: true, noAlert: true })
     },
     bindMobile(data = {}) {
-        return ajax('/api/user/bindWxappMobile', data, { type: 'post' })
+        return ajax('/api/user/bindWxappMobile', data, { type: 'post', loading: true });
     },
     viewPhone(data = {}) {
-        return ajax('/api/house_resource/getPhoneNumber', data, { type: 'post', noAlert: true })
+        return ajax('/api/house_resource/getPhoneNumber', data, { type: 'post', noAlert: true, loading: true });
     },
     getInfo(data = {}) {
         return ajax('/api/user/getRegisterInfo', data, { noAlert: true })
@@ -86,52 +86,43 @@ export default {
         return ajax('/api/house_resource/getList', data, { noToken: true })
     },
     addHouse(data = {}) {
-        return ajax('/api/house_resource/wxappAdd', data, { type: 'post' })
+        return ajax('/api/house_resource/wxappAdd', data, { type: 'post' });
     },
     editHouse(data = {}) {
-        return ajax('/api/house_resource/wxappEdit', data, { type: 'post' })
+        return ajax('/api/house_resource/wxappEdit', data, { type: 'post' });
     },
     getHouse(data = {}) {
-        return ajax('/api/house_resource/getDetail', data, { noToken: true })
+        return ajax('/api/house_resource/getDetail', data, { noToken: true });
     },
     addReader(data) {
         return ajax('/api/house_resource/readAdd', data, { type: 'post', noAlert: true })
     },
     getLandlordList(data = {}) {
-        return ajax('/api/landlord/getList', data, { noToken: true })
+        return ajax('/api/landlord/getList', data, { noToken: true });
     },
     getLandlordDetail(data = {}) {
-        return ajax('/api/landlord/getDetail', data, { noToken: true })
-    },
-    sendSms(data = {}) {
-        return ajax('/api/landlord/sendSms', data, { type: 'post' })
+        return ajax('/api/landlord/getDetail', data, { noToken: true });
     },
     addLandlord(data = {}) {
-        return ajax('/api/landlord/wxappAdd', data, { type: 'post' })
+        return ajax('/api/landlord/wxappAdd', data, { type: 'post' });
     },
     editLoandlord(data = {}) {
-        return ajax('/api/landlord/edit', data, { type: 'post' })
+        return ajax('/api/landlord/edit', data, { type: 'post' });
     },
     collect(data = {}) {
-        return ajax('/api/user/collectionAdd', data, { type: 'post' })
-    },
-    cancelCollect(data = {}) {
-        return ajax('/api/user/collectionDel', data, { type: 'post' })
+        return ajax('/api/user/collectionAdd', data, { type: 'post' });
     },
     getMyCollection(data = {}) {
-        return ajax('/api/user/collectionGetList', data)
+        return ajax('/api/user/collectionGetList', data);
     },
     getMyHouse(data = {}) {
         return ajax('/api/user/houseResourceGetlist', data)
     },
-    getUserHouse(data = {}) {
-        return ajax('/api/house_resource/getUserList', data, { loading: true })
-    },
     rent(data = {}) {
-        return ajax('/api/House_resource/rentChange', data, { type: 'post' })
+        return ajax('/api/House_resource/rentChange', data, { type: 'post' });
     },
     public(data = {}) {
-        return ajax('/api/House_Resource/publicHouse', data, { type: 'post' })
+        return ajax('/api/house_resource/wxappEdit', data, { type: 'post' });
     },
     getConfig(data = {}) {
         return ajax('/api/keyvalue/getAllList', data, { noToken: true })
@@ -140,6 +131,6 @@ export default {
         return ajax('/api/upload/add', data, { type: 'post', upload: true, noToken: true })
     },
     getQRCode(data = {}) {
-        return ajax('/api/House_Resource/getPoster', data, { type: 'post' })
+        return ajax('/api/House_Resource/getPoster', data, { type: 'post' });
     }
 }

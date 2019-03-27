@@ -93,7 +93,9 @@
                         <text class="intro">附近）</text>
                     </view>
                     <view class="cell map">
-                        <map :longitude="detail.location.lng" :latitude="detail.location.lat" :scale="18" :markers="markers" :enable-scroll="false" :enable-zoom="false" @tap="showMap"></map>
+                        <map :longitude="detail.location.lng" :latitude="detail.location.lat" :scale="18" :markers="markers" :enable-scroll="false" :enable-zoom="false" @tap="showMap">
+                            <cover-image class="marker" src="/static/image/index/marker.png"></cover-image>
+                        </map>
                     </view>
                 </view>
             </view>
@@ -155,7 +157,6 @@ export default {
         };
     },
     onLoad(res) {
-        console.log(res);
         if (res.id) {
             this.id = res.id;
         } else {
@@ -182,14 +183,7 @@ export default {
         ...mapMutations(["setCollectReload"]),
         ...mapActions(["login", "getInfo"]),
         getData() {
-            console.log(this.id);
-            const params = {
-                id: this.id
-            };
-            if (this.userInfo) {
-                params.user_id = this.userInfo.user_id;
-            }
-            this.$request.getHouse(params).then(res => {
+            this.$request.getHouse({ id: this.id }).then(res => {
                 if (res && res.data) {
                     const data = this.filterHouse(res.data, "string");
                     // 数据库数据经纬度传反了
@@ -198,23 +192,6 @@ export default {
                     data.location.lng = +data.location.lat;
                     data.location.lat = +tmp;
                     this.detail = { ...data };
-                    if (
-                        this.detail.location &&
-                        this.detail.location.lng &&
-                        this.detail.location.lat
-                    ) {
-                        this.markers = [
-                            {
-                                id: 0,
-                                latitude: this.detail.location.lat,
-                                longitude: this.detail.location.longitude,
-                                title: this.detail.address_flag,
-                                iconPath: "/static/image/index/marker.png",
-                                width: 15,
-                                height: 20
-                            }
-                        ];
-                    }
                 }
             });
         },
@@ -225,13 +202,7 @@ export default {
             });
         },
         addReader() {
-            const params = {
-                id: this.id
-            };
-            if (this.userInfo) {
-                params.user_id = this.userInfo.user_id;
-            }
-            this.$request.addReader(params).then(res => {
+            this.$request.addReader({ id: this.id }).then(res => {
                 console.log(res);
             });
         },
@@ -423,11 +394,6 @@ export default {
         height: 321upx;
         padding: 0;
         padding-bottom: 18upx;
-
-        map {
-            width: 100%;
-            height: 100%;
-        }
     }
     .other {
         height: 100upx;

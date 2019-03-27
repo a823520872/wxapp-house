@@ -277,11 +277,9 @@ export default {
     onLoad(res) {
         if (res.scene) {
             const scene = decodeURIComponent(res.scene);
-            console.log("scene", scene);
             if (scene) {
                 res.p = scene.replace("page=", "");
             }
-            console.log("res.p", res.p);
         } else if (res.p) {
             res.p = decodeURIComponent(res.p);
         }

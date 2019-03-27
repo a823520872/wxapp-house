@@ -1,11 +1,18 @@
 export default {
-    parse_url(url) {
-        var pattern = /([\w_]+)=([\w\/@]+)/gi
-        var parames = {}
-        url.replace(pattern, (a, b, c) => {
-            parames[b] = c
-        })
-        return parames
+    log(...args) {
+        // #ifdef APP-PLUS
+        console.log(
+            ...args.map(item => {
+                if (typeof item === 'object') {
+                    return JSON.stringify(item);
+                }
+                return item;
+            })
+        );
+        // #endif
+        // #ifdef APP-PLUS
+        console.log(...args);
+        // #endif
     },
     testWechat(v) {
         return /^[a-zA-Z\d_-]{5,}$/.test(v)
@@ -31,10 +38,10 @@ export default {
         return v
     },
     filterHouse(item, type) {
-        item.config_base = type === 'string' ? item.config_base && item.config_base.replace(/\,/g, '，') : item.config_base.split(',')
-        item.config_lightspot = type === 'string' ? item.config_lightspot && item.config_lightspot.replace(/\,/g, '，') : item.config_lightspot.split(',')
-        item.image_urls = item.image_urls && item.image_urls.split(',')
-        return item
+        item.config_base = type === 'string' ? item.config_base.replace(/\,/g, '，') : item.config_base.split(',');
+        item.config_lightspot = type === 'string' ? item.config_lightspot.replace(/\,/g, '，') : item.config_lightspot.split(',');
+        item.image_urls = item.image_urls && item.image_urls.split(',');
+        return item;
     },
     call(v) {
         uni.makePhoneCall({
@@ -53,13 +60,11 @@ export default {
         })
     },
     goPage(value) {
+        if (!value) return;
         if (typeof value === 'string') {
-            const tabs = ['/pages/index/index', '/pages/publish/index', '/pages/me/index']
-            const isHome = tabs.some(tab => {
-                return value.indexOf(tab) !== -1
-            })
-            if (isHome) {
-                uni.reLaunch({
+            const tabs = ['/pages/index/index', '/pages/publish/index', '/pages/me/index'];
+            if (tabs.indexOf(value) !== -1) {
+                uni.switchTab({
                     url: value
                 })
             } else {
@@ -67,43 +72,14 @@ export default {
                     url: value
                 })
             }
-        } else if (typeof value === 'object') {
-            if (value.replace) {
-                uni.redirectTo({
-                    url: value.path
-                })
-            } else {
-                uni.navigateTo({
-                    url: value.path
-                })
-            }
+        } else if (value.replace) {
+            uni.redirectTo({
+                url: value.path
+            });
+        } else {
+            uni.navigateTo({
+                url: value.path
+            });
         }
-    },
-    chooseImage(count = 9) {
-        return new Promise((resolve, reject) => {
-            uni.chooseImage({
-                sizeType: ['compressed'],
-                sourceType: 'album',
-                count: count,
-                success: resolve,
-                fail: reject
-            })
-        })
     }
-    // compressImage(src) {
-    //     return src.map(item => this._compressImage(item));
-    // },
-    // _compressImage(src) {
-    //     return new Promise((resolve, reject) => {
-    //         wx.compressImage({
-    //             src, // 图片路径
-    //             // quality: 80, // 压缩质量
-    //             success(e) {
-    //                 console.log(e);
-    //                 resolve(e.tempFilePath);
-    //             },
-    //             fail: reject
-    //         });
-    //     });
-    // }
-}
+};

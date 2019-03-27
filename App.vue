@@ -11,10 +11,10 @@ export default {
         // #endif
     },
     onShow: function() {
-        console.log("App Show");
+        this.log("App Show");
     },
     onHide: function() {
-        console.log("App Hide");
+        this.log("App Hide");
     }
 };
 </script>

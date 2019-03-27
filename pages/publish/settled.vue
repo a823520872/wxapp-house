@@ -102,7 +102,7 @@ export default {
                     this.form.latitude = res.latitude;
                 },
                 e => {
-                    console.log(e);
+                    this.log(e);
                 }
             );
         },
@@ -117,7 +117,7 @@ export default {
                     this.form.latitude = res.latitude;
                 },
                 e => {
-                    console.log(e);
+                    this.log(e);
                 }
             );
         },

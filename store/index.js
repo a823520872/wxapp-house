@@ -42,21 +42,30 @@ const store = new Vuex.Store({
         }
     },
     actions: {
-        login(context) {
+        login(context, bl) {
             return new Promise((resolve, reject) => {
-                uni.checkSession({
-                    success() {
-                        resolve();
-                    },
-                    fail() {
-                        uni.login({
-                            success(res) {
-                                context.commit('setCode', res.code);
-                                resolve(res.code);
-                            }
-                        });
-                    }
-                });
+                if (bl) {
+                    uni.login({
+                        success(res) {
+                            context.commit('setCode', res.code);
+                            resolve(res.code);
+                        }
+                    });
+                } else {
+                    uni.checkSession({
+                        success() {
+                            resolve();
+                        },
+                        fail() {
+                            uni.login({
+                                success(res) {
+                                    context.commit('setCode', res.code);
+                                    resolve(res.code);
+                                }
+                            });
+                        }
+                    });
+                }
             });
         },
         getToken(context, data = {}) {

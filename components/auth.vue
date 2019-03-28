@@ -38,7 +38,9 @@ export default {
         ...mapMutations(["setUserInfo"]),
         ...mapActions(["login", "getToken", "getInfo"]),
         signUp(data) {
-            this.getToken(data);
+            this.getToken(data).then(() => {
+                this.$refs.user_modal.hide();
+            });
             // .then(res => {
             //     if (res && res.data) {
             //         this.session3rd = res.data.session3rd;
@@ -47,6 +49,7 @@ export default {
             // });
         },
         getUserInfoByBtn(e) {
+            this.$refs.user_modal.hide();
             const self = this;
             const {
                 errMsg,
@@ -57,8 +60,6 @@ export default {
                 userInfo
             } = e.detail;
             if (errMsg === "getUserInfo:ok") {
-                this.$refs.user_modal.hide();
-                console.log(213);
                 this.signUp({
                     code: self.code,
                     rawData,
@@ -99,6 +100,7 @@ export default {
             }
         },
         getPhone(e) {
+            this.$store.commit("setCode", "");
             this.login().then(code => {
                 if (e) {
                     this.getPhoneByBtn(e);

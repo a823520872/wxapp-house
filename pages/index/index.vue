@@ -97,7 +97,7 @@
             <view v-if="hasFocus" class="official-account"></view>
             <official-account @load="viewSucc"></official-account>
         </view>
-        <v-auth ref="auth"></v-auth>
+        <!-- <v-auth ref="auth"></v-auth> -->
         <v-modal ref="modal">
             <view slot="content">
                 <view class="modal" v-if="modalList && modalList.length">
@@ -306,8 +306,8 @@ export default {
             if (!this.userInfo) {
                 this.getInfo();
             }
-        } else {
-            this.$refs.auth.getUserInfo();
+            // } else {
+            //     this.$refs.auth.getUserInfo();
         }
         this.init();
         this.getData();

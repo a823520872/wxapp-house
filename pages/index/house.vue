@@ -55,9 +55,9 @@
                                 </text>
                             </text>
                         </view>
-                        <view class="intro_cell" v-if="detail.remark">
+                        <view class="intro_cell" v-if="detail.remarks">
                             <text class="intro_hd">备注：</text>
-                            <text class="intro_bd">{{detail.remark}}</text>
+                            <text class="intro_bd">{{detail.remarks}}</text>
                         </view>
                     </view>
                 </view>
@@ -183,7 +183,13 @@ export default {
         ...mapMutations(["setCollectReload"]),
         ...mapActions(["login", "getInfo"]),
         getData() {
-            this.$request.getHouse({ id: this.id }).then(res => {
+            const params = {
+                id: this.id
+            };
+            if (this.userInfo) {
+                params.user_id = this.userInfo.user_id;
+            }
+            this.$request.getHouse(params).then(res => {
                 if (res && res.data) {
                     const data = this.filterHouse(res.data, "string");
                     // 数据库数据经纬度传反了
@@ -192,6 +198,23 @@ export default {
                     data.location.lng = +data.location.lat;
                     data.location.lat = +tmp;
                     this.detail = { ...data };
+                    if (
+                        this.detail.location &&
+                        this.detail.location.lng &&
+                        this.detail.location.lat
+                    ) {
+                        this.markers = [
+                            {
+                                id: 0,
+                                latitude: this.detail.location.lat,
+                                longitude: this.detail.location.longitude,
+                                title: this.detail.address_flag,
+                                iconPath: "/static/image/index/marker.png",
+                                width: 15,
+                                height: 20
+                            }
+                        ];
+                    }
                 }
             });
         },
@@ -202,7 +225,13 @@ export default {
             });
         },
         addReader() {
-            this.$request.addReader({ id: this.id }).then(res => {
+            const params = {
+                id: this.id
+            };
+            if (this.userInfo) {
+                params.user_id = this.userInfo.user_id;
+            }
+            this.$request.addReader(params).then(res => {
                 console.log(res);
             });
         },
@@ -390,10 +419,25 @@ export default {
         }
     }
     .map {
+        position: relative;
         width: 750upx;
         height: 321upx;
         padding: 0;
         padding-bottom: 18upx;
+
+        map {
+            width: 100%;
+            height: 100%;
+        }
+
+        cover-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40upx;
+            height: 40upx;
+            transform: translate(-50%, -50%);
+        }
     }
     .other {
         height: 100upx;

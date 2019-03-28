@@ -96,7 +96,9 @@ export default {
         uploadImg(filePath) {
             return new Promise((resolve, reject) => {
                 if (filePath.indexOf("zhiqiang.ink") > 0) {
-                    resolve(filePath);
+                    resolve({
+                        url: filePath
+                    });
                 }
                 qiniuUploader.upload(
                     filePath,

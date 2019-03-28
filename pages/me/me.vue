@@ -63,9 +63,9 @@
                     <view class="cell_fd">智能找房、意见反馈、入驻咨询</view>
                 </view>
             </button>
-            <view class="cell m_flex_justify m_flex_middle" @tap="clear">
+            <!-- <view class="cell m_flex_justify m_flex_middle" @tap="clear">
                 <view class="cell_hd">清楚授权</view>
-            </view>
+            </view> -->
         </view>
         <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
@@ -163,20 +163,20 @@ export default {
                           })
                     : this.goPage(url)
                 : this.getUserInfo();
-        },
-        clear() {
-            try {
-                uni.clearStorageSync();
-                uni.reLaunch({
-                    url: "/pages/me/me"
-                });
-            } catch (e) {
-                uni.showToast({
-                    title: "清楚授权失败",
-                    icon: "none"
-                });
-            }
         }
+        // clear() {
+        //     try {
+        //         uni.clearStorageSync();
+        //         uni.reLaunch({
+        //             url: "/pages/me/me"
+        //         });
+        //     } catch (e) {
+        //         uni.showToast({
+        //             title: "清楚授权失败",
+        //             icon: "none"
+        //         });
+        //     }
+        // }
     }
 };
 </script>

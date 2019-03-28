@@ -28,8 +28,8 @@
                 </view>
             </view>
         </view>
-        <v-auth ref="auth"></v-auth>
-        <v-modal ref="modal">
+        <v-auth ref="auth2"></v-auth>
+        <v-modal ref="modal2">
             <view slot="content">
                 <link-modal :temp="temp"></link-modal>
             </view>
@@ -67,13 +67,15 @@ export default {
     },
     methods: {
         to(url) {
-            this.userInfo ? this.goPage(url) : this.getUserInfo();
+            // this.userInfo ?
+            this.goPage(url);
+            //  : this.getUserInfo();
         },
         getUserInfo(e) {
-            this.$refs.auth.getUserInfo(e);
+            this.$refs.auth2.getUserInfo(e);
         },
         getPhone(e) {
-            this.$refs.auth.getPhone(e);
+            this.$refs.auth2.getPhone(e);
         },
         linkLandlord(li) {
             const self = this;
@@ -83,7 +85,7 @@ export default {
                         contact_mobile: li.contact_mobile,
                         wechat_number: li.wechat_number
                     };
-                    this.$refs.modal.show({
+                    this.$refs.modal2.show({
                         title: "联系方式",
                         confirmText: "确定",
                         success() {

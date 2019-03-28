@@ -69,7 +69,6 @@ const store = new Vuex.Store({
             });
         },
         getToken(context, data = {}) {
-            context.commit('setCode', '');
             return api.getToken(data).then(res => {
                 if (res && res.data && res.data.userinfo) {
                     uni.setStorageSync('tk', res.data.userinfo.token);

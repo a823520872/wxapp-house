@@ -57,15 +57,15 @@ export default {
                             active: true
                         },
                         {
-                            id: 3750,
-                            name: '棠东',
+                            id: 3751,
+                            name: '棠下',
                             first: 'T',
                             level: 4,
                             active: false
                         },
                         {
-                            id: 3751,
-                            name: '棠下',
+                            id: 3750,
+                            name: '棠东',
                             first: 'T',
                             level: 4,
                             active: false
@@ -113,7 +113,10 @@ export default {
         return ajax('/api/landlord/edit', data, { type: 'post' });
     },
     collect(data = {}) {
-        return ajax('/api/user/collectionAdd', data, { type: 'post' });
+        return ajax('/api/user/collectionAdd', data, { type: 'post', loading: true });
+    },
+    cancelCollect(data = {}) {
+        return ajax('/api/user/collectionDel', data, { type: 'post', loading: true });
     },
     getMyCollection(data = {}) {
         return ajax('/api/user/collectionGetList', data);
@@ -121,11 +124,14 @@ export default {
     getMyHouse(data = {}) {
         return ajax('/api/user/houseResourceGetlist', data);
     },
+    getUserHouse(data = {}) {
+        return ajax('/api/house_resource/getUserList', data, { loading: true });
+    },
     rent(data = {}) {
         return ajax('/api/House_resource/rentChange', data, { type: 'post' });
     },
     public(data = {}) {
-        return ajax('/api/house_resource/wxappEdit', data, { type: 'post' });
+        return ajax('/api/House_Resource/publicHouse', data, { type: 'post' });
     },
     getConfig(data = {}) {
         return ajax('/api/keyvalue/getAllList', data, { noToken: true });

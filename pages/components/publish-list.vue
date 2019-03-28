@@ -131,7 +131,9 @@ export default {
         public(li) {
             this.$request
                 .public({
-                    id: li.id
+                    id: li.id,
+                    is_public: 1,
+                    is_rented: 2
                 })
                 .then(res => {
                     if (res && res.data) {

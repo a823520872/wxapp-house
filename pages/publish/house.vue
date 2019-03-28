@@ -294,31 +294,29 @@ export default {
                     }
                 });
             } else {
-                this.log(213);
                 this.form.contact_mobile = this.userInfo.landlord_mobile;
+                this.form.wechat_number = this.userInfo.landlord_mobile;
             }
         },
-        getLandlord() {
-            this.$request
-                .getLandlordDetail({ id: this.userInfo.landlord_id })
-                .then(res => {
-                    if (res && res.data) {
-                        // this.form.contact_mobile =
-                        //     res.data.landlord_mobile || "";
-                    }
-                });
-        },
+        // getLandlord() {
+        //     this.$request
+        //         .getLandlordDetail({ id: this.userInfo.landlord_id })
+        //         .then(res => {
+        //             if (res && res.data) {
+        //                 this.form.contact_mobile =
+        //                     res.data.landlord_mobile || "";
+        //             }
+        //         });
+        // },
         chooseImg() {
             if (this.houseImg && this.houseImg.length) {
+                this.setHouseTempImg(this.houseImg.map(item => item.url));
                 this.goPage(`/pages/publish/img`);
             } else {
-                uni.chooseImage({
-                    sourceType: "album",
-                    success(e) {
-                        if (e.errMsg === "chooseImage:ok") {
-                            self.setHouseTempImg(e.tempFilePaths);
-                            self.goPage(`/pages/publish/img`);
-                        }
+                this.chooseImage(9).then(e => {
+                    if (e.errMsg === "chooseImage:ok") {
+                        this.setHouseTempImg(e.tempFilePaths);
+                        this.goPage(`/pages/publish/img`);
                     }
                 });
             }

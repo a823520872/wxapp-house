@@ -125,7 +125,7 @@ export default {
         return ajax('/api/user/houseResourceGetlist', data);
     },
     getUserHouse(data = {}) {
-        return ajax('/api/house_resource/getUserList', data, { loading: true });
+        return ajax('/api/house_resource/getUserList', data, { noToken: true, loading: true });
     },
     rent(data = {}) {
         return ajax('/api/House_resource/rentChange', data, { type: 'post' });

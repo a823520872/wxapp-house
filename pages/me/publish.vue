@@ -5,9 +5,9 @@
                 <image :src="user_info.avatar" mode="aspectFit"></image>
             </view>
             <view class="name">{{user_info.nickname}}</view>
-            <view class="tips" v-if="user_info.public_num || user_info.rented_num">发布中:{{user_info.public_num}}套&nbsp;&nbsp;&nbsp;&nbsp;未发布:{{user_info.rented_num}}套</view>
+            <view class="tips" v-if="(user_info.public_num || user_info.rented_num) && !landlord_id">发布中:{{user_info.public_num}}套&nbsp;&nbsp;&nbsp;&nbsp;未发布:{{user_info.rented_num}}套</view>
         </view>
-        <view class="tabs m_flex">
+        <view class="tabs m_flex" v-if="!landlord_id">
             <view class="m_flex_item">
                 <view :class="{'tab': true, 'active' : tab === 2}" @tap="chooseTab(2)">发布中</view>
             </view>
@@ -35,16 +35,17 @@ export default {
             tab: 2,
             list: [],
             user_id: "",
-            user_info: null
+            user_info: null,
+            landlord_id: ""
         };
     },
     onLoad(res) {
         if (res.user_id) {
-            this.user_id = res.user_id;
+            this.landlord_id = res.user_id;
             uni.setNavigationBarTitle({
                 title: "房源列表"
             });
-        } else if (this.userInfo.is_landlord === 1) {
+        } else if (this.userInfo && this.userInfo.is_landlord === 1) {
             this.user_id = this.userInfo.user_id;
         } else {
             uni.showToast({
@@ -73,11 +74,8 @@ export default {
         getData() {
             const self = this;
             const params = {
-                user_id: this.user_id
+                user_id: this.landlord_id || this.user_id
             };
-            if (this.user_id) {
-                params.user_id = this.user_id;
-            }
             if (this.tab === 2) {
                 params.is_public = 1;
             } else if (this.tab === 1) {

@@ -11,7 +11,7 @@
                         <view class="intro_cell name">{{li.address_street}} · {{li.house_type}}</view>
                         <view class="intro_cell price">¥{{li.rental}}/月</view>
                         <!-- <view v-if="li.is_public === 1" class="intro_cell price">¥{{li.rental}}/月</view> -->
-                        <view class="intro_cell addr">
+                        <view class="intro_cell addr m_textover">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
                             <text v-if="li.address_street">{{li.address_street}}</text>
                             <text v-if="li.address_flag">{{li.address_flag}}</text>
@@ -24,7 +24,7 @@
                         </view>
                     </view>
                 </view>
-                <view class="fd m_flex_right">
+                <view class="fd m_flex_right" v-if="userInfo && userInfo.user_id === li.user_id">
                     <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
                         <button class="m_button plain" @tap.stop="rented(li)">已租</button>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import poster from "../components/poster.vue";
 export default {
     props: {
@@ -67,6 +67,9 @@ export default {
                 return [];
             }
         }
+    },
+    computed: {
+        ...mapState(["userInfo"])
     },
     components: {
         poster
@@ -174,7 +177,7 @@ export default {
         color: $primary-color;
     }
     .intro {
-        margin-top: 12upx;
+        // margin-top: 12upx;
         margin-left: 30upx;
         color: $text-color-inverse;
 

@@ -80,27 +80,27 @@ export default {
         linkLandlord(li) {
             const self = this;
             if (this.userInfo) {
-                if (this.userInfo.mobile) {
-                    this.temp = {
-                        contact_mobile: li.contact_mobile,
-                        wechat_number: li.wechat_number
-                    };
-                    this.$refs.modal2.show({
-                        title: "联系方式",
-                        confirmText: "确定",
-                        success() {
-                            self.temp = null;
-                        },
-                        fail() {
-                            self.temp = null;
-                        }
-                    });
-                    this.$request.viewPhone({
-                        id: li.id
-                    });
-                } else {
-                    this.getPhone();
-                }
+                // if (this.userInfo.mobile) {
+                this.temp = {
+                    contact_mobile: li.contact_mobile,
+                    wechat_number: li.wechat_number
+                };
+                this.$refs.modal2.show({
+                    title: "联系方式",
+                    confirmText: "确定",
+                    success() {
+                        self.temp = null;
+                    },
+                    fail() {
+                        self.temp = null;
+                    }
+                });
+                this.$request.viewPhone({
+                    id: li.id
+                });
+                // } else {
+                //     this.getPhone();
+                // }
             } else {
                 this.getUserInfo();
             }

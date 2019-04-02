@@ -26,8 +26,8 @@ export default {
         return v;
     },
     filterHouse(item, type) {
-        item.config_base = type === 'string' ? item.config_base.replace(/\,/g, '，') : item.config_base.split(',');
-        item.config_lightspot = type === 'string' ? item.config_lightspot.replace(/\,/g, '，') : item.config_lightspot.split(',');
+        item.config_base = type === 'string' ? item.config_base && item.config_base.replace(/\,/g, '，') : item.config_base && item.config_base.split(',');
+        item.config_lightspot = type === 'string' ? item.config_lightspot && item.config_lightspot.replace(/\,/g, '，') : item.config_lightspot && item.config_lightspot.split(',');
         item.image_urls = item.image_urls && item.image_urls.split(',');
         return item;
     },
@@ -74,7 +74,7 @@ export default {
         return new Promise((resolve, reject) => {
             uni.chooseImage({
                 sizeType: ['compressed'],
-                sourceType: 'album',
+                sourceType: ['album'],
                 count: count,
                 success: resolve,
                 fail: reject

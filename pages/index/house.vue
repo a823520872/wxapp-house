@@ -69,7 +69,7 @@
                         <view class="user m_flex_item">
                             <view class="name">{{detail.landlord_info.nickname}}</view>
                             <view class="m_flex_middle">
-                                <text>阅读量：{{detail.virtual_number + detail.real_number}}</text>
+                                <text>阅读量：{{detail.read_number}}</text>
                             </view>
                         </view>
                         <view class="time" v-if="detail.public_time">
@@ -284,7 +284,7 @@ export default {
         },
         linkLandlord() {
             this.userInfo
-                ? this.userInfo.mobile
+                // ? this.userInfo.mobile
                     ? (this.$refs.modal.show({
                           title: "联系方式",
                           confirmText: "确定",
@@ -293,7 +293,7 @@ export default {
                       this.$request.viewPhone({
                           id: this.id
                       }))
-                    : this.getPhone()
+                    // : this.getPhone()
                 : this.getUserInfo();
         }
     }

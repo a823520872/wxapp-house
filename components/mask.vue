@@ -13,13 +13,13 @@
 </script>
 
 <style lang="scss">
-	.ui-mask {
-		position: fixed;
-		z-index: 100;
-		top: var(--window-top);
-		right: 0;
-		left: 0;
-		bottom: 0;
-		background: $uni-bg-color-mask;
-	}
+.ui-mask {
+    position: fixed;
+    z-index: 100;
+    top: var(--window-top);
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: $uni-bg-color-mask;
+}
 </style>

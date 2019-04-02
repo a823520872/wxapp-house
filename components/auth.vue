@@ -3,14 +3,14 @@
         <v-modal ref="user_modal">
             <block slot="footer">
                 <button class="m_button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="getUserInfoByBtn">
-                    去授权
+                    授权
                 </button>
             </block>
         </v-modal>
         <v-modal ref="phone_modal">
             <block slot="footer">
                 <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">
-                    去授权
+                    授权
                 </button>
             </block>
         </v-modal>
@@ -76,7 +76,8 @@ export default {
                 } else {
                     !this.userInfo &&
                         this.$refs.user_modal.show({
-                            content: "为了更好的用户体验，需要获取您的个人信息",
+                            content:
+                                "为了让您有更好的用户体验，请您授权微信头像等基本信息",
                             cancelText: "取消"
                         });
                 }

@@ -86,10 +86,10 @@ export default {
         return ajax('/api/house_resource/getList', data, { noToken: true });
     },
     addHouse(data = {}) {
-        return ajax('/api/house_resource/wxappAdd', data, { type: 'post' });
+        return ajax('/api/house_resource/wxappAdd', data, { type: 'post', loading: true });
     },
     editHouse(data = {}) {
-        return ajax('/api/house_resource/wxappEdit', data, { type: 'post' });
+        return ajax('/api/house_resource/wxappEdit', data, { type: 'post', loading: true });
     },
     getHouse(data = {}) {
         return ajax('/api/house_resource/getDetail', data, { noToken: true });
@@ -101,16 +101,16 @@ export default {
         return ajax('/api/landlord/getList', data, { noToken: true });
     },
     getLandlordDetail(data = {}) {
-        return ajax('/api/landlord/getDetail', data, { noToken: true });
+        return ajax('/api/landlord/getDetail', data, { noToken: true, loading: true });
     },
     sendSms(data = {}) {
         return ajax('/api/landlord/sendSms', data, { type: 'post' });
     },
     addLandlord(data = {}) {
-        return ajax('/api/landlord/wxappAdd', data, { type: 'post' });
+        return ajax('/api/landlord/wxappAdd', data, { type: 'post', loading: true });
     },
     editLoandlord(data = {}) {
-        return ajax('/api/landlord/edit', data, { type: 'post' });
+        return ajax('/api/landlord/edit', data, { type: 'post', loading: true });
     },
     collect(data = {}) {
         return ajax('/api/user/collectionAdd', data, { type: 'post', loading: true });
@@ -119,7 +119,7 @@ export default {
         return ajax('/api/user/collectionDel', data, { type: 'post', loading: true });
     },
     getMyCollection(data = {}) {
-        return ajax('/api/user/collectionGetList', data);
+        return ajax('/api/user/collectionGetList', data, { loading: true });
     },
     getMyHouse(data = {}) {
         return ajax('/api/user/houseResourceGetlist', data);
@@ -128,7 +128,7 @@ export default {
         return ajax('/api/house_resource/getUserList', data, { noToken: true, loading: true });
     },
     rent(data = {}) {
-        return ajax('/api/House_resource/rentChange', data, { type: 'post' });
+        return ajax('/api/House_resource/rentChange', data, { type: 'post', loading: true });
     },
     public(data = {}) {
         return ajax('/api/House_Resource/publicHouse', data, { type: 'post' });

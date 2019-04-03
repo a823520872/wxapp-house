@@ -3,7 +3,7 @@
         <view class="m_listloading" v-if="loading">·· 正在加载中 ··</view>
         <template v-else>
             <view class="m_listloading" v-if="hasMore">·· 加载下一页 ··</view>
-            <view class="m_listloading" v-else>·· END ··</view>
+            <view class="m_listloading" v-else>·· 没有更多了 ··</view>
         </template>
     </view>
 </template>

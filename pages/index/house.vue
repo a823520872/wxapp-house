@@ -109,9 +109,13 @@
                     <image src="/static/image/index/gift.png" mode="aspectFit"></image>
                     <text>拿乔迁礼</text>
                 </button> -->
-                <view class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="goPage('/pages/index/index')">
+                <view class="collection m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="goPage('/pages/index/index')">
                     <image src="/static/image/index/home.png" mode="aspectFit"></image>
                     <text>返回首页</text>
+                </view>
+                <view class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="getPoster">
+                    <image src="/static/image/index/poster.png" mode="aspectFit"></image>
+                    <text>生成海报</text>
                 </view>
                 <view class="link m_flex_column m_flex_middle m_flex_center" @tap="linkLandlord">
                     <image src="/static/image/index/tel.png" mode="aspectFit"></image>
@@ -125,24 +129,28 @@
             </v-modal>
         </view>
         <v-auth ref="auth"></v-auth>
+        <poster ref="poster" :uri="uri"></poster>
     </view>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import linkModal from "../components/link-modal";
+import poster from "../components/poster.vue";
 export default {
     computed: {
         ...mapState(["userInfo"])
     },
     components: {
-        linkModal
+        linkModal,
+        poster
     },
     data() {
         return {
             id: "",
             detail: null,
-            markers: null
+            markers: null,
+            uri: ''
         };
     },
     onShareAppMessage(obj) {
@@ -217,6 +225,18 @@ export default {
                     }
                 }
             });
+        },
+        getPoster() {
+            this.$request
+                .getQRCode({
+                    house_id: this.id
+                })
+                .then(res => {
+                    if (res && res.data) {
+                        this.uri = res.data;
+                        this.$refs.poster.show();
+                    }
+                });
         },
         showMap(e) {
             uni.openLocation({

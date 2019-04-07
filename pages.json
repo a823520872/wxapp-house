@@ -16,6 +16,18 @@
             }
         },
         {
+            "path": "pages/index/require",
+            "style": {
+                "navigationBarTitleText": "发帖"
+            }
+        },
+        {
+            "path": "pages/index/webview",
+            "style": {
+                "navigationBarTitleText": " "
+            }
+        },
+        {
             "path": "pages/publish/index",
             "style": {
                 "navigationBarTitleText": "发布房源"

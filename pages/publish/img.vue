@@ -121,13 +121,44 @@ export default {
                 return;
             }
             if (this.option.uptoken) {
-                uni.showLoading({
-                    title: "正在上传中……",
-                    mask: true
-                });
                 const tasks = this.houseTempImg.map(item => {
                     return this.uploadImg(item);
                 });
+                this.queneUpload(tasks);
+            } else {
+                this.getQiniuToken().then(() => {
+                    this.confirm();
+                });
+            }
+        },
+        queneUpload(tasks) {
+            uni.showLoading({
+                title: "正在上传中……",
+                mask: true
+            });
+            if (tasks.length > 4) {
+                const arr = tasks.splice(0, 4);
+                let houseImg = [];
+                Promise.all(arr)
+                    .then(res => {
+                        houseImg = res;
+                        return Promise.all(tasks);
+                    })
+                    .then(res => {
+                        houseImg = [...houseImg, ...res];
+                        uni.hideLoading();
+                        uni.navigateBack({
+                            delta: 1
+                        });
+                    })
+                    .catch(e => {
+                        uni.hideLoading();
+                        uni.showToast({
+                            title: e && e.message,
+                            icon: "none"
+                        });
+                    });
+            } else {
                 Promise.all(tasks)
                     .then(res => {
                         this.setHouseImg(res);
@@ -143,10 +174,6 @@ export default {
                             icon: "none"
                         });
                     });
-            } else {
-                this.getQiniuToken().then(() => {
-                    this.confirm();
-                });
             }
         }
     }

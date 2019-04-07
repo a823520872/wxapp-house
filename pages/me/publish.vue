@@ -15,6 +15,9 @@
                 <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">未发布</view>
             </view>
         </view>
+        <view v-else class="fix_right_icon" @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
+            <image src="/static/image/me/gss.png" mode="aspectFill"></image>
+        </view>
         <publish-list :list.sync="list" @reload="getData"></publish-list>
         <v-page ref="page" :list.sync="list"></v-page>
     </view>
@@ -173,5 +176,14 @@ export default {
             z-index: 10;
         }
     }
+}
+.fix_right_icon {
+    position: fixed;
+    right: 40upx;
+    bottom: 200upx;
+    width: 160upx;
+    height: 160upx;
+    border-radius: 50%;
+    overflow: hidden;
 }
 </style>

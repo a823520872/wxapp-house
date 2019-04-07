@@ -1,9 +1,14 @@
 <template>
     <view class="content">
-        <swiper class="swiper" :indicator-dots="true" indicator-color="#6d7271" indicator-active-color="#4ce6e8" :autoplay="true" :interval="3000" :duration="1000">
+        <swiper class="swiper" indicator-dots circular indicator-color="#6d7271" indicator-active-color="#4ce6e8" autoplay :interval="3000" :duration="1000">
             <swiper-item>
                 <view class="swiper-item">
                     <image src="/static/image/index/banner.jpg" mode="aspectFit"></image>
+                </view>
+            </swiper-item>
+            <swiper-item @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
+                <view class="swiper-item">
+                    <image src="/static/image/index/banner1.jpg" mode="aspectFit"></image>
                 </view>
             </swiper-item>
         </swiper>
@@ -97,6 +102,9 @@
             <view v-if="hasFocus" class="official-account"></view>
             <official-account @load="viewSucc"></official-account>
         </view>
+        <!-- <view class="fix_right_icon" @tap="goPage('/pages/index/require')">
+            <image src="/static/image/index/tie.png" mode="aspectFill"></image>
+        </view> -->
         <!-- <v-auth ref="auth"></v-auth> -->
         <v-modal ref="modal">
             <view slot="content">
@@ -597,6 +605,13 @@ export default {
 }
 .list {
     margin-top: 22upx;
+}
+.fix_right_icon {
+    position: fixed;
+    right: 60upx;
+    bottom: 200upx;
+    width: 143upx;
+    height: 143upx;
 }
 .modal {
     &_list {

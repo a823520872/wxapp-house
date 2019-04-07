@@ -10,10 +10,10 @@ import validator from './common/validator.js'
 import vMask from './components/mask.vue'
 import vModal from './components/modal.vue'
 import vPage from './components/page.vue'
-import VAuth from './components/auth.vue'
+import vAuth from './components/auth.vue'
 Vue.component('vMask', vMask)
 Vue.component('vModal', vModal)
-Vue.component('VAuth', VAuth)
+Vue.component('vAuth', vAuth)
 Vue.component('vPage', vPage)
 
 Vue.mixin({

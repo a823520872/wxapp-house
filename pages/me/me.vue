@@ -63,6 +63,10 @@
                     <view class="cell_fd">智能找房、意见反馈、入驻咨询</view>
                 </view>
             </button>
+            <view class="cell m_flex_justify m_flex_middle" @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
+                <view class="cell_hd">搬家服务</view>
+                <view class="cell_fd">查看搬家报价</view>
+            </view>
             <!-- <view class="cell m_flex_justify m_flex_middle" @tap="clear">
                 <view class="cell_hd">清楚授权</view>
             </view> -->

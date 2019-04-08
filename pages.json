@@ -16,6 +16,12 @@
             }
         },
         {
+            "path": "pages/index/hot",
+            "style": {
+                "navigationBarTitleText": "最热房源"
+            }
+        },
+        {
             "path": "pages/index/require",
             "style": {
                 "navigationBarTitleText": "发帖"

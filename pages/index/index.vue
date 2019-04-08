@@ -102,6 +102,9 @@
             <view v-if="hasFocus" class="official-account"></view>
             <official-account @load="viewSucc"></official-account>
         </view>
+        <view class="fix_right_icon m_flex_center m_flex_middle" @tap="goPage('/pages/index/hot')">
+            <image src="/static/image/index/hot.png" mode="aspectFill"></image>
+        </view>
         <!-- <view class="fix_right_icon" @tap="goPage('/pages/index/require')">
             <image src="/static/image/index/tie.png" mode="aspectFill"></image>
         </view> -->
@@ -608,10 +611,16 @@ export default {
 }
 .fix_right_icon {
     position: fixed;
-    right: 60upx;
+    right: 40upx;
     bottom: 200upx;
-    width: 143upx;
-    height: 143upx;
+    // width: 143upx;
+    // height: 143upx;
+    width: 120upx;
+    height: 120upx;
+    line-height: 1.2;
+    // background: linear-gradient(to bottom, #ffffbe, rgba(255, 255, 190, 0.75));
+    border-radius: 50%;
+    overflow: hidden;
 }
 .modal {
     &_list {

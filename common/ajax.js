@@ -32,7 +32,7 @@ const ajax = (path, data, options = {}) => {
         if (res.length && res.length === 2) {
             res = res[1];
         }
-        utils.log(path, data, res.data);
+        utils.log({ url: path, data, response: res.data });
 
         if (res && res.statusCode == 200) {
             let data = res.data;
@@ -61,7 +61,7 @@ const ajax = (path, data, options = {}) => {
         }
     };
     const fail = e => {
-        utils.log(path, data, e);
+        utils.log({ url: path, data, response: e });
         options.loading && uni.hideLoading();
         !options.noAlert &&
             uni.showToast({

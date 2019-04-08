@@ -146,6 +146,7 @@ export default {
                     })
                     .then(res => {
                         houseImg = [...houseImg, ...res];
+                        this.setHouseImg(houseImg);
                         uni.hideLoading();
                         uni.navigateBack({
                             delta: 1

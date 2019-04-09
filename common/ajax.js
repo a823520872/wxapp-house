@@ -1,6 +1,6 @@
 import utils from './utils';
 import store from '../store';
-const ajax = (path, data, options = {}) => {
+const ajax = (path, params, options = {}) => {
     const urlPrefix = 'https://house.zhiqiang.ink';
     const url = urlPrefix + path;
     const token = uni.getStorageSync('tk');
@@ -32,10 +32,13 @@ const ajax = (path, data, options = {}) => {
         if (res.length && res.length === 2) {
             res = res[1];
         }
-        utils.log({ url: path, data, response: res.data });
+        let data = res.data;
+        if (typeof data === 'string') {
+            data = JSON.parse(data);
+        }
+        utils.log({ url: path, data: params, response: data });
 
         if (res && res.statusCode == 200) {
-            let data = res.data;
             if (data.code && data.code === 1) {
                 if (data.data && data.data.message && data.data.message === '请求Token失败') {
                     return store
@@ -72,13 +75,34 @@ const ajax = (path, data, options = {}) => {
         return Promise.reject(e);
     };
 
+    // const obj = options.upload
+    //     ? {
+    //           url,
+    //           filePath: data.filePath,
+    //           name: 'file',
+    //           header
+    //       }
+    //     : {
+    //           url,
+    //           method: options.type,
+    //           data: params,
+    //           header
+    //       };
+    // return options.upload ? uni.uploadFile(obj).then(success, fail) : uni.request(obj).then(success, fail);
     const obj = {
         url,
-        method: options.type,
-        data,
         header
     };
-    return uni.request(obj).then(success, fail);
+    let method = 'request';
+    if (options.upload) {
+        method = 'uploadFile';
+        obj.filePath = params.filePath;
+        obj.name = 'file';
+    } else {
+        obj.method = options.type;
+        obj.data = params;
+    }
+    return uni[method](obj).then(success, fail);
 };
 
 export default ajax;

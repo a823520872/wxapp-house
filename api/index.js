@@ -158,7 +158,7 @@ export default {
         return ajax('/api/keyvalue/getAllList', data, { noToken: true });
     },
     uploadImg(data = {}) {
-        return ajax('/api/upload/add', data, { type: 'post', upload: true, noToken: true });
+        return ajax('/api/upload/uploadImage', data, { type: 'post', upload: true, noToken: true });
     },
     getQRCode(data = {}) {
         return ajax('/api/House_Resource/getPoster', data, { type: 'post' });

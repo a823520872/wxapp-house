@@ -100,16 +100,30 @@ export default {
                         url: filePath
                     });
                 }
-                qiniuUploader.upload(
-                    filePath,
-                    res => {
-                        resolve(res.data);
-                    },
-                    e => {
-                        reject(e);
-                    },
-                    this.option
-                );
+                // qiniuUploader.upload(
+                //     filePath,
+                //     res => {
+                //         resolve(res.data);
+                //     },
+                //     e => {
+                //         reject(e);
+                //     },
+                //     this.option
+                // );
+                this.$request
+                    .uploadImg({
+                        filePath
+                    })
+                    .then(
+                        res => {
+                            console.log(res);
+                            resolve(res.data);
+                        },
+                        e => {
+                            console.log(e);
+                            reject(e);
+                        }
+                    );
             });
         },
         confirm() {

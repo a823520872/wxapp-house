@@ -63,9 +63,13 @@
                     <view class="cell_fd">智能找房、意见反馈、入驻咨询</view>
                 </view>
             </button>
-            <view v-if="userInfo || userInfo.is_landlord !== 1" class="cell m_flex_justify m_flex_middle" @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
+            <view v-if="userInfo || (userInfo && userInfo.is_landlord !== 1)" class="cell m_flex_justify m_flex_middle" @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
                 <view class="cell_hd">搬家服务</view>
                 <view class="cell_fd">查看搬家报价</view>
+            </view>
+            <view v-if="!userInfo" class="cell m_flex_justify m_flex_middle" @tap="showLogin">
+                <view class="cell_hd">手机号登录</view>
+                <view class="cell_fd">若无法授权，请使用手机号登录</view>
             </view>
             <!-- <view class="cell m_flex_justify m_flex_middle" @tap="clear">
                 <view class="cell_hd">清楚授权</view>
@@ -75,6 +79,24 @@
         <v-modal ref="modal">
             <view slot="content">
                 <link-modal :temp="temp"></link-modal>
+            </view>
+        </v-modal>
+        <v-modal ref="loginModal">
+            <view slot="content">
+                <view class="cells">
+                    <view class="cell m_flex_middle">
+                        <view class="label">手机号</view>
+                        <view class="model m_flex_middle m_flex_item"><input type="number" v-model="form.mobile" placeholder="请输入您的手机号" /></view>
+                    </view>
+                    <view class="cell m_flex_middle">
+                        <!-- <view class="label">验证码</view> -->
+                        <view class="model m_flex_middle m_flex_item">
+                            <input class="m_flex_item" type="number" v-model="form.captcha" placeholder="请输入短信验证码" />
+                            <view v-if="time === -1" class="m_button main btn_code plain" @tap="getCode">获取验证码</view>
+                            <view v-else class="m_button btn_code">{{time + 's后可再次获取'}}</view>
+                        </view>
+                    </view>
+                </view>
             </view>
         </v-modal>
     </view>
@@ -92,7 +114,12 @@ export default {
     },
     data() {
         return {
-            service: false
+            service: false,
+            form: {
+                mobile: "",
+                captcha: ""
+            },
+            time: -1
         };
     },
     onShow() {
@@ -120,6 +147,7 @@ export default {
         };
     },
     methods: {
+        ...mapMutations(["setUserInfo"]),
         ...mapActions(["login", "getInfo", "checkAuth"]),
         init() {
             this.getInfo(true).then(() => {
@@ -167,6 +195,95 @@ export default {
                           })
                     : this.goPage(url)
                 : this.getUserInfo();
+        },
+        showLogin() {
+            this.$refs.loginModal.show({
+                title: "手机号登录",
+                cancelText: "取消",
+                confirmText: "确定",
+                success: () => {
+                    return new Promise((resolve, reject) => {
+                        this.$validate(this.form, {
+                            mobile: [
+                                { required: true, msg: "请输入手机号码" },
+                                { type: "mobile", msg: "手机号码不正确" }
+                            ],
+                            captcha: [{ required: true, msg: "请输入验证码" }]
+                        }).then(
+                            () => {
+                                this.$request.mobileLogin(this.form).then(
+                                    res => {
+                                        console.log(res);
+                                        if (res.data && res.data.userinfo) {
+                                            uni.setStorageSync(
+                                                "tk",
+                                                res.data.userinfo.token
+                                            );
+                                            this.setUserInfo(res.data.userinfo);
+                                            resolve();
+                                        } else {
+                                            reject();
+                                        }
+                                    },
+                                    e => {
+                                        reject(e);
+                                    }
+                                );
+                            },
+                            e => {
+                                reject(e);
+                            }
+                        );
+                    });
+                }
+            });
+        },
+        getCode() {
+            this.$validate(this.form, {
+                mobile: [
+                    { required: true, msg: "请输入手机号码" },
+                    { type: "mobile", msg: "手机号码不正确" }
+                ]
+            }).then(
+                () => {
+                    this.countDown();
+                    this.$request
+                        .sendLoginSms({
+                            mobile: this.form.mobile,
+                            event: "mobilelogin"
+                        })
+                        .then(
+                            res => {
+                                uni.showToast({
+                                    title: "获取成功",
+                                    icon: "success"
+                                });
+                            },
+                            e => {
+                                this.time = -1;
+                            }
+                        );
+                },
+                e => {
+                    uni.showToast({
+                        title: e.msg,
+                        icon: "none"
+                    });
+                }
+            );
+        },
+        countDown() {
+            const self = this;
+            this.time = 61;
+            function cd() {
+                if (self.time < 0) {
+                    return;
+                }
+                if (self.time-- >= 0) {
+                    setTimeout(cd, 1000);
+                }
+            }
+            cd();
         }
         // clear() {
         //     try {
@@ -281,6 +398,24 @@ export default {
     }
     .m_button {
         padding: 0;
+    }
+}
+.cells {
+    color: $text-color;
+    .cell {
+        padding: 10upx 0;
+    }
+    .label {
+        padding-right: 10upx;
+    }
+    input {
+        width: 100%;
+        height: 60upx;
+        line-height: 60upx;
+        text-align: left;
+    }
+    .btn_code {
+        margin-left: 10upx;
     }
 }
 </style>

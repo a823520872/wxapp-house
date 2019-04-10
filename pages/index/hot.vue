@@ -11,6 +11,7 @@
         </view>
         <view class="bd">
             <button class="m_button primary" open-type="contact">看热门房源</button>
+            <view class="slogan">客服窗回复“1” 即可获得关注入口</view>
         </view>
         <!-- <view class="fd">
             <view class="qrcode" @tap="viewImg">
@@ -23,13 +24,13 @@
 
 <script>
 export default {
-    methods: {
-        viewImg() {
-            uni.previewImage({
-                urls: ["/static/image/index/qrcode.png"]
-            });
-        }
-    }
+    // methods: {
+    //     viewImg() {
+    //         uni.previewImage({
+    //             urls: ["/static/image/index/qrcode.png"]
+    //         });
+    //     }
+    // }
 };
 </script>
 
@@ -69,6 +70,11 @@ export default {
         line-height: 78upx;
         border-radius: 12upx;
         font-size: 30upx;
+    }
+    .slogan {
+        margin-top: 37upx;
+        font-size: 31upx;
+        color: $text-color-inverse;
     }
 }
 .fd {

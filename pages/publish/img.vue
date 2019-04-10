@@ -33,46 +33,46 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-const qiniuUploader = require("../../common/qiniuUploader.js");
+// const qiniuUploader = require("../../common/qiniuUploader.js");
 export default {
     computed: {
         ...mapState(["houseTempImg", "houseImg"])
     },
     data() {
         return {
-            option: {
-                uptoken: "",
-                uploadURL: "https://house.zhiqiang.ink/api/upload/uploadImage",
-                domain: "house.zhiqiang.ink"
-            }
+            // option: {
+            //     uptoken: "",
+            //     uploadURL: "https://house.zhiqiang.ink/api/upload/uploadImage",
+            //     domain: "house.zhiqiang.ink"
+            // }
         };
     },
-    onShow() {
-        this.option.uptoken || this.getQiniuToken();
-    },
+    // onShow() {
+    //     this.option.uptoken || this.getQiniuToken();
+    // },
     methods: {
         ...mapMutations(["setHouseTempImg", "setHouseImg"]),
-        getQiniuToken() {
-            return this.$request
-                .getQiniuToken()
-                .then(
-                    res => {
-                        if (res.data && res.data.token) {
-                            this.option.uptoken = res.data.token;
-                            return res.data.token;
-                        }
-                    },
-                    e => {
-                        if (e.data && e.data.token) {
-                            this.option.uptoken = e.data.token;
-                            return res.data.token;
-                        }
-                    }
-                )
-                .catch(e => {
-                    this.log(e);
-                });
-        },
+        // getQiniuToken() {
+        //     return this.$request
+        //         .getQiniuToken()
+        //         .then(
+        //             res => {
+        //                 if (res.data && res.data.token) {
+        //                     this.option.uptoken = res.data.token;
+        //                     return res.data.token;
+        //                 }
+        //             },
+        //             e => {
+        //                 if (e.data && e.data.token) {
+        //                     this.option.uptoken = e.data.token;
+        //                     return res.data.token;
+        //                 }
+        //             }
+        //         )
+        //         .catch(e => {
+        //             this.log(e);
+        //         });
+        // },
         showImg(li) {
             uni.previewImage({
                 current: li,
@@ -134,16 +134,16 @@ export default {
                 });
                 return;
             }
-            if (this.option.uptoken) {
-                const tasks = this.houseTempImg.map(item => {
-                    return this.uploadImg(item);
-                });
-                this.queneUpload(tasks);
-            } else {
-                this.getQiniuToken().then(() => {
-                    this.confirm();
-                });
-            }
+            // if (this.option.uptoken) {
+            const tasks = this.houseTempImg.map(item => {
+                return this.uploadImg(item);
+            });
+            this.queneUpload(tasks);
+            // } else {
+            //     this.getQiniuToken().then(() => {
+            //         this.confirm();
+            //     });
+            // }
         },
         queneUpload(tasks) {
             uni.showLoading({

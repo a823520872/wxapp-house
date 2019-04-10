@@ -143,10 +143,6 @@ export default {
                             },
                             e => {
                                 this.time = -1;
-                                uni.showToast({
-                                    title: "获取失败",
-                                    icon: "none"
-                                });
                             }
                         );
                 },

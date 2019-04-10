@@ -127,6 +127,12 @@ export default {
     sendSms(data = {}) {
         return ajax('/api/landlord/sendSms', data, { type: 'post' });
     },
+    sendLoginSms(data = {}) {
+        return ajax('/api/Sms/send', data, { type: 'post', noToken: true });
+    },
+    mobileLogin(data = {}) {
+        return ajax('/api/user/mobilelogin', data, { type: 'post', noToken: true, loading: true });
+    },
     addLandlord(data = {}) {
         return ajax('/api/landlord/wxappAdd', data, { type: 'post', loading: true });
     },

@@ -82,8 +82,16 @@ export default {
             this.failFun && this.failFun(boolean);
         },
         confirm() {
-            this.isShow = false;
-            this.successFun && this.successFun();
+            if (this.successFun) {
+                const callback = this.successFun();
+                callback
+                    ? callback.then(() => {
+                          this.isShow = false;
+                      })
+                    : (this.isShow = false);
+            } else {
+                this.isShow = false;
+            }
         }
     }
 };

@@ -612,7 +612,7 @@ export default {
 .fix_right_icon {
     position: fixed;
     right: 40upx;
-    bottom: 200upx;
+    bottom: 120upx;
     // width: 143upx;
     // height: 143upx;
     width: 120upx;

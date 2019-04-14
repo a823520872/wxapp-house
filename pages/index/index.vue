@@ -1,14 +1,14 @@
 <template>
     <view class="content">
-        <swiper class="swiper" indicator-dots circular indicator-color="#6d7271" indicator-active-color="#4ce6e8" autoplay :interval="3000" :duration="1000">
+        <swiper class="swiper" indicator-dots circular indicator-color="#6d7271" indicator-active-color="#4ce6e8" autoplay :interval="2000" :duration="1000">
+            <swiper-item @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html?cityType=3')}`)">
+                <view class="swiper-item">
+                    <image src="/static/image/index/banner1.jpg" mode="aspectFit"></image>
+                </view>
+            </swiper-item>
             <swiper-item>
                 <view class="swiper-item">
                     <image src="/static/image/index/banner.jpg" mode="aspectFit"></image>
-                </view>
-            </swiper-item>
-            <swiper-item @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
-                <view class="swiper-item">
-                    <image src="/static/image/index/banner1.jpg" mode="aspectFit"></image>
                 </view>
             </swiper-item>
         </swiper>

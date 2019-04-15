@@ -4,13 +4,13 @@
             <view class="logo">
                 <image src="/static/image/index/logo.png" mode="aspectFit"></image>
             </view>
-            <view class="title">广州村里租房公众号</view>
+            <view class="title">广州城中村租房平台</view>
             <view class="slogan">
-                <text class="strong">每周</text>为您推荐广州<text class="strong">城中村</text>时下<text class="strong">最热门</text>房源
+                为您推荐广州城中村时下最热门房源
             </view>
         </view>
         <view class="bd">
-            <button class="m_button primary" open-type="contact">看热门房源</button>
+            <button class="m_button primary" open-type="contact">关注平台</button>
             <view class="slogan">客服窗回复“1” 即可获得关注入口</view>
         </view>
         <!-- <view class="fd">

@@ -186,6 +186,7 @@ export default {
     },
     onReady() {
         this.getData();
+        this.addReader()
     },
     methods: {
         ...mapMutations(["setCollectReload"]),
@@ -251,9 +252,7 @@ export default {
             if (this.userInfo) {
                 params.user_id = this.userInfo.user_id;
             }
-            this.$request.addReader(params).then(res => {
-                console.log(res);
-            });
+            this.$request.addReader(params)
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);

@@ -46,7 +46,7 @@ export default {
                                 level: 3
                             }
                         ],
-                        res.data
+                        [...res.data]
                     ]
                 };
             } else {

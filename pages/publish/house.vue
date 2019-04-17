@@ -20,7 +20,7 @@
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">租金</view>
-                            <input class="cell_bd" type="text" v-model="form.rental" placeholder="请输入房源租金" />
+                            <input class="cell_bd" type="number" v-model="form.rental" placeholder="请输入房源租金" />
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config">
@@ -32,7 +32,7 @@
                             <!-- </view> -->
                         </picker>
                         <picker class="cell_box m_flex_item" :range="address_flag" mode="selector" @change="pickerChange('address_flag', $event)">
-                            <!-- <view class="cell_box m_flex_item"> -->
+                            <!-- <view class="cell_box m_flex_item"> --> 
                             <view class="cell_hd">标志建筑</view>
                             <view class="cell_bd">{{form.address_flag ? form.address_flag : '请选择'}}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" /> -->

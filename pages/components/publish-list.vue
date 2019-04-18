@@ -27,7 +27,8 @@
                 <view class="fd m_flex_right" v-if="userInfo && userInfo.user_id === li.user_id">
                     <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
-                        <button class="m_button plain" @tap.stop="rented(li)">已租</button>
+                        <button class="m_button primary" @tap.stop="rented(li)">已租</button>
+                        <button class="m_button plain" @tap.stop="refresh(li)">刷新</button>
                         <button class="m_button primary" @tap.stop="getQRCode(li)">生成海报</button>
                     </block>
                     <block v-if="li.is_public === 2">
@@ -130,6 +131,25 @@ export default {
                     }
                 }
             });
+        },
+        refresh(li) {
+            this.$request
+                .public({
+                    id: li.id,
+                    is_public: 1,
+                    is_rented: 2,
+                    type: "refresh"
+                })
+                .then(res => {
+                    if (res && res.data) {
+                        this.$emit("reload");
+                        this.setHomeReload(true);
+                        uni.showToast({
+                            title: "操作成功",
+                            icon: "success"
+                        });
+                    }
+                });
         },
         public(li) {
             this.$request

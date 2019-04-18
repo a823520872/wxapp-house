@@ -20,7 +20,7 @@
                         <image src="/static/image/index/addr.png" mode="aspectFit"></image>
                     </view>
                     <view class="addr_box m_flex">
-                        <picker :range="address_street" @change="pickerChange" mode="multiSelector">
+                        <picker :range="address_street" @change="pickerChange" @columnchange="columnChange" mode="multiSelector">
                             <view class="addr_picker last m_flex_middle">
                                 <view class="addr_item m_textover">{{params.address_street || '选择村'}}</view>
                                 <view class="addr_pull">
@@ -280,6 +280,7 @@ export default {
                 config_base: null,
                 config_lightspot: null
             },
+            addr: null,
             modalType: null,
             modalList: null,
             hasFocus: false
@@ -360,7 +361,8 @@ export default {
             });
             this.$request.getAddrList().then(res => {
                 if (res.data) {
-                    const address_street = res.data || [];
+                    const address_street = Object.values(res.data) || [];
+                    this.addr = { ...res.data };
                     this.config = {
                         ...this.config,
                         address_street
@@ -415,13 +417,37 @@ export default {
                 .map(item => item.id)
                 .join(",");
         },
+        columnChange(e) {
+            const self = this;
+            let { column, value } = e.detail;
+            function setColumn() {
+                let item = self.config.address_street[column][value];
+                if (!item) return;
+                if (column < 2) {
+                    let p = self.config.address_street;
+                    p[++column] = self.addr[item.id] || [];
+                    self.config = {
+                        ...self.config,
+                        address_street: p
+                    };
+                    if (column < 2) {
+                        value = 0;
+                        setColumn();
+                    }
+                }
+            }
+            setColumn();
+        },
         pickerChange(e) {
-            this.params.address_street = this.config.address_street[2][
-                e.detail.value[2]
-            ].name;
-            this.params.address_street_id = this.config.address_street[2][
-                e.detail.value[2]
-            ].id;
+            const value = e.detail.value;
+            const item = this.config.address_street[2][value[2]];
+            if (!item) {
+                this.params.address_street = "";
+                this.params.address_street_id = "";
+            } else {
+                this.params.address_street = item.name;
+                this.params.address_street_id = item.id;
+            }
             this.init();
         },
         filterType(type) {

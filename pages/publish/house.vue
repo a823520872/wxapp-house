@@ -24,7 +24,7 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config">
-                        <picker class="cell_box m_flex_item" :range="address_street" mode="multiSelector" @change="pickerChange('address_street', $event)">
+                        <picker class="cell_box m_flex_item" :range="address_street" mode="multiSelector" @columnchange="columnChange" @change="pickerChange('address_street', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">地址</view>
                             <view class="cell_bd">{{form.address_street ? form.address_street : '请选择'}}</view>
@@ -32,7 +32,7 @@
                             <!-- </view> -->
                         </picker>
                         <picker class="cell_box m_flex_item" :range="address_flag" mode="selector" @change="pickerChange('address_flag', $event)">
-                            <!-- <view class="cell_box m_flex_item"> --> 
+                            <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">标志建筑</view>
                             <view class="cell_bd">{{form.address_flag ? form.address_flag : '请选择'}}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" /> -->
@@ -199,7 +199,8 @@ export default {
                 address_flag: null,
                 config_base: null,
                 config_lightspot: null
-            }
+            },
+            addr: null
         };
     },
     onLoad(res) {
@@ -252,7 +253,8 @@ export default {
         getAddr() {
             this.$request.getAddrList().then(res => {
                 if (res && res.data) {
-                    const address_street = res.data || [];
+                    const address_street = Object.values(res.data) || [];
+                    this.addr = { ...res.data };
                     this.config = {
                         ...this.config,
                         address_street
@@ -321,32 +323,53 @@ export default {
                 });
             }
         },
+        columnChange(e) {
+            const self = this;
+            let { column, value } = e.detail;
+            function setColumn() {
+                let item = self.config.address_street[column][value];
+                if (!item) return;
+                if (column < 2) {
+                    let p = self.config.address_street;
+                    p[++column] = self.addr[item.id] || [];
+                    self.config = {
+                        ...self.config,
+                        address_street: p
+                    };
+                    if (column < 2) {
+                        value = 0;
+                        setColumn();
+                    }
+                }
+            }
+            setColumn();
+        },
         pickerChange(key, e) {
+            const value = e.detail.value;
             switch (key) {
                 case "address_street":
-                    const item = this.config.address_street[2][
-                        e.detail.value[2]
-                    ];
-                    this.getAreaFlag(item.id);
-                    this.form.address_street = item.name;
-                    this.form.address_street_id = item.id;
+                    const item = this.config.address_street[2][value[2]];
+                    if (!item) {
+                        this.form.address_street = "";
+                        this.form.address_street_id = "";
+                    } else {
+                        this.form.address_street = item.name;
+                        this.form.address_street_id = item.id;
+                        this.getAreaFlag(item.id);
+                    }
                     break;
                 case "address_flag":
-                    this.form[key] = this.config[key][e.detail.value].shortname;
-                    this.form[`${key}_id`] = this.config[key][
-                        e.detail.value
-                    ].id;
+                    this.form[key] = this.config[key][value].shortname;
+                    this.form[`${key}_id`] = this.config[key][value].id;
                     break;
                 case "road_distance":
                 case "house_type":
-                    this.form[key] = this.config[key][e.detail.value].value;
-                    this.form[`${key}_id`] = this.config[key][
-                        e.detail.value
-                    ].id;
+                    this.form[key] = this.config[key][value].value;
+                    this.form[`${key}_id`] = this.config[key][value].id;
                     break;
                 case "floor":
                     this.form.floor_number = +this.config[key][
-                        e.detail.value
+                        value
                     ].value.replace("楼", "");
                     break;
                 default:

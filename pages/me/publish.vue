@@ -15,7 +15,7 @@
                 <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">未发布</view>
             </view>
         </view>
-        <view v-else class="fix_right_icon" @tap="goPage(`/pages/index/webview?src=${encodeURIComponent('https://gssban.com/admin/web/phone/index.html')}`)">
+        <view v-else class="fix_right_icon" @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
             <image src="/static/image/me/gss.png" mode="aspectFill"></image>
         </view>
         <publish-list :list.sync="list" @reload="getData"></publish-list>

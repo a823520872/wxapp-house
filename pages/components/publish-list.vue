@@ -24,7 +24,7 @@
                         </view>
                     </view>
                 </view>
-                <view class="fd m_flex_right">
+                <view class="fd m_flex_right" v-if="userInfo && userInfo.user_id === li.user_id">
                     <block v-if="li.is_rented === 2">
                         <button class="m_button primary" @tap.stop="refresh(li)">刷新</button>
                     </block>

@@ -24,12 +24,14 @@
                         </view>
                     </view>
                 </view>
-                <view class="fd m_flex_right" v-if="userInfo && userInfo.user_id === li.user_id">
+                <view class="fd m_flex_right">
+                    <block v-if="li.is_rented === 2">
+                        <button class="m_button primary" @tap.stop="refresh(li)">刷新</button>
+                    </block>
                     <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
-                        <button class="m_button primary" @tap.stop="rented(li)">已租</button>
-                        <button class="m_button plain" @tap.stop="refresh(li)">刷新</button>
-                        <button class="m_button primary" @tap.stop="getQRCode(li)">生成海报</button>
+                        <button class="m_button plain" @tap.stop="rented(li)">下架</button>
+                        <!-- <button class="m_button primary" @tap.stop="getQRCode(li)">生成海报</button> -->
                     </block>
                     <block v-if="li.is_public === 2">
                         <button class="m_button primary" @tap.stop="public(li)">发布</button>
@@ -119,14 +121,14 @@ export default {
                                 rent_type: self.rent_type
                             })
                             .then(res => {
-                                if (res && res.data) {
-                                    self.$emit("reload");
-                                    self.setHomeReload(true);
-                                    uni.showToast({
-                                        title: "操作成功",
-                                        icon: "success"
-                                    });
-                                }
+                                // if (res && res.data) {
+                                self.$emit("reload");
+                                self.setHomeReload(true);
+                                uni.showToast({
+                                    title: "操作成功",
+                                    icon: "success"
+                                });
+                                // }
                             });
                     }
                 }
@@ -141,14 +143,14 @@ export default {
                     type: "refresh"
                 })
                 .then(res => {
-                    if (res && res.data) {
-                        this.$emit("reload");
-                        this.setHomeReload(true);
-                        uni.showToast({
-                            title: "操作成功",
-                            icon: "success"
-                        });
-                    }
+                    // if (res && res.data) {
+                    this.$emit("reload");
+                    this.setHomeReload(true);
+                    uni.showToast({
+                        title: "操作成功",
+                        icon: "success"
+                    });
+                    // }
                 });
         },
         public(li) {
@@ -159,14 +161,14 @@ export default {
                     is_rented: 2
                 })
                 .then(res => {
-                    if (res && res.data) {
-                        this.$emit("reload");
-                        this.setHomeReload(true);
-                        uni.showToast({
-                            title: "操作成功",
-                            icon: "success"
-                        });
-                    }
+                    // if (res && res.data) {
+                    this.$emit("reload");
+                    this.setHomeReload(true);
+                    uni.showToast({
+                        title: "操作成功",
+                        icon: "success"
+                    });
+                    // }
                 });
         }
     }

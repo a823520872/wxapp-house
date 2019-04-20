@@ -253,8 +253,25 @@ export default {
         getAddr() {
             this.$request.getAddrList().then(res => {
                 if (res && res.data) {
-                    const address_street = Object.values(res.data) || [];
-                    this.addr = { ...res.data };
+                    const city = res.data.filter(item => item.level === 2);
+                    const addr = res.data.reduce((obj, item) => {
+                        if (!item.pid) return obj;
+                        if (!obj[item.pid]) {
+                            obj[item.pid] = [];
+                        }
+                        obj[item.pid].push(item);
+                        return obj;
+                    }, {});
+                    const address_street = [[...city]];
+                    const district = addr[city[0].id];
+                    if (district && district.length) {
+                        address_street.push([...district]);
+                        const county = addr[district[0].id];
+                        if (county && county.length) {
+                            address_street.push([...county]);
+                        }
+                    }
+                    this.addr = addr;
                     this.config = {
                         ...this.config,
                         address_street
@@ -329,17 +346,15 @@ export default {
             function setColumn() {
                 let item = self.config.address_street[column][value];
                 if (!item) return;
-                if (column < 2) {
+                if (column++ < 2) {
                     let p = self.config.address_street;
-                    p[++column] = self.addr[item.id] || [];
+                    p[column] = self.addr[item.id] || [];
                     self.config = {
                         ...self.config,
                         address_street: p
                     };
-                    if (column < 2) {
-                        value = 0;
-                        setColumn();
-                    }
+                    value = 0;
+                    setColumn();
                 }
             }
             setColumn();

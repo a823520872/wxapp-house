@@ -23,23 +23,7 @@ export default {
         return ajax('/api/upload/getUploadToken', data, { noToken: true, noAlert: true })
     },
     getAddrList(data = {}) {
-        return ajax('/api/area/getAllList', data, { noToken: true }).then(res => {
-            function getItem(list) {
-                const addr = list.reduce((obj, item) => {
-                    if (!item.pid) return obj
-                    if (!obj[item.pid]) {
-                        obj[item.pid] = []
-                    }
-                    obj[item.pid].push(item)
-                    return obj
-                }, {})
-                return addr
-            }
-            return {
-                ...res,
-                data: getItem(res.data)
-            }
-        })
+        return ajax('/api/area/getAllList', data, { noToken: true })
     },
     getAreaStreet(data = {}) {
         return ajax('/api/area_street/getAllList', data)

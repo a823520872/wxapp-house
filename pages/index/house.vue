@@ -175,14 +175,15 @@ export default {
         }
     },
     onShow() {
-        const tk = uni.getStorageSync("tk");
-        if (tk) {
-            if (!this.userInfo) {
-                this.getInfo();
-            }
-            // } else {
-            //     this.login();
-        }
+        // const tk = uni.getStorageSync("tk");
+        // if (tk) {
+        //     this.getInfo();
+        // } else {
+        //     this.login()
+        // }
+        this.login().then(code => {
+            this.getInfo()
+        })
     },
     onReady() {
         this.getData();

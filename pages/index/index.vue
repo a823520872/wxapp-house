@@ -300,10 +300,13 @@ export default {
         }
     },
     onShow() {
-        this.login();
+        this.login().then(code => {
+            this.getInfo();
+        });
         if (this.homeReload) {
             this.setHomeReload(false);
             this.init();
+            this.getData();
         }
     },
     onPullDownRefresh() {
@@ -313,14 +316,10 @@ export default {
         this.$refs.page.next();
     },
     onReady() {
-        const tk = uni.getStorageSync("tk");
-        if (tk) {
-            if (!this.userInfo) {
-                this.getInfo();
-            }
-            // } else {
-            //     this.$refs.auth.getUserInfo();
-        }
+        // const tk = uni.getStorageSync("tk");
+        // if (tk) {
+        //     this.getInfo();
+        // }
         this.init();
         this.getData();
     },

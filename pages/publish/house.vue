@@ -211,15 +211,18 @@ export default {
     },
     onShow() {
         this.setHouseTempImg([]);
+        this.login()
+            .then(code => {
+                return this.getInfo();
+            })
+            .then(userInfo => {
+                this.getData();
+            });
         if (this.houseImg && this.houseImg.length) {
             this.form.images = this.houseImg;
         }
     },
-    onReady() {
-        this.getInfo().then(() => {
-            this.getData();
-        });
-    },
+    onReady() {},
     methods: {
         ...mapMutations([
             "setHouseTempImg",

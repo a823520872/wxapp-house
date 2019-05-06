@@ -123,14 +123,13 @@ export default {
         };
     },
     onShow() {
-        const tk = uni.getStorageSync("tk");
-        if (tk) {
-            this.init();
-        } else {
-            this.login().then(code => {
+        this.login()
+            .then(code => {
+                return this.getInfo(true);
+            })
+            .then(userInfo => {
                 this.init();
             });
-        }
     },
     onShareAppMessage() {
         return {
@@ -150,18 +149,16 @@ export default {
         ...mapMutations(["setUserInfo"]),
         ...mapActions(["login", "getInfo", "checkAuth"]),
         init() {
-            this.getInfo(true).then(() => {
-                if (this.userInfo && this.userInfo.is_landlord === 1) {
-                    this.checkAuth().then(
-                        res => {
-                            this.service = res;
-                        },
-                        e => {
-                            this.service = false;
-                        }
-                    );
-                }
-            });
+            if (this.userInfo && this.userInfo.is_landlord === 1) {
+                this.checkAuth().then(
+                    res => {
+                        this.service = res;
+                    },
+                    e => {
+                        this.service = false;
+                    }
+                );
+            }
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);

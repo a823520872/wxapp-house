@@ -42,11 +42,13 @@ export default {
         }
     },
     onReady() {
-        this.login().then(code => {
-            this.getInfo().then(res => {
+        this.login()
+            .then(code => {
+                return this.getInfo();
+            })
+            .then(userInfo => {
                 this.getDetail();
             });
-        });
     },
     methods: {
         ...mapActions(["login", "getInfo"]),

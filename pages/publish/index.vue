@@ -99,40 +99,37 @@ export default {
         };
     },
     onShow() {
-        const tk = uni.getStorageSync("tk");
-        if (tk) {
-            this.init();
-        } else {
-            this.login().then(code => {
+        this.login()
+            .then(code => {
+                return this.getInfo(true);
+            })
+            .then(userInfo => {
                 this.init();
             });
-        }
     },
     methods: {
         ...mapActions(["login", "getInfo", "checkAuth"]),
         init() {
-            this.getInfo(true).then(res => {
-                if (res && res.data) {
-                    if (this.userInfo.is_landlord === 1) {
-                        this.checkAuth().then(
-                            res => {
-                                if (res) {
-                                    this.step = 1;
-                                } else {
-                                    this.step = 4;
-                                }
-                            },
-                            e => {
+            if (this.userInfo) {
+                if (this.userInfo.is_landlord === 1) {
+                    this.checkAuth().then(
+                        res => {
+                            if (res) {
+                                this.step = 1;
+                            } else {
                                 this.step = 4;
                             }
-                        );
-                    } else {
-                        this.step = this.userInfo.is_landlord;
-                    }
+                        },
+                        e => {
+                            this.step = 4;
+                        }
+                    );
                 } else {
-                    this.step = 2;
+                    this.step = this.userInfo.is_landlord;
                 }
-            });
+            } else {
+                this.step = 2;
+            }
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e);

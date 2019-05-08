@@ -211,13 +211,10 @@ export default {
     },
     onShow() {
         this.setHouseTempImg([]);
-        this.login()
-            .then(code => {
-                return this.getInfo();
-            })
-            .then(userInfo => {
-                this.getData();
-            });
+        this.login().then(code => {
+            this.getData();
+            this.getInfo();
+        });
         if (this.houseImg && this.houseImg.length) {
             this.form.images = this.houseImg;
         }

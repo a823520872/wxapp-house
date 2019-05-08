@@ -103,9 +103,14 @@ export default {
             .then(code => {
                 return this.getInfo(true);
             })
-            .then(userInfo => {
-                this.init();
-            });
+            .then(
+                userInfo => {
+                    this.init();
+                },
+                e => {
+                    this.init();
+                }
+            );
     },
     methods: {
         ...mapActions(["login", "getInfo", "checkAuth"]),

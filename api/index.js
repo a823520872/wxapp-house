@@ -1,7 +1,7 @@
 import ajax from '../common/ajax.js'
 
 export default {
-    getToken(data = {}) {
+    signUp(data = {}) {
         return ajax('/api/user/checkLogin', data, { noToken: true, noAlert: true })
     },
     bindMobile(data = {}) {

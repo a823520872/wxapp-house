@@ -1,6 +1,7 @@
 <template>
     <view class="content content_bg_ff">
-        <view class="is_landlord" v-if="step === 1">
+        <view class="is_landlord"
+              v-if="step === 1">
             <view class="hd">
                 <view class="title">发帖真实性承诺</view>
                 <view class="con">为维护真房源环境，请据实发帖</view>
@@ -10,7 +11,8 @@
                 <view class="cells">
                     <view class="cell m_flex_middle">
                         <view class="img">
-                            <image src="/static/image/publish/shangchuan.png" mode="aspectFit"></image>
+                            <image src="/static/image/publish/shangchuan.png"
+                                   mode="aspectFit"></image>
                         </view>
                         <view class="m_flex_item">
                             <view>上传实拍图片</view>
@@ -19,7 +21,8 @@
                     </view>
                     <view class="cell m_flex_middle">
                         <view class="img">
-                            <image src="/static/image/publish/info.png" mode="aspectFit"></image>
+                            <image src="/static/image/publish/info.png"
+                                   mode="aspectFit"></image>
                         </view>
                         <view class="m_flex_item">
                             <view>房源如实描述</view>
@@ -28,7 +31,8 @@
                     </view>
                     <view class="cell m_flex_middle">
                         <view class="img">
-                            <image src="/static/image/publish/rent.png" mode="aspectFit"></image>
+                            <image src="/static/image/publish/rent.png"
+                                   mode="aspectFit"></image>
                         </view>
                         <view class="m_flex_item">
                             <view>房租标价合理</view>
@@ -37,7 +41,8 @@
                     </view>
                     <view class="cell m_flex_middle">
                         <view class="img">
-                            <image src="/static/image/publish/policy.png" mode="aspectFit"></image>
+                            <image src="/static/image/publish/policy.png"
+                                   mode="aspectFit"></image>
                         </view>
                         <view class="m_flex_item">
                             <view>责任声明</view>
@@ -46,17 +51,24 @@
                     </view>
                 </view>
             </view>
-            <view class="fd m_button primary" @tap="to(`/pages/publish/house`)">我承诺并立即发布</view>
+            <view class="fd m_button primary"
+                  @tap="to(`/pages/publish/house`)">我承诺并立即发布</view>
         </view>
-        <view class="not_landlord" v-else>
+        <view class="not_landlord"
+              v-else>
             <view class="bd">
                 <view>{{state}}</view>
-                <image src="/static/image/publish/intro.png" mode="widthFix"></image>
+                <image src="/static/image/publish/intro.png"
+                       mode="widthFix"></image>
             </view>
             <view class="fd">
-                <button class="m_button main" open-type="contact">联系客服</button>
+                <button class="m_button main"
+                        open-type="contact">联系客服</button>
             </view>
-            <button v-if="step === 2" class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="to(`/pages/publish/settled`)">
+            <button v-if="step === 2"
+                    class="m_button main btn_add m_flex_center m_flex_middle m_flex_column"
+                    plain
+                    @tap="to(`/pages/publish/settled`)">
                 <view>申请</view>
                 <view>入驻</view>
             </button>
@@ -72,86 +84,82 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
-import linkModal from "../components/link-modal";
+import { mapState, mapMutations, mapActions } from 'vuex'
+import linkModal from '../components/link-modal'
 export default {
     components: {
         linkModal
     },
     computed: {
-        ...mapState(["userInfo"]),
+        ...mapState(['userInfo']),
         state() {
             switch (this.step) {
                 case 2:
-                    return "您未入驻，暂无法发布房源";
+                    return '您未入驻，暂无法发布房源'
                 case 3:
-                    return "正在审核，加快审核请联系客服";
+                    return '正在审核，加快审核请联系客服'
                 case 4:
-                    return "服务已结束，如想继续使用请联系客服";
+                    return '服务已结束，如想继续使用请联系客服'
                 default:
-                    return "您未入驻，暂无法发布房源";
+                    return '您未入驻，暂无法发布房源'
             }
         }
     },
     data() {
         return {
             step: 2
-        };
+        }
     },
     onShow() {
         this.login()
             .then(code => {
-                return this.getInfo(true);
+                return this.getInfo(true)
             })
             .then(
                 userInfo => {
-                    this.init();
+                    this.init()
                 },
                 e => {
-                    this.init();
+                    this.init()
                 }
-            );
+            )
     },
     methods: {
-        ...mapActions(["login", "getInfo", "checkAuth"]),
+        ...mapActions(['login', 'getInfo', 'checkAuth']),
         init() {
-            if (this.userInfo) {
-                if (this.userInfo.is_landlord === 1) {
-                    this.checkAuth().then(
-                        res => {
-                            if (res) {
-                                this.step = 1;
-                            } else {
-                                this.step = 4;
-                            }
-                        },
-                        e => {
-                            this.step = 4;
+            this.checkAuth().then(
+                res => {
+                    if (this.userInfo) {
+                        if (this.userInfo.is_landlord === 1) {
+                            this.step = 1
+                        } else {
+                            this.step = this.userInfo.is_landlord
                         }
-                    );
-                } else {
-                    this.step = this.userInfo.is_landlord;
+                    } else {
+                        res || (this.step = 2)
+                    }
+                },
+                e => {
+                    this.step = 4
                 }
-            } else {
-                this.step = 2;
-            }
+            )
         },
         getUserInfo(e) {
-            this.$refs.auth.getUserInfo(e);
+            this.$refs.auth.getUserInfo(e)
         },
         to(url) {
-            this.userInfo ? this.goPage(url) : this.getUserInfo();
+            this.userInfo ? this.goPage(url) : this.getUserInfo()
         },
         showLink() {
             this.userInfo
                 ? this.$refs.modal.show({
-                      title: "联系方式",
-                      confirmText: "确定"
+                      title: '联系方式',
+                      confirmText: '确定'
                   })
-                : this.getUserInfo();
+                : this.getUserInfo()
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>

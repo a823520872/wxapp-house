@@ -68,8 +68,8 @@ const store = new Vuex.Store({
                 }
             })
         },
-        getToken(context, data = {}) {
-            return api.getToken(data).then(res => {
+        signUp(context, data = {}) {
+            return api.signUp(data).then(res => {
                 if (res && res.data && res.data.userinfo) {
                     uni.setStorageSync('tk', res.data.userinfo.token)
                     context.commit('setUserInfo', res.data.userinfo)
@@ -91,8 +91,13 @@ const store = new Vuex.Store({
                 return res
             })
         },
-        checkAuth(context) {
+        checkAuth(context, flag) {
+            const hasAuth = uni.getStorageSync('auth')
+            if (!flag && hasAuth) {
+                return Promise.resolve(hasAuth)
+            }
             return api.checkAuth().then(res => {
+                uni.setStorageSync('auth', res.data)
                 return res.data
             })
         }

@@ -92,9 +92,12 @@ const store = new Vuex.Store({
             })
         },
         checkAuth(context, flag) {
-            const hasAuth = uni.getStorageSync('auth')
+            const auth = uni.getStorageSync('auth')
+            const exp = new Date(auth).valueOf()
+            const now = new Date().valueOf()
+            const hasAuth = now < exp
             if (!flag && hasAuth) {
-                return Promise.resolve(hasAuth)
+                return Promise.resolve(auth)
             }
             return api.checkAuth().then(res => {
                 uni.setStorageSync('auth', res.data)

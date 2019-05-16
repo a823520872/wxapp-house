@@ -189,22 +189,16 @@ export default {
         ...mapMutations(['setUserInfo']),
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         init() {
-            this.checkAuth().then(
-                res => {
-                    if (
-                        res &&
-                        this.userInfo &&
-                        this.userInfo.is_landlord === 1
-                    ) {
+            if (this.userInfo && this.userInfo.is_landlord === 1) {
+                this.checkAuth().then(
+                    res => {
                         this.service = res
-                    } else {
+                    },
+                    e => {
                         this.service = false
                     }
-                },
-                e => {
-                    this.service = false
-                }
-            )
+                )
+            }
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e)

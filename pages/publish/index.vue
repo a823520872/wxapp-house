@@ -127,22 +127,26 @@ export default {
     methods: {
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         init() {
-            this.checkAuth().then(
-                res => {
-                    if (this.userInfo) {
-                        if (this.userInfo.is_landlord === 1) {
-                            this.step = 1
-                        } else {
-                            this.step = this.userInfo.is_landlord
+            if (this.userInfo) {
+                if (this.userInfo.is_landlord === 1) {
+                    this.checkAuth().then(
+                        res => {
+                            if (res) {
+                                this.step = 1
+                            } else {
+                                this.step = 4
+                            }
+                        },
+                        e => {
+                            this.step = 4
                         }
-                    } else {
-                        res || (this.step = 2)
-                    }
-                },
-                e => {
-                    this.step = 4
+                    )
+                } else {
+                    this.step = this.userInfo.is_landlord
                 }
-            )
+            } else {
+                this.step = 2
+            }
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e)

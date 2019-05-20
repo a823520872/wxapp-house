@@ -2,17 +2,12 @@
     <view>
         <v-modal ref="user_modal">
             <block slot="footer">
-                <button class="m_button"
-                        open-type="getUserInfo"
-                        lang="zh_CN"
-                        @getuserinfo="getUserInfoByBtn">授权</button>
+                <button class="m_button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="getUserInfoByBtn">授权</button>
             </block>
         </v-modal>
         <v-modal ref="phone_modal">
             <block slot="footer">
-                <button class="m_button"
-                        open-type="getPhoneNumber"
-                        @getphonenumber="getPhoneByBtn">授权</button>
+                <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">授权</button>
             </block>
         </v-modal>
     </view>
@@ -27,11 +22,6 @@ var myAmapFun = new amapFile.AMapWX({
 })
 export default {
     props: {},
-    // data() {
-    //     return {
-    //         session3rd: ""
-    //     };
-    // },
     computed: {
         ...mapState(['code', 'userInfo'])
     },
@@ -60,12 +50,6 @@ export default {
                 }).then(() => {
                     this.$refs.user_modal.hide()
                 })
-                // .then(res => {
-                //     if (res && res.data) {
-                //         this.session3rd = res.data.session3rd;
-                //         this.getPhone();
-                //     }
-                // });
             }
         },
         getUserInfo(e) {

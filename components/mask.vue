@@ -1,16 +1,15 @@
 <template>
-    <view class="ui-mask"
-          @tap.stop="hide"></view>
+    <view class="ui-mask" @tap.stop="hide"></view>
 </template>
 
 <script>
 export default {
     methods: {
         hide() {
-            this.$emit("click", false);
+            this.$emit('click', false)
         }
     }
-};
+}
 </script>
 
 <style lang="scss">

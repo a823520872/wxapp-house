@@ -26,75 +26,75 @@
 
 <script>
 export default {
-    name: "modal",
+    name: 'modal',
     props: {
         title: {
             type: String,
             default() {
-                return "";
+                return ''
             }
         },
         content: {
             type: String,
             default() {
-                return "";
+                return ''
             }
         },
         cancelText: {
             type: String,
             default() {
-                return "";
+                return ''
             }
         },
         confirmText: {
             default() {
-                return "";
+                return ''
             }
         }
     },
     data() {
         return {
             isShow: false,
-            titleModal: "",
-            contentModal: "",
-            cancelTextModal: "",
-            confirmTextModal: ""
-        };
+            titleModal: '',
+            contentModal: '',
+            cancelTextModal: '',
+            confirmTextModal: ''
+        }
     },
     methods: {
         show(cfg) {
-            this.isShow = true;
+            this.isShow = true
 
-            this.titleModal = cfg.title || this.title;
+            this.titleModal = cfg.title || this.title
 
-            this.contentModal = cfg.content || this.content;
+            this.contentModal = cfg.content || this.content
 
-            this.cancelTextModal = cfg.cancelText || this.cancelText;
+            this.cancelTextModal = cfg.cancelText || this.cancelText
 
-            this.confirmTextModal = cfg.confirmText || this.confirmText;
+            this.confirmTextModal = cfg.confirmText || this.confirmText
 
-            this.successFun = cfg.success || null;
-            this.failFun = cfg.fail || null;
+            this.successFun = cfg.success || null
+            this.failFun = cfg.fail || null
         },
         hide(boolean) {
-            this.isShow = false;
+            this.isShow = false
             // boolean为true时，代表点击的取消按钮
-            this.failFun && this.failFun(boolean);
+            this.failFun && this.failFun(boolean)
         },
         confirm() {
             if (this.successFun) {
-                const callback = this.successFun();
+                const callback = this.successFun()
                 callback
                     ? callback.then(() => {
-                          this.isShow = false;
+                          this.isShow = false
                       })
-                    : (this.isShow = false);
+                    : (this.isShow = false)
             } else {
-                this.isShow = false;
+                this.isShow = false
             }
         }
     }
-};
+}
 </script>
 
 <style lang="scss">
@@ -163,7 +163,7 @@ export default {
     }
 
     &__ft:after {
-        content: " ";
+        content: ' ';
         position: absolute;
         left: 0;
         top: 0;
@@ -195,7 +195,7 @@ export default {
     }
 
     &__btn:after {
-        content: " ";
+        content: ' ';
         position: absolute;
         left: 0;
         top: 0;

@@ -20,75 +20,75 @@ export default {
             loading: true,
             obj: null,
             error: false
-        };
+        }
     },
     methods: {
         empty() {
-            this.hasMore = false;
-            this.$emit("update:list", []);
+            this.hasMore = false
+            this.$emit('update:list', [])
         },
         init(obj) {
-            this.empty();
-            obj.fn = obj.fn || ((data = []) => data);
-            this.obj = obj;
-            return this.getData(obj.page ? obj.page : -1);
+            this.empty()
+            obj.fn = obj.fn || ((data = []) => data)
+            this.obj = obj
+            return this.getData(obj.page ? obj.page : -1)
         },
         reload(page) {
-            return this.getData(page);
+            return this.getData(page)
         },
         next() {
             if (this.page >= this.pages) {
-                return;
+                return
             }
-            return this.getData(this.page + 1);
+            return this.getData(this.page + 1)
         },
         getData(page) {
-            const page_size = this.obj.page_size || 10;
+            const page_size = this.obj.page_size || 10
             const obj = {
                 ...this.obj.params,
                 page: page === -1 ? 1 : page,
                 page_size: page === -1 ? page_size * this.page : page_size
-            };
+            }
             if (page !== -1) {
-                this.page = page;
+                this.page = page
             }
             if (page !== -1 || this.list === null) {
-                this.loading = true;
+                this.loading = true
             }
-            this.error = false;
+            this.error = false
 
-            const request = this.$request[this.obj.url];
+            const request = this.$request[this.obj.url]
 
             return request(obj)
                 .then(res => {
-                    const { data } = res;
+                    const { data } = res
                     if (data && data.data) {
-                        let list = this.obj.fn(data.data);
+                        let list = this.obj.fn(data.data)
                         if (page <= 1) {
-                            list = [...list];
+                            list = [...list]
                         } else {
-                            list = [...this.list, ...list];
+                            list = [...this.list, ...list]
                         }
-                        this.$emit("update:list", list);
-                        this.loading = false;
+                        this.$emit('update:list', list)
+                        this.loading = false
                         if (!data.page) {
-                            this.hasMore = false;
+                            this.hasMore = false
                         } else {
-                            this.hasMore = data.page < data.pages;
+                            this.hasMore = data.page < data.pages
                         }
                     }
-                    uni.stopPullDownRefresh();
-                    return res;
+                    uni.stopPullDownRefresh()
+                    return res
                 })
                 .catch(e => {
-                    this.log(e);
-                    this.loading = false;
-                    this.error = e.msg;
-                    uni.stopPullDownRefresh();
-                });
+                    this.log(e)
+                    this.loading = false
+                    this.error = e.msg
+                    uni.stopPullDownRefresh()
+                })
         }
     }
-};
+}
 </script>
 
 <style lang="scss">

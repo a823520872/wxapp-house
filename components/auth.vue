@@ -16,6 +16,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import amapFile from '../common/amap-wx.js'
+const Defer = require('../common/defer.js')
 
 var myAmapFun = new amapFile.AMapWX({
     key: '9243ebd0fc3e66ed2ba643128aa8fb1f'
@@ -24,6 +25,11 @@ export default {
     props: {},
     computed: {
         ...mapState(['code', 'userInfo'])
+    },
+    data() {
+        return {
+            defer: null
+        }
     },
     methods: {
         ...mapMutations(['setUserInfo']),
@@ -48,11 +54,20 @@ export default {
                     signature,
                     iv
                 }).then(() => {
+                    uni.showToast({
+                        title: '登录成功',
+                        icon: 'none'
+                    })
                     this.$refs.user_modal.hide()
+                    this.defer.resolve()
                 })
+            } else {
+                this.$refs.user_modal.hide()
+                this.defer.reject(errMsg)
             }
         },
         getUserInfo(e) {
+            this.defer = new Defer()
             this.login(true).then(code => {
                 if (e) {
                     this.getUserInfoByBtn(e)
@@ -64,6 +79,7 @@ export default {
                         })
                 }
             })
+            return this.defer
         },
         getPhoneByBtn(e) {
             const self = this

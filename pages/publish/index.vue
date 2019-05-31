@@ -68,7 +68,7 @@
             <button v-if="step === 2"
                     class="m_button main btn_add m_flex_center m_flex_middle m_flex_column"
                     plain
-                    @tap="to(`/pages/publish/settled`)">
+                    @tap="settle">
                 <view>申请</view>
                 <view>入驻</view>
             </button>
@@ -153,6 +153,10 @@ export default {
         },
         to(url) {
             this.userInfo ? this.goPage(url) : this.getUserInfo()
+        },
+        settle() {
+            this.step = 1
+            // this.to(`/pages/publish/settled`)
         },
         showLink() {
             this.userInfo

@@ -68,8 +68,8 @@ const store = new Vuex.Store({
                 }
             })
         },
-        signUp(context, data = {}) {
-            return api.signUp(data).then(res => {
+        getToken(context, data = {}) {
+            return api.getToken(data).then(res => {
                 if (res && res.data && res.data.userinfo) {
                     uni.setStorageSync('tk', res.data.userinfo.token)
                     context.commit('setUserInfo', res.data.userinfo)

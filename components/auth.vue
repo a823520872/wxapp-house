@@ -2,7 +2,7 @@
     <view>
         <v-modal ref="user_modal">
             <block slot="footer">
-                <button class="m_button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="getUserInfoByBtn">授权</button>
+                <button class="m_button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="getUserInfoByBtn">登录</button>
             </block>
         </v-modal>
         <v-modal ref="phone_modal">
@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         ...mapMutations(['setUserInfo']),
-        ...mapActions(['login', 'signUp', 'getInfo']),
+        ...mapActions(['login', 'getToken', 'getInfo']),
         getUserInfoByBtn(e) {
             this.$refs.user_modal.hide()
             const self = this
@@ -41,7 +41,7 @@ export default {
             } = e.detail
             if (errMsg === 'getUserInfo:ok') {
                 uni.removeStorageSync('auth')
-                this.signUp({
+                this.getToken({
                     code: self.code,
                     rawData,
                     encryptedData,
@@ -59,8 +59,7 @@ export default {
                 } else {
                     !this.userInfo &&
                         this.$refs.user_modal.show({
-                            content:
-                                '为了让您有更好的用户体验，请您授权微信头像等基本信息',
+                            content: '发布信息，获取房东联系方式请先登录',
                             cancelText: '取消'
                         })
                 }

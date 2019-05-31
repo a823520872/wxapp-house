@@ -2,7 +2,7 @@
     <view class="content content_bg_ff">
         <view class="hd">
             <view class="avatar"
-                  @tap="getAuth">
+                  @tap="getUserInfo()">
                 <image v-if="userInfo"
                        :src="userInfo.avatar"
                        mode="aspectFit"></image>
@@ -90,8 +90,8 @@
             <view v-if="!userInfo"
                   class="cell m_flex_justify m_flex_middle"
                   @tap="showLogin">
-                <view class="cell_hd">手机号登录</view>
-                <view class="cell_fd">若无法授权，请使用手机号登录</view>
+                <view class="cell_hd">授权登录</view>
+                <view class="cell_fd">登录后才能发布房源</view>
             </view>
             <!-- <view class="cell m_flex_justify m_flex_middle" @tap="clear">
                 <view class="cell_hd">清楚授权</view>
@@ -153,23 +153,19 @@ export default {
         }
     },
     onShow() {
-        this.login()
-            .then(
-                code => {
-                    return this.getInfo()
-                },
-                e => {
-                    console.log(e)
-                }
-            )
-            .then(
-                userInfo => {
-                    this.init()
-                },
-                e => {
-                    this.init()
-                }
-            )
+        this.login().then(code => {
+                return this.getInfo()
+            },
+            e => {
+                console.log(e)
+            }
+        ).then(userInfo => {
+                this.init()
+            },
+            e => {
+                this.init()
+            }
+        )
     },
     onShareAppMessage() {
         return {
@@ -394,7 +390,7 @@ export default {
         line-height: 95upx;
         padding: 0 30upx;
         border: none;
-        font-size: 33upx;
+        font-size: 34upx;
         color: $text-color;
     }
     .tabs {

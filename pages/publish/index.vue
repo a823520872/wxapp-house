@@ -83,7 +83,7 @@ export default {
         state() {
             switch (this.step) {
                 case 2:
-                    return ''
+                    return '发布房源请点击右下角浮窗'
                 case 3:
                     return '正在审核，加快审核请联系客服'
                 case 4:
@@ -144,7 +144,7 @@ export default {
         },
         settle() {
             this.userInfo
-                ? (this.step = 1)
+                ? this.to(`/pages/publish/settled`)
                 : this.getUserInfo().done(() => {
                       this.init()
                   })

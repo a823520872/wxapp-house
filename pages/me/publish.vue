@@ -15,103 +15,103 @@
                 <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">未发布</view>
             </view>
         </view>
-        <view v-else class="fix_right_icon" @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
+        <!-- <view v-else class="fix_right_icon" @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
             <image src="/static/image/me/gss.png" mode="aspectFill"></image>
-        </view>
+        </view> -->
         <publish-list :list.sync="list" @reload="getData"></publish-list>
         <v-page ref="page" :list.sync="list"></v-page>
     </view>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import publishList from "../components/publish-list.vue";
+import { mapState, mapMutations } from 'vuex'
+import publishList from '../components/publish-list.vue'
 export default {
     components: {
         publishList
     },
     computed: {
-        ...mapState(["userInfo", "collectReload"])
+        ...mapState(['userInfo', 'collectReload'])
     },
     data() {
         return {
             tab: 2,
             list: [],
-            user_id: "",
+            user_id: '',
             user_info: null,
-            landlord_id: ""
-        };
+            landlord_id: ''
+        }
     },
     onLoad(res) {
         if (res.user_id) {
-            this.landlord_id = res.user_id;
+            this.landlord_id = res.user_id
             uni.setNavigationBarTitle({
-                title: "房源列表"
-            });
+                title: '房源列表'
+            })
         } else if (this.userInfo && this.userInfo.is_landlord === 1) {
-            this.user_id = this.userInfo.user_id;
+            this.user_id = this.userInfo.user_id
         } else {
             uni.showToast({
-                title: "页面错误",
-                icon: "none"
-            });
+                title: '页面错误',
+                icon: 'none'
+            })
         }
     },
     onShow() {
         if (this.collectReload) {
-            this.setCollectReload(false);
-            this.getData();
+            this.setCollectReload(false)
+            this.getData()
         }
     },
     onReady() {
-        this.getData();
+        this.getData()
     },
     onPullDownRefresh() {
-        this.$refs.page.getData(1);
+        this.$refs.page.getData(1)
     },
     onReachBottom() {
-        this.$refs.page.next();
+        this.$refs.page.next()
     },
     methods: {
-        ...mapMutations(["setCollectReload"]),
+        ...mapMutations(['setCollectReload']),
         getData() {
-            const self = this;
+            const self = this
             const params = {
                 user_id: this.landlord_id || this.user_id
-            };
+            }
             if (this.tab === 2) {
-                params.is_public = 1;
+                params.is_public = 1
             } else if (this.tab === 1) {
-                params.is_rented = 1;
+                params.is_rented = 1
             }
             this.$refs.page &&
                 this.$refs.page
                     .init({
-                        url: "getUserHouse",
+                        url: 'getUserHouse',
                         params,
                         fn(data) {
                             return (data || []).map(
                                 item => (
                                     (item.images =
                                         item.image_urls &&
-                                        item.image_urls.split(",")),
+                                        item.image_urls.split(',')),
                                     item
                                 )
-                            );
+                            )
                         }
                     })
                     .then(res => {
                         if (res && res.data) {
-                            this.user_info = res.data.user_info;
+                            this.user_info = res.data.user_info
                         }
-                    });
+                    })
         },
         chooseTab(v) {
-            this.tab = v;
-            this.getData();
+            this.tab = v
+            this.getData()
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -148,7 +148,7 @@ export default {
     font-size: 33upx;
 
     &::after {
-        content: " ";
+        content: ' ';
         position: absolute;
         right: 0;
         bottom: 0;
@@ -165,7 +165,7 @@ export default {
     .active {
         color: $text-color;
         &::after {
-            content: " ";
+            content: ' ';
             position: absolute;
             right: 0;
             bottom: 0;

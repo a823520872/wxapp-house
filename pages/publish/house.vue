@@ -119,49 +119,49 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
     computed: {
-        ...mapState(["userInfo", "houseTempImg", "houseImg"]),
+        ...mapState(['userInfo', 'houseTempImg', 'houseImg']),
         address_street() {
             return (
                 this.config &&
                 this.config.address_street &&
                 this.config.address_street.map(lis => {
-                    return lis.map(li => li.name);
+                    return lis.map(li => li.name)
                 })
-            );
+            )
         },
         address_flag() {
             return (
                 this.config &&
                 this.config.address_flag &&
-                this.config.address_flag.map(item => item.shortname || "")
-            );
+                this.config.address_flag.map(item => item.shortname || '')
+            )
         },
         road_distance() {
             return (
                 this.config &&
                 this.config.road_distance &&
                 this.config.road_distance.map(item => item.value)
-            );
+            )
         },
         house_type() {
             return (
                 this.config &&
                 this.config.house_type &&
                 this.config.house_type.map(item => item.value)
-            );
+            )
         },
         floor() {
             return (
                 this.config &&
                 this.config.floor &&
                 this.config.floor.map(item => item.value)
-            );
+            )
         },
         address() {
-            return this.form.address_street || "";
+            return this.form.address_street || ''
         }
     },
     data() {
@@ -169,28 +169,28 @@ export default {
             step: 0,
             form: {
                 images: [],
-                landlord_id: "",
+                landlord_id: '',
                 // landlord_mobile: "",
-                rental: "",
+                rental: '',
                 address_street_id: 1969,
-                address_street: "",
+                address_street: '',
                 address_flag_id: 3752,
-                address_flag: "",
+                address_flag: '',
                 road_distance_id: 1,
-                road_distance: "",
-                address_detail: "",
-                house_type_id: "",
-                house_type: "",
-                floor_number: "",
-                contact_mobile: "",
-                wechat_number: "",
-                config_base_ids: "",
-                config_base: "",
-                config_lightspot_ids: "",
-                config_lightspot: "",
-                remarks: ""
+                road_distance: '',
+                address_detail: '',
+                house_type_id: '',
+                house_type: '',
+                floor_number: '',
+                contact_mobile: '',
+                wechat_number: '',
+                config_base_ids: '',
+                config_base: '',
+                config_lightspot_ids: '',
+                config_lightspot: '',
+                remarks: ''
             },
-            house_id: "",
+            house_id: '',
             config: {
                 house_type: null,
                 floor: null,
@@ -201,37 +201,38 @@ export default {
                 config_lightspot: null
             },
             addr: null
-        };
+        }
     },
     onLoad(res) {
-        this.setHouseImg([]);
         if (res.id) {
-            this.house_id = res.id;
+            this.house_id = res.id
         }
+        this.setHouseImg([])
     },
     onShow() {
-        this.setHouseTempImg([]);
-        this.login().then(code => {
-            this.getData();
-            this.getInfo();
-        });
+        this.setHouseTempImg([])
         if (this.houseImg && this.houseImg.length) {
-            this.form.images = this.houseImg;
+            this.form.images = this.houseImg
         }
     },
-    onReady() {},
+    onReady() {
+        this.login().then(code => {
+            this.getData()
+            this.getInfo()
+        })
+    },
     methods: {
         ...mapMutations([
-            "setHouseTempImg",
-            "setHouseImg",
-            "setHomeReload",
-            "setCollectReload"
+            'setHouseTempImg',
+            'setHouseImg',
+            'setHomeReload',
+            'setCollectReload'
         ]),
-        ...mapActions(["login", "getInfo", "checkAuth"]),
+        ...mapActions(['login', 'getInfo', 'checkAuth']),
         getData() {
-            this.getConfig();
-            this.getAddr();
-            this.getHouse();
+            this.getConfig()
+            this.getAddr()
+            this.getHouse()
             // this.getLandlord();
         },
         getConfig() {
@@ -239,45 +240,45 @@ export default {
                 if (res && res.data) {
                     const config = res.data.reduce((obj, item) => {
                         if (!obj[item.type]) {
-                            obj[item.type] = [];
+                            obj[item.type] = []
                         }
-                        item.active = false;
-                        obj[item.type].push(item);
-                        return obj;
-                    }, {});
+                        item.active = false
+                        obj[item.type].push(item)
+                        return obj
+                    }, {})
 
-                    this.config = { ...this.config, ...config };
+                    this.config = { ...this.config, ...config }
                 }
-            });
+            })
         },
         getAddr() {
             this.$request.getAddrList().then(res => {
                 if (res && res.data) {
-                    const city = res.data.filter(item => item.level === 2);
+                    const city = res.data.filter(item => item.level === 2)
                     const addr = res.data.reduce((obj, item) => {
-                        if (!item.pid) return obj;
+                        if (!item.pid) return obj
                         if (!obj[item.pid]) {
-                            obj[item.pid] = [];
+                            obj[item.pid] = []
                         }
-                        obj[item.pid].push(item);
-                        return obj;
-                    }, {});
-                    const address_street = [[...city]];
-                    const district = addr[city[0].id];
+                        obj[item.pid].push(item)
+                        return obj
+                    }, {})
+                    const address_street = [[...city]]
+                    const district = addr[city[0].id]
                     if (district && district.length) {
-                        address_street.push([...district]);
-                        const county = addr[district[0].id];
+                        address_street.push([...district])
+                        const county = addr[district[0].id]
                         if (county && county.length) {
-                            address_street.push([...county]);
+                            address_street.push([...county])
                         }
                     }
-                    this.addr = addr;
+                    this.addr = addr
                     this.config = {
                         ...this.config,
                         address_street
-                    };
+                    }
                 }
-            });
+            })
         },
         getAreaFlag(id) {
             this.$request.getAreaFlag({ pid_area_street: id }).then(res => {
@@ -286,35 +287,35 @@ export default {
                         this.config = {
                             ...this.config,
                             address_flag: res.data
-                        };
+                        }
                     } catch (error) {
-                        this.log(error);
+                        this.log(error)
                     }
                 }
-            });
+            })
         },
         getHouse() {
             if (this.house_id) {
                 this.$request.getHouse({ id: this.house_id }).then(res => {
                     if (res && res.data) {
                         const images = res.data.image_urls
-                            ? res.data.image_urls.split(",")
-                            : [];
-                        this.setHouseTempImg([...images]);
+                            ? res.data.image_urls.split(',')
+                            : []
+                        this.setHouseTempImg([...images])
                         this.setHouseImg(
                             images.map(item => ({
                                 url: item
                             }))
-                        );
+                        )
                         res.data.images = images.map(item => ({
                             url: item
-                        }));
-                        this.form = { ...res.data };
+                        }))
+                        this.form = { ...res.data }
                     }
-                });
+                })
             } else {
-                this.form.contact_mobile = this.userInfo.landlord_mobile;
-                this.form.wechat_number = this.userInfo.landlord_mobile;
+                this.form.contact_mobile = this.userInfo.landlord_mobile
+                this.form.wechat_number = this.userInfo.landlord_mobile
             }
         },
         // getLandlord() {
@@ -329,197 +330,197 @@ export default {
         // },
         chooseImg() {
             if (this.houseImg && this.houseImg.length) {
-                this.setHouseTempImg(this.houseImg.map(item => item.url));
-                this.goPage(`/pages/publish/img`);
+                this.setHouseTempImg(this.houseImg.map(item => item.url))
+                this.goPage(`/pages/publish/img`)
             } else {
                 this.chooseImage(9).then(e => {
-                    if (e.errMsg === "chooseImage:ok") {
-                        this.setHouseTempImg(e.tempFilePaths);
-                        this.goPage(`/pages/publish/img`);
+                    if (e.errMsg === 'chooseImage:ok') {
+                        this.setHouseTempImg(e.tempFilePaths)
+                        this.goPage(`/pages/publish/img`)
                     }
-                });
+                })
             }
         },
         columnChange(e) {
-            const self = this;
-            let { column, value } = e.detail;
+            const self = this
+            let { column, value } = e.detail
             function setColumn() {
-                let item = self.config.address_street[column][value];
-                if (!item) return;
+                let item = self.config.address_street[column][value]
+                if (!item) return
                 if (column++ < 2) {
-                    let p = self.config.address_street;
-                    p[column] = self.addr[item.id] || [];
+                    let p = self.config.address_street
+                    p[column] = self.addr[item.id] || []
                     self.config = {
                         ...self.config,
                         address_street: p
-                    };
-                    value = 0;
-                    setColumn();
+                    }
+                    value = 0
+                    setColumn()
                 }
             }
-            setColumn();
+            setColumn()
         },
         pickerChange(key, e) {
-            const value = e.detail.value;
+            const value = e.detail.value
             switch (key) {
-                case "address_street":
-                    const item = this.config.address_street[2][value[2]];
+                case 'address_street':
+                    const item = this.config.address_street[2][value[2]]
                     if (!item) {
-                        this.form.address_street = "";
-                        this.form.address_street_id = "";
+                        this.form.address_street = ''
+                        this.form.address_street_id = ''
                     } else {
-                        this.form.address_street = item.name;
-                        this.form.address_street_id = item.id;
-                        this.getAreaFlag(item.id);
+                        this.form.address_street = item.name
+                        this.form.address_street_id = item.id
+                        this.getAreaFlag(item.id)
                     }
-                    break;
-                case "address_flag":
-                    this.form[key] = this.config[key][value].shortname;
-                    this.form[`${key}_id`] = this.config[key][value].id;
-                    break;
-                case "road_distance":
-                case "house_type":
-                    this.form[key] = this.config[key][value].value;
-                    this.form[`${key}_id`] = this.config[key][value].id;
-                    break;
-                case "floor":
+                    break
+                case 'address_flag':
+                    this.form[key] = this.config[key][value].shortname
+                    this.form[`${key}_id`] = this.config[key][value].id
+                    break
+                case 'road_distance':
+                case 'house_type':
+                    this.form[key] = this.config[key][value].value
+                    this.form[`${key}_id`] = this.config[key][value].id
+                    break
+                case 'floor':
                     this.form.floor_number = +this.config[key][
                         value
-                    ].value.replace("楼", "");
-                    break;
+                    ].value.replace('楼', '')
+                    break
                 default:
-                    break;
+                    break
             }
         },
         next() {
             this.checkAuth().then(res => {
-                if (!res) return;
+                if (!res) return
 
                 this.$validate(this.form, {
-                    rental: [{ required: true, msg: "请输入租金" }],
-                    address_street: [{ required: true, msg: "请选择地址" }],
-                    address_flag: [{ required: true, msg: "请选择标志建筑" }],
-                    road_distance: [{ required: true, msg: "请选择路边距离" }],
-                    house_type: [{ required: true, msg: "请选择房型" }],
-                    floor_number: [{ required: true, msg: "请输入楼层" }],
+                    rental: [{ required: true, msg: '请输入租金' }],
+                    address_street: [{ required: true, msg: '请选择地址' }],
+                    address_flag: [{ required: true, msg: '请选择标志建筑' }],
+                    road_distance: [{ required: true, msg: '请选择路边距离' }],
+                    house_type: [{ required: true, msg: '请选择房型' }],
+                    floor_number: [{ required: true, msg: '请输入楼层' }],
                     images: [
-                        { type: "array", msg: "请上传图片" },
-                        { min: 2, msg: "请至少上传2张图片" }
+                        { type: 'array', msg: '请上传图片' },
+                        { min: 2, msg: '请至少上传2张图片' }
                     ]
                 }).then(
                     () => {
                         const config_base = this.form.config_base
-                            ? this.form.config_base.split(",")
-                            : [];
+                            ? this.form.config_base.split(',')
+                            : []
                         const config_lightspot = this.form.config_lightspot
-                            ? this.form.config_lightspot.split(",")
-                            : [];
+                            ? this.form.config_lightspot.split(',')
+                            : []
                         this.config.config_base.map(item => {
                             if (config_base.indexOf(item.value) > -1) {
-                                item.active = true;
+                                item.active = true
                             }
-                        });
+                        })
                         this.config.config_lightspot.map(item => {
                             if (config_lightspot.indexOf(item.value) > -1) {
-                                item.active = true;
+                                item.active = true
                             }
-                        });
-                        this.step = 1;
+                        })
+                        this.step = 1
                     },
                     e => {
                         uni.showToast({
                             title: e.msg,
-                            icon: "none"
-                        });
+                            icon: 'none'
+                        })
                     }
-                );
-            });
+                )
+            })
         },
         filterForm() {
             const config_base = this.config.config_base.filter(
                 item => item.active
-            );
+            )
             const config_lightspot = this.config.config_lightspot.filter(
                 item => item.active
-            );
-            this.form.landlord_id = this.userInfo.landlord_id;
+            )
+            this.form.landlord_id = this.userInfo.landlord_id
             this.form.config_base_ids = config_base
                 .map(item => item.id)
-                .join(",");
+                .join(',')
             this.form.config_base = config_base
                 .map(item => item.value)
-                .join(",");
+                .join(',')
             this.form.config_lightspot_ids = config_lightspot
                 .map(item => item.id)
-                .join(",");
+                .join(',')
             this.form.config_lightspot = config_lightspot
                 .map(item => item.value)
-                .join(",");
+                .join(',')
         },
         confirm() {
             this.checkAuth().then(res => {
-                if (!res) return;
-                this.filterForm();
+                if (!res) return
+                this.filterForm()
                 this.$validate(this.form, {
-                    rental: [{ required: true, msg: "请输入租金" }],
-                    address_street: [{ required: true, msg: "请选择地址" }],
-                    address_flag: [{ required: true, msg: "请选择标志建筑" }],
-                    road_distance: [{ required: true, msg: "请选择路边距离" }],
-                    house_type: [{ required: true, msg: "请选择房型" }],
-                    floor_number: [{ required: true, msg: "请输入楼层" }],
+                    rental: [{ required: true, msg: '请输入租金' }],
+                    address_street: [{ required: true, msg: '请选择地址' }],
+                    address_flag: [{ required: true, msg: '请选择标志建筑' }],
+                    road_distance: [{ required: true, msg: '请选择路边距离' }],
+                    house_type: [{ required: true, msg: '请选择房型' }],
+                    floor_number: [{ required: true, msg: '请输入楼层' }],
                     images: [
-                        { type: "array", msg: "请上传图片" },
-                        { min: 2, msg: "请至少上传2张图片" }
+                        { type: 'array', msg: '请上传图片' },
+                        { min: 2, msg: '请至少上传2张图片' }
                     ]
                 }).then(
                     () => {
                         const api = this.form.id
-                            ? ((this.form.hr_id = this.form.id), "editHouse")
-                            : "addHouse";
+                            ? ((this.form.hr_id = this.form.id), 'editHouse')
+                            : 'addHouse'
                         const {
                             landlord_info,
                             image_urls,
                             ...params
-                        } = this.form;
+                        } = this.form
                         params.images = params.images.map(item => {
-                            if (typeof item === "string") {
+                            if (typeof item === 'string') {
                                 item = {
                                     url: item
-                                };
+                                }
                             }
-                            return item;
-                        });
+                            return item
+                        })
                         this.$request[api](params).then(res => {
                             if (res && res.data) {
-                                this.setHouseTempImg([]);
-                                this.setHouseImg([]);
-                                this.setHomeReload(true);
-                                this.setCollectReload(true);
+                                this.setHouseTempImg([])
+                                this.setHouseImg([])
+                                this.setHomeReload(true)
+                                this.setCollectReload(true)
                                 this.goPage({
                                     path: `/pages/publish/publish_succ?id=${this
                                         .form.id || res.data}`,
                                     replace: true
-                                });
+                                })
                             }
-                        });
+                        })
                     },
                     e => {
                         uni.showToast({
                             title: e.msg,
-                            icon: "none"
-                        });
+                            icon: 'none'
+                        })
                     }
-                );
-            });
+                )
+            })
         },
         chooseCfgBase(li) {
-            li.active = !li.active;
+            li.active = !li.active
         },
         chooseCfgLight(li) {
-            li.active = !li.active;
+            li.active = !li.active
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -590,7 +591,7 @@ export default {
             font-size: 33upx;
 
             &::before {
-                content: " ";
+                content: ' ';
                 display: inline-block;
                 width: 5upx;
                 height: 22upx;
@@ -610,7 +611,7 @@ export default {
         picker {
             position: relative;
             & + picker::before {
-                content: " ";
+                content: ' ';
                 position: absolute;
                 top: 50%;
                 left: 0;

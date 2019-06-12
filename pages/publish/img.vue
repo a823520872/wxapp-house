@@ -68,21 +68,22 @@ export default {
                     resolve({
                         url: filePath
                     })
+                } else {
+                    this.$request
+                        .uploadImg({
+                            filePath
+                        })
+                        .then(
+                            res => {
+                                console.log(res)
+                                resolve(res.data)
+                            },
+                            e => {
+                                console.log(e)
+                                reject(e)
+                            }
+                        )
                 }
-                this.$request
-                    .uploadImg({
-                        filePath
-                    })
-                    .then(
-                        res => {
-                            console.log(res)
-                            resolve(res.data)
-                        },
-                        e => {
-                            console.log(e)
-                            reject(e)
-                        }
-                    )
             })
         },
         confirm() {
@@ -93,10 +94,11 @@ export default {
                 })
                 return
             }
-            const tasks = this.houseTempImg.map(item => {
+            let tasks = this.houseTempImg.map(item => {
                 return this.uploadImg(item)
             })
             this.queneUpload(tasks)
+            this.setHouseImg(null)
         },
         queneUpload(tasks) {
             uni.showLoading({
@@ -104,7 +106,7 @@ export default {
                 mask: true
             })
             if (tasks.length > 4) {
-                const arr = tasks.splice(0, 4)
+                let arr = tasks.splice(0, 4)
                 let houseImg = []
                 Promise.all(arr)
                     .then(res => {
@@ -112,7 +114,7 @@ export default {
                         return Promise.all(tasks)
                     })
                     .then(res => {
-                        houseImg = [...houseImg, ...res]
+                        houseImg.push(...res)
                         this.setHouseImg(houseImg)
                         uni.hideLoading()
                         uni.navigateBack({
@@ -131,9 +133,9 @@ export default {
                     .then(res => {
                         this.setHouseImg(res)
                         uni.hideLoading()
-                        uni.navigateBack({
-                            delta: 1
-                        })
+                        // uni.navigateBack({
+                        //     delta: 1
+                        // })
                     })
                     .catch(e => {
                         uni.hideLoading()

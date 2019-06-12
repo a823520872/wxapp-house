@@ -165,7 +165,9 @@ export default {
                 })
         },
         getUserInfo(e) {
-            return this.$refs.auth.getUserInfo(e)
+            this.$refs.auth.getUserInfo(e).done(() => {
+                this.init()
+            })
         },
         linkAdmin() {
             this.userInfo
@@ -174,9 +176,7 @@ export default {
                       confirmText: '确定',
                       success() {}
                   })
-                : this.getUserInfo().done(() => {
-                      this.init()
-                  })
+                : this.getUserInfo()
         },
         handleClick() {
             if (
@@ -218,7 +218,6 @@ export default {
                             () => {
                                 this.$request.mobileLogin(this.form).then(
                                     res => {
-                                        console.log(res)
                                         if (res.data && res.data.userinfo) {
                                             uni.setStorageSync(
                                                 'tk',

@@ -133,21 +133,17 @@ export default {
                 )
         },
         getUserInfo(e) {
-            return this.$refs.auth.getUserInfo(e)
+            this.$refs.auth.getUserInfo(e).done(() => {
+                this.init()
+            })
         },
         to(url) {
-            this.userInfo
-                ? this.goPage(url)
-                : this.getUserInfo().done(() => {
-                      this.init()
-                  })
+            this.userInfo ? this.goPage(url) : this.getUserInfo()
         },
         settle() {
             this.userInfo
                 ? this.to(`/pages/publish/settled`)
-                : this.getUserInfo().done(() => {
-                      this.init()
-                  })
+                : this.getUserInfo()
             // this.to(`/pages/publish/settled`)
         },
         showLink() {
@@ -156,9 +152,7 @@ export default {
                       title: '联系方式',
                       confirmText: '确定'
                   })
-                : this.getUserInfo().done(() => {
-                      this.init()
-                  })
+                : this.getUserInfo()
         }
     }
 }

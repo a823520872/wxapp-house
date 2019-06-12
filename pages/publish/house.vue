@@ -342,16 +342,15 @@ export default {
             }
         },
         columnChange(e) {
-            const self = this
             let { column, value } = e.detail
-            function setColumn() {
-                let item = self.config.address_street[column][value]
+            const setColumn = () => {
+                let item = this.config.address_street[column][value]
                 if (!item) return
                 if (column++ < 2) {
-                    let p = self.config.address_street
-                    p[column] = self.addr[item.id] || []
-                    self.config = {
-                        ...self.config,
+                    let p = this.config.address_street
+                    p[column] = this.addr[item.id] || []
+                    this.config = {
+                        ...this.config,
                         address_street: p
                     }
                     value = 0

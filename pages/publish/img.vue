@@ -75,11 +75,9 @@ export default {
                         })
                         .then(
                             res => {
-                                console.log(res)
                                 resolve(res.data)
                             },
                             e => {
-                                console.log(e)
                                 reject(e)
                             }
                         )
@@ -98,53 +96,42 @@ export default {
                 return this.uploadImg(item)
             })
             this.queneUpload(tasks)
-            this.setHouseImg(null)
+            this.setHouseImg([])
         },
         queneUpload(tasks) {
             uni.showLoading({
                 title: '正在上传中……',
                 mask: true
             })
-            if (tasks.length > 4) {
-                let arr = tasks.splice(0, 4)
-                let houseImg = []
-                Promise.all(arr)
-                    .then(res => {
-                        houseImg = res
-                        return Promise.all(tasks)
-                    })
-                    .then(res => {
-                        houseImg.push(...res)
-                        this.setHouseImg(houseImg)
-                        uni.hideLoading()
-                        uni.navigateBack({
-                            delta: 1
+            let houseImg = []
+            new Promise((resolve, reject) => {
+                if (tasks.length > 4) {
+                    let arr = tasks.splice(0, 4)
+                    Promise.all(arr)
+                        .then(res => {
+                            houseImg.push(...res)
+                            return Promise.all(tasks)
                         })
+                        .then(resolve)
+                } else {
+                    Promise.all(tasks).then(resolve)
+                }
+            })
+                .then(res => {
+                    houseImg.push(...res)
+                    this.setHouseImg(houseImg)
+                    uni.hideLoading()
+                    uni.navigateBack({
+                        delta: 1
                     })
-                    .catch(e => {
-                        uni.hideLoading()
-                        uni.showToast({
-                            title: e && e.message,
-                            icon: 'none'
-                        })
+                })
+                .catch(e => {
+                    uni.hideLoading()
+                    uni.showToast({
+                        title: e && e.message,
+                        icon: 'none'
                     })
-            } else {
-                Promise.all(tasks)
-                    .then(res => {
-                        this.setHouseImg(res)
-                        uni.hideLoading()
-                        // uni.navigateBack({
-                        //     delta: 1
-                        // })
-                    })
-                    .catch(e => {
-                        uni.hideLoading()
-                        uni.showToast({
-                            title: e && e.message,
-                            icon: 'none'
-                        })
-                    })
-            }
+                })
         }
     }
 }

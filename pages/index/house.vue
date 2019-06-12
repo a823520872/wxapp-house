@@ -343,7 +343,7 @@ export default {
             font-size: 33upx;
 
             &::before {
-                content: " ";
+                content: ' ';
                 display: inline-block;
                 width: 5upx;
                 height: 22upx;

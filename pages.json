@@ -155,7 +155,7 @@
             {
                 "name": "编辑房源",
                 "path": "pages/publish/house",
-                "query": "id=39"
+                "query": "id=1669"
             },
             {
                 "name": "上传图片",
@@ -164,7 +164,7 @@
             {
                 "name": "发布成功",
                 "path": "pages/publish/publish_succ",
-                "query": "id=11"
+                "query": "id=1669"
             },
             {
                 "name": "我的",

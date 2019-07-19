@@ -1,8 +1,7 @@
 import utils from './utils'
 import store from '../store'
 const ajax = (path, params, options = {}) => {
-    const urlPrefix = 'https://house.zhiqiang.ink'
-    const url = urlPrefix + path
+    const url = store.state.urlPrefix + path
     const token = uni.getStorageSync('tk')
     options.type = options.type || 'get'
     options.loading &&
@@ -31,7 +30,12 @@ const ajax = (path, params, options = {}) => {
         options.loading && uni.hideLoading()
         if (res.length && res.length === 2) {
             res = res[1]
-        }
+        } else {
+			if (res[0] && ~res[0].errMsg.indexOf('fail')) {
+				store.commit('setUrlPrefix')
+				return ajax(path, params, options)
+			}
+		}
         let data = res.data
         if (typeof data === 'string') {
             data = JSON.parse(data)

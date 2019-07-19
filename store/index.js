@@ -13,9 +13,13 @@ const store = new Vuex.Store({
         houseTempImg: [],
         houseImg: [],
         homeReload: false,
-        collectReload: false
+        collectReload: false,
+		urlPrefix: 'https://house.zhiqiang.ink'
     },
     mutations: {
+		setVal(state, obj) {
+			state[obj.key] = obj.val
+		},
         setCode(state, code) {
             state.code = code
         },
@@ -39,7 +43,10 @@ const store = new Vuex.Store({
         },
         setCollectReload(state, bl) {
             state.collectReload = bl
-        }
+        },
+		setUrlPrefix(state) {
+			state.urlPrefix = state.urlPrefix === 'https://house.zhiqiang.ink' ? 'https://house.ioupian.com' : 'https://house.zhiqiang.ink'
+		}
     },
     actions: {
         login(context, bl) {

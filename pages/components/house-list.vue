@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="list">
-            <view v-for="(li, i) in items" :key="Math.random()" class="cell" @tap="to(`/pages/index/house?id=${li.id}`)">
+            <view v-for="(li, i) in items" :key="i" class="cell" @tap="to(`/pages/index/house?id=${li.id}`)">
                 <view class="hd">
                     <view class="m_flex_justify m_flex_middle">
                         <view class="title m_textover">{{li.address_street}} · {{li.house_type}}</view>
@@ -23,7 +23,7 @@
                 </view>
                 <view class="bd m_flex" v-if="li.image_urls && li.image_urls.length">
                     <view :class="{'img_box': true, 'last': li.image_urls.length > 3 && j === 2}" v-for="(it, j) in li.image_urls" :key="j" v-if="j < 3">
-                        <image :src="it" :mode="config.house_mode"></image>
+                        <image :src="it" :mode="CONFIG.house_mode"></image>
                     </view>
                 </view>
             </view>

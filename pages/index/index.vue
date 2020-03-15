@@ -74,7 +74,7 @@
                         <template v-if="house_type_active">
                             <view class="house_type"
                                   v-for="li in house_type_active"
-                                  :key="Math.random()">
+                                  :key="li.value">
                                 <view class="btn active">{{li.value}}</view>
                                 <view class="del_btn"
                                       @tap="delParams(li)">
@@ -86,7 +86,7 @@
                         <template v-if="price_active">
                             <view class="house_type"
                                   v-for="li in price_active"
-                                  :key="Math.random()">
+                                  :key="li.value">
                                 <view class="btn active">{{li.value}}</view>
                                 <view class="del_btn"
                                       @tap="delParams(li)">
@@ -98,7 +98,7 @@
                         <template v-if="road_distance_active">
                             <view class="house_type"
                                   v-for="li in road_distance_active"
-                                  :key="Math.random()">
+                                  :key="li.value">
                                 <view class="btn active">{{li.value}}</view>
                                 <view class="del_btn"
                                       @tap="delParams(li)">
@@ -110,7 +110,7 @@
                         <template v-if="config_base_active">
                             <view class="house_type"
                                   v-for="li in config_base_active"
-                                  :key="Math.random()">
+                                  :key="li.value">
                                 <view class="btn active">{{li.value}}</view>
                                 <view class="del_btn"
                                       @tap="delParams(li)">
@@ -122,7 +122,7 @@
                         <template v-if="config_lightspot_active">
                             <view class="house_type"
                                   v-for="li in config_lightspot_active"
-                                  :key="Math.random()">
+                                  :key="li.value">
                                 <view class="btn active">{{li.value}}</view>
                                 <view class="del_btn"
                                       @tap="delParams(li)">
@@ -158,11 +158,11 @@
                       v-if="modalList && modalList.length">
                     <view class="m_flex_center"
                           v-for="(lis, i) in modalList"
-                          :key="Math.random()">
+                          :key="i">
                         <view class="modal_list m_flex_wrap">
                             <view class="modal_item"
                                   v-for="(li, j) in lis"
-                                  :key="Math.random()">
+                                  :key="j">
                                 <view :class="['m_button', 'main', {'plain': !li.tmpActive}]"
                                       @tap="toggleList(i, j)">{{ li.value || li }}</view>
                             </view>

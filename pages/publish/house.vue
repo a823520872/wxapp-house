@@ -3,7 +3,7 @@
         <view class="step_one" v-if="step === 0">
             <view class="hd">
                 <view class="bg">
-                    <image :src="houseImg[0] ? houseImg[0].url : '/static/image/publish/house_bg.png'" :mode="config.house_mode"></image>
+                    <image :src="houseImg[0] ? houseImg[0].url : '/static/image/publish/house_bg.png'" :mode="CONFIG.house_mode"></image>
                 </view>
                 <view class="warn">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
                 <view class="main m_flex_column m_flex_middle">
@@ -93,7 +93,7 @@
                     一般配置
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config && config.config_base" :key="i" @tap="chooseCfgBase(li)">{{li.value}}</view>
+                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config.config_base" :key="i" @tap="chooseCfgBase(li)">{{li.value}}</view>
                 </view>
             </view>
             <view class="cells" v-if="config && config.config_lightspot && config && config.config_lightspot.length">
@@ -101,7 +101,7 @@
                     房屋亮点
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config && config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{li.value}}</view>
+                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{li.value}}</view>
                 </view>
             </view>
             <view class="cells">
@@ -210,7 +210,7 @@ export default {
         this.setHouseImg([])
     },
     onShow() {
-        this.setHouseTempImg([])
+        // this.setHouseTempImg([])
         if (this.houseImg && this.houseImg.length) {
             this.form.images = this.houseImg
         }
@@ -329,17 +329,20 @@ export default {
         //         });
         // },
         chooseImg() {
-            if (this.houseImg && this.houseImg.length) {
-                this.setHouseTempImg(this.houseImg.map(item => item.url))
+            return new Promise((resolve) => {
+                if (this.houseImg && this.houseImg.length) {
+                    resolve(this.houseImg.map(item => item.url))
+                } else {
+                    this.chooseImage(9).then(e => {
+                        if (e.errMsg === 'chooseImage:ok') {
+                            resolve(e.tempFilePaths)
+                        }
+                    })
+                }
+            }).then((imgs) => {
+                this.setHouseTempImg(imgs)
                 this.goPage(`/pages/publish/img`)
-            } else {
-                this.chooseImage(9).then(e => {
-                    if (e.errMsg === 'chooseImage:ok') {
-                        this.setHouseTempImg(e.tempFilePaths)
-                        this.goPage(`/pages/publish/img`)
-                    }
-                })
-            }
+            })
         },
         columnChange(e) {
             let { column, value } = e.detail

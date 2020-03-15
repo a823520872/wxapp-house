@@ -2,7 +2,7 @@
     <view class="content">
         <view class="hd">
             <view class="banner">
-                <image :src="houseTempImg[0]" @tap="showImg(houseTempImg[0])" :mode="config.house_mode"></image>
+                <image :src="houseTempImg[0]" @tap="showImg(houseTempImg[0])" :mode="CONFIG.house_mode"></image>
             </view>
             <template v-if="houseTempImg && houseTempImg.length">
                 <view class="close" @tap="del(0)">
@@ -12,14 +12,16 @@
             </template>
         </view>
         <view class="bd m_flex_wrap">
-            <view v-for="(li, i) in houseTempImg" :key="i" v-if="i > 0" class="item">
-                <view class="img" @tap="showImg(li)">
-                    <image :src="li" :mode="config.house_mode"></image>
+            <block v-for="(li, i) in houseTempImg" :key="i">
+                <view v-if="i > 0" class="item">
+                    <view class="img" @tap="showImg(li)">
+                        <image :src="li" :mode="CONFIG.house_mode"></image>
+                    </view>
+                    <view class="close" @tap="del(i)">
+                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                    </view>
                 </view>
-                <view class="close" @tap="del(i)">
-                    <image src="/static/image/index/del.png" mode="aspectFit"></image>
-                </view>
-            </view>
+            </block>
             <view v-if="houseTempImg.length < 8" class="item m_flex_center m_flex_middle" @tap="chooseImg">
                 <view class="photo">
                     <image src="/static/image/publish/photo_1.png" mode="aspectFit"></image>
@@ -97,6 +99,7 @@ export default {
             })
             this.queneUpload(tasks)
             this.setHouseImg([])
+            this.setHouseTempImg([])
         },
         queneUpload(tasks) {
             uni.showLoading({

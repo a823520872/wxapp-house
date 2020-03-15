@@ -81,7 +81,7 @@
                     <view class="cells_title title">房源图片</view>
                     <view class="cell">
                         <view class="house_img" v-for="(li, i) in detail.image_urls" :key="i">
-                            <!-- <image :src="li" :mode="config.house_mode"></image> -->
+                            <!-- <image :src="li" :mode="CONFIG.house_mode"></image> -->
                             <image :src="li" mode="widthFix" @tap="showImg(li)"></image>
                         </view>
                     </view>

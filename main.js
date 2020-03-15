@@ -19,7 +19,7 @@ Vue.component('vPage', vPage)
 Vue.mixin({
     data() {
         return {
-            config
+            CONFIG: config
         }
     },
     methods: util

@@ -15,13 +15,13 @@
             <view class="title">联系客服快速审核</view>
             <view class="cells m_flex_center">
                 <view class="">
-                    <view class="cell" @tap="copy(config.wechat_number)">
+                    <view class="cell" @tap="copy(CONFIG.wechat_number)">
                         <text class="label m_flex_item">客服微信：</text>
-                        <text class="model m_flex_item">{{config.wechat_number}}</text>
+                        <text class="model m_flex_item">{{CONFIG.wechat_number}}</text>
                     </view>
-                    <view class="cell" @tap="call(config.contact_mobile)">
+                    <view class="cell" @tap="call(CONFIG.contact_mobile)">
                         <text class="label m_flex_item">客服联系电话：</text>
-                        <text class="model m_flex_item">{{config.contact_mobile}}</text>
+                        <text class="model m_flex_item">{{CONFIG.contact_mobile}}</text>
                     </view>
                 </view>
             </view>

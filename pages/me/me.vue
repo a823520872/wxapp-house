@@ -11,7 +11,7 @@
                         <view v-if="userInfo" class="name m_flex m_flex_column m_textover">
                             <view>{{ userInfo.nickname }}</view>
                             <view v-if="userInfo.is_landlord === 1">
-                                <view v-if="service" class="service">{{service}} 服务结束</view>
+                                <view v-if="service" class="service">{{ service }} 服务结束</view>
                                 <view v-else>服务结束</view>
                             </view>
                         </view>
@@ -30,7 +30,7 @@
                             <view class="icon">
                                 <image src="/static/image/me/person.png" mode="aspectFit"></image>
                             </view>
-                            <view>{{userInfo && userInfo.is_landlord === 1 ? (service ? '服务中' : '继续合作') : '申请入驻' }}</view>
+                            <view>{{ userInfo && userInfo.is_landlord === 1 ? (service ? '服务中' : '继续合作') : '申请入驻' }}</view>
                         </view>
                         <!-- <view class="tab">
                             <view class="icon">
@@ -55,22 +55,20 @@
             <button class="m_button plain long" open-type="share">
                 <view class="cell m_flex_justify m_flex_middle">
                     <view class="cell_hd">推荐好友</view>
-                    <view class="cell_fd">{{userInfo && userInfo.is_landlord === 1 ? '邀请入驻2人同享1月免费服务' : ''}}</view>
+                    <view class="cell_fd">{{ userInfo && userInfo.is_landlord === 1 ? '好友入驻成功，即享1月免费服务' : '' }}</view>
                 </view>
             </button>
             <button class="m_button plain long" open-type="contact">
                 <view class="cell m_flex_justify m_flex_middle">
                     <view class="cell_hd">联系客服</view>
-                    <view class="cell_fd">智能找房、意见反馈、入驻咨询</view>
+                    <view class="cell_fd">意见反馈、入驻咨询</view>
                 </view>
             </button>
-            <view v-if="!userInfo || (userInfo && userInfo.is_landlord !== 1)" class="cell m_flex_justify m_flex_middle" @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
+            <!-- <view v-if="!userInfo || (userInfo && userInfo.is_landlord !== 1)" class="cell m_flex_justify m_flex_middle" @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
                 <view class="cell_hd">搬家服务</view>
                 <view class="cell_fd">查看搬家报价</view>
-            </view>
-            <!-- <view v-if="!userInfo"
-                  class="cell m_flex_justify m_flex_middle"
-                  @tap="showLogin">
+            </view> -->
+            <!-- <view v-if="!userInfo" class="cell m_flex_justify m_flex_middle" @tap="showLogin">
                 <view class="cell_hd">授权登录</view>
                 <view class="cell_fd">登录后才能发布房源</view>
             </view> -->
@@ -81,7 +79,7 @@
         <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
             <view slot="content">
-                <link-modal :temp="temp"></link-modal>
+                <link-modal :temp="CONFIG"></link-modal>
             </view>
         </v-modal>
         <v-modal ref="loginModal">
@@ -89,14 +87,14 @@
                 <view class="cells">
                     <view class="cell m_flex_middle">
                         <view class="label">手机号</view>
-                        <view class="model m_flex_middle m_flex_item"><input type="number" v-model="form.mobile" placeholder="请输入您的手机号" /></view>
+                        <view class="model m_flex_middle m_flex_item"><input type="number" v-model="form.mobile" placeholder="请输入您的手机号"/></view>
                     </view>
                     <view class="cell m_flex_middle">
                         <!-- <view class="label">验证码</view> -->
                         <view class="model m_flex_middle m_flex_item">
                             <input class="m_flex_item" type="number" v-model="form.captcha" placeholder="请输入短信验证码" />
                             <view v-if="time === -1" class="m_button main btn_code plain" @tap="getCode">获取验证码</view>
-                            <view v-else class="m_button btn_code">{{time + 's后可再次获取'}}</view>
+                            <view v-else class="m_button btn_code">{{ time + 's后可再次获取' }}</view>
                         </view>
                     </view>
                 </view>
@@ -134,11 +132,7 @@ export default {
             path:
                 `/pages/index/index?p=` +
                 encodeURIComponent(
-                    this.userInfo
-                        ? this.userInfo.is_landlord === 1
-                            ? `/pages/publish/index?uid=${this.userInfo.id}`
-                            : `/pages/index/index?uid=${this.userInfo.id}`
-                        : `/pages/index/index`
+                    this.userInfo ? (this.userInfo.is_landlord === 1 ? `/pages/publish/index?uid=${this.userInfo.id}` : `/pages/index/index?uid=${this.userInfo.id}`) : `/pages/index/index`
                 )
         }
     },
@@ -147,6 +141,7 @@ export default {
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         init() {
             this.service = false
+            // #ifdef MP-WEIXIN
             this.login()
                 .then(
                     code => {
@@ -163,6 +158,16 @@ export default {
                         })
                     }
                 })
+            // #endif
+            // #ifdef H5
+            this.getInfo().then(userInfo => {
+                if (this.userInfo && this.userInfo.is_landlord === 1) {
+                    this.checkAuth().then(res => {
+                        this.service = res
+                    })
+                }
+            })
+            // #endif
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e).done(() => {
@@ -179,12 +184,7 @@ export default {
                 : this.getUserInfo()
         },
         handleClick() {
-            if (
-                this.service &&
-                this.userInfo &&
-                this.userInfo.is_landlord === 1
-            )
-                return
+            if (this.service && this.userInfo && this.userInfo.is_landlord === 1) return
             this.to('/pages/publish/index')
         },
         to(url) {
@@ -219,10 +219,7 @@ export default {
                                 this.$request.mobileLogin(this.form).then(
                                     res => {
                                         if (res.data && res.data.userinfo) {
-                                            uni.setStorageSync(
-                                                'tk',
-                                                res.data.userinfo.token
-                                            )
+                                            uni.setStorageSync('tk', res.data.userinfo.token)
                                             this.setUserInfo(res.data.userinfo)
                                             resolve()
                                         } else {

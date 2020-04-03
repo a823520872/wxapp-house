@@ -50,11 +50,16 @@
         </view>
         <view class="not_landlord" v-else>
             <view class="bd">
-                <view>{{state}}</view>
+                <view>{{ state }}</view>
                 <image src="/static/image/publish/intro.png" mode="widthFix"></image>
             </view>
             <view class="fd">
+                <!-- #ifdef MP-WEIXIN -->
                 <button class="m_button main" open-type="contact">联系客服</button>
+                <!-- #endif -->
+                <!-- #ifdef H5 -->
+                <button class="m_button main" @tap="showLink">联系客服</button>
+                <!-- #endif -->
             </view>
             <button v-if="step === 2" class="m_button main btn_add m_flex_center m_flex_middle m_flex_column" plain @tap="settle">
                 <view>发布</view>
@@ -62,11 +67,13 @@
             </button>
             <v-modal ref="modal">
                 <view slot="content">
-                    <link-modal :temp="config"></link-modal>
+                    <link-modal :temp="CONFIG"></link-modal>
                 </view>
             </v-modal>
         </view>
+        <!-- #ifdef MP-WEIXIN -->
         <official-account></official-account>
+        <!-- #endif -->
         <v-auth ref="auth"></v-auth>
     </view>
 </template>
@@ -104,6 +111,7 @@ export default {
     methods: {
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         init() {
+            // #ifdef MP-WEIXIN
             this.login()
                 .then(code => {
                     return this.getInfo(true)
@@ -131,6 +139,32 @@ export default {
                         this.step = 2
                     }
                 )
+            // #endif
+            // #ifdef H5
+            this.getInfo(true).then(
+                userInfo => {
+                    if (this.userInfo.is_landlord === 1) {
+                        this.checkAuth().then(
+                            res => {
+                                if (res) {
+                                    this.step = 1
+                                } else {
+                                    this.step = 4
+                                }
+                            },
+                            e => {
+                                this.step = 4
+                            }
+                        )
+                    } else {
+                        this.step = this.userInfo.is_landlord
+                    }
+                },
+                e => {
+                    this.step = 2
+                }
+            )
+            // #endif
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e).done(() => {
@@ -141,9 +175,7 @@ export default {
             this.userInfo ? this.goPage(url) : this.getUserInfo()
         },
         settle() {
-            this.userInfo
-                ? this.to(`/pages/publish/settled`)
-                : this.getUserInfo()
+            this.userInfo ? this.to(`/pages/publish/settled`) : this.getUserInfo()
             // this.to(`/pages/publish/settled`)
         },
         showLink() {

@@ -37,14 +37,7 @@ export default {
         getUserInfoByBtn(e) {
             this.$refs.user_modal.hide()
             const self = this
-            const {
-                errMsg,
-                rawData,
-                encryptedData,
-                iv,
-                signature,
-                userInfo
-            } = e.detail
+            const { errMsg, rawData, encryptedData, iv, signature, userInfo } = e.detail
             if (errMsg === 'getUserInfo:ok') {
                 uni.removeStorageSync('auth')
                 this.getToken({
@@ -53,11 +46,13 @@ export default {
                     encryptedData,
                     signature,
                     iv
-                }).then(() => {
-                    uni.showToast({
-                        title: '登录成功',
-                        icon: 'none'
-                    })
+                }).then(res => {
+                    let { userinfo } = res.data
+                    userinfo &&
+                        uni.showToast({
+                            title: '登录成功',
+                            icon: 'none'
+                        })
                     this.$refs.user_modal.hide()
                     this.defer.resolve()
                 })
@@ -135,18 +130,9 @@ export default {
             return new Promise((resolve, reject) => {
                 uni.chooseLocation({
                     success(res) {
-                        const {
-                            errMsg,
-                            name,
-                            address,
-                            latitude,
-                            longitude
-                        } = res
+                        const { errMsg, name, address, latitude, longitude } = res
                         if (errMsg === 'chooseLocation:ok') {
-                            self.transformAddr(
-                                res.longitude,
-                                res.latitude
-                            ).then(
+                            self.transformAddr(res.longitude, res.latitude).then(
                                 r => {
                                     resolve(r)
                                 },

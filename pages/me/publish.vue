@@ -4,20 +4,19 @@
             <view class="avatar">
                 <image :src="user_info.avatar" mode="aspectFit"></image>
             </view>
-            <view class="name">{{user_info.nickname}}</view>
-            <view class="tips" v-if="(user_info.public_num || user_info.rented_num) && !landlord_id">发布中:{{user_info.public_num}}套&nbsp;&nbsp;&nbsp;&nbsp;未发布:{{user_info.rented_num}}套</view>
+            <view class="name">{{ user_info.nickname }}</view>
+            <!-- <view class="tips" v-if="(user_info.public_num || user_info.rented_num) && !landlord_id">
+                <text>发布中:{{ user_info.public_num }}套&nbsp;&nbsp;&nbsp;&nbsp;未发布:{{ user_info.rented_num }}套</text>
+            </view> -->
         </view>
         <view class="tabs m_flex" v-if="!landlord_id">
             <view class="m_flex_item">
-                <view :class="{'tab': true, 'active' : tab === 2}" @tap="chooseTab(2)">发布中</view>
+                <view :class="{ tab: true, active: tab === 2 }" @tap="chooseTab(2)">发布中{{ user_info && user_info.public_num ? `(${user_info.public_num})` : '(0)' }}</view>
             </view>
             <view class="m_flex_item">
-                <view :class="{'tab': true, 'active' : tab === 1}" @tap="chooseTab(1)">未发布</view>
+                <view :class="{ tab: true, active: tab === 1 }" @tap="chooseTab(1)">未发布{{ user_info && user_info.rented_num ? `(${user_info.rented_num})` : '(0)' }}</view>
             </view>
         </view>
-        <!-- <view v-else class="fix_right_icon" @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
-            <image src="/static/image/me/gss.png" mode="aspectFill"></image>
-        </view> -->
         <publish-list :list.sync="list" @reload="getData"></publish-list>
         <v-page ref="page" :list.sync="list"></v-page>
     </view>
@@ -90,14 +89,7 @@ export default {
                         url: 'getUserHouse',
                         params,
                         fn(data) {
-                            return (data || []).map(
-                                item => (
-                                    (item.images =
-                                        item.image_urls &&
-                                        item.image_urls.split(',')),
-                                    item
-                                )
-                            )
+                            return (data || []).map(item => ((item.images = item.image_urls && item.image_urls.split(',')), item))
                         }
                     })
                     .then(res => {
@@ -176,14 +168,5 @@ export default {
             z-index: 10;
         }
     }
-}
-.fix_right_icon {
-    position: fixed;
-    right: 40upx;
-    bottom: 200upx;
-    width: 160upx;
-    height: 160upx;
-    border-radius: 50%;
-    overflow: hidden;
 }
 </style>

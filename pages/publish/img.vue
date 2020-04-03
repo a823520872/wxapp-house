@@ -28,8 +28,10 @@
                 </view>
             </view>
         </view>
-        <view class="empty"></view>
-        <view class="fd" @tap="confirm">完成</view>
+        <view class="empty" :class="{ ipx: CONFIG.isIphoneX }"></view>
+        <view class="fd">
+            <button class="m_button btn" @tap="confirm">完成</button>
+        </view>
     </view>
 </template>
 
@@ -212,11 +214,20 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    height: 100upx;
-    line-height: 100upx;
-    background-color: $primary-color;
-    text-align: center;
-    font-size: 33upx;
-    color: #fff;
+    z-index: 10;
+    background-color: #eee;
+    font-size: 0;
+
+    .btn {
+        width: 100%;
+        height: 100upx;
+        padding: 0;
+        line-height: 100upx;
+        background-color: $primary-color;
+        border-radius: 0;
+        text-align: center;
+        font-size: 33upx;
+        color: #fff;
+    }
 }
 </style>

@@ -1,152 +1,128 @@
 <template>
     <view class="content">
-        <swiper class="swiper"
-                indicator-dots
-                circular
-                indicator-color="#6d7271"
-                indicator-active-color="#4ce6e8"
-                autoplay
-                :interval="2000"
-                :duration="1000">
-            <swiper-item @tap="goPage(`/pages/index/webview?src=${config.gss}`)">
-                <view class="swiper-item">
-                    <image src="/static/image/index/banner1.jpg"
-                           mode="aspectFit"></image>
-                </view>
-            </swiper-item>
+        <swiper class="swiper" indicator-dots circular indicator-color="#6d7271" indicator-active-color="#4ce6e8" autoplay :interval="2000" :duration="1000">
             <swiper-item>
                 <view class="swiper-item">
-                    <image src="/static/image/index/banner.jpg"
-                           mode="aspectFit"></image>
+                    <image src="/static/image/index/banner.jpg" mode="aspectFill"></image>
                 </view>
             </swiper-item>
         </swiper>
-        <view class="cells">
-            <view class="cells_hd m_flex_middle m_flex_justify">
-                <view class="title">房东直租</view>
-                <view class="m_flex_middle">
-                    <view class="addr_icon">
-                        <image src="/static/image/index/addr.png"
-                               mode="aspectFit"></image>
+        <view class="m_sticky">
+            <view class="cells">
+                <view class="cells_hd m_flex_middle m_flex_justify">
+                    <view class="title">房东直租</view>
+                    <view class="m_flex_middle">
+                        <view class="addr_icon">
+                            <image src="/static/image/index/addr.png" mode="aspectFit"></image>
+                        </view>
+                        <view class="addr_box m_flex">
+                            <picker :range="address_street" @change="pickerChange" @columnchange="columnChange" :value="addrVal" mode="multiSelector">
+                                <view class="m_flex_middle" v-if="addrVal && addrVal.length && (params.address_street || params.area_id)">
+                                    <view class="addr_picker m_flex_middle">
+                                        <view class="addr_item m_textover">{{ address_street[0][addrVal[0]] }}</view>
+                                        <view class="addr_pull">
+                                            <image src="/static/image/index/pull.png" mode="aspectFit"></image>
+                                        </view>
+                                    </view>
+                                    <view class="addr_picker m_flex_middle" :class="{ last: !params.address_street }">
+                                        <view class="addr_item m_textover">{{ address_street[1][addrVal[1]] }}</view>
+                                        <view class="addr_pull">
+                                            <image src="/static/image/index/pull.png" mode="aspectFit"></image>
+                                        </view>
+                                    </view>
+                                    <view class="addr_picker last m_flex_middle" v-if="params.address_street">
+                                        <view class="addr_item m_textover">{{ params.address_street }}</view>
+                                        <view class="addr_pull">
+                                            <image src="/static/image/index/pull.png" mode="aspectFit"></image>
+                                        </view>
+                                    </view>
+                                </view>
+                                <view class="addr_picker last m_flex_middle" v-else>
+                                    <view class="addr_item m_textover">选择村</view>
+                                    <view class="addr_pull">
+                                        <image src="/static/image/index/pull.png" mode="aspectFit"></image>
+                                    </view>
+                                </view>
+                            </picker>
+                        </view>
                     </view>
-                    <view class="addr_box m_flex">
-                        <picker :range="address_street"
-                                @change="pickerChange"
-                                @columnchange="columnChange"
-                                mode="multiSelector">
-                            <view class="addr_picker last m_flex_middle">
-                                <view class="addr_item m_textover">{{params.address_street || '选择村'}}</view>
-                                <view class="addr_pull">
-                                    <image src="/static/image/index/pull.png"
-                                           mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </picker>
+                </view>
+                <view class="cells_bd m_flex_justify">
+                    <view class="filter_title" @tap="showModal(1, '户型')">
+                        <text class="title">户型</text>
+                        <text class="triangle_down_icon"></text>
+                    </view>
+                    <view class="filter_title" @tap="showModal(2, '价格')">
+                        <text class="title">价格</text>
+                        <text class="triangle_down_icon"></text>
+                    </view>
+                    <view class="filter_title" @tap="showModal(4, '路边距离')">
+                        <text class="title">路边距离</text>
+                        <text class="triangle_down_icon"></text>
+                    </view>
+                    <view class="filter_title" @tap="showModal(3, '更多')">
+                        <text class="title">更多</text>
+                        <text class="triangle_down_icon"></text>
                     </view>
                 </view>
-            </view>
-            <view class="cells_bd m_flex_justify">
-                <view class="filter_title"
-                      @tap="showModal(1, '户型')">
-                    <text class="title">户型</text>
-                    <text class="bottom_icon"></text>
+                <view class="cells_fd">
+                    <scroll-view class="scroll_view" :scroll-x="true">
+                        <view class="m_flex">
+                            <template v-if="house_type_active">
+                                <view class="house_type" v-for="li in house_type_active" :key="li.value">
+                                    <view class="btn active">{{ li.value }}</view>
+                                    <view class="del_btn" @tap="delParams(li)">
+                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                    </view>
+                                </view>
+                            </template>
+                            <template v-if="price_active">
+                                <view class="house_type" v-for="li in price_active" :key="li.value">
+                                    <view class="btn active">{{ li.value }}</view>
+                                    <view class="del_btn" @tap="delParams(li)">
+                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                    </view>
+                                </view>
+                            </template>
+                            <template v-if="road_distance_active">
+                                <view class="house_type" v-for="li in road_distance_active" :key="li.value">
+                                    <view class="btn active">{{ li.value }}</view>
+                                    <view class="del_btn" @tap="delParams(li)">
+                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                    </view>
+                                </view>
+                            </template>
+                            <template v-if="config_base_active">
+                                <view class="house_type" v-for="li in config_base_active" :key="li.value">
+                                    <view class="btn active">{{ li.value }}</view>
+                                    <view class="del_btn" @tap="delParams(li)">
+                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                    </view>
+                                </view>
+                            </template>
+                            <template v-if="config_lightspot_active">
+                                <view class="house_type" v-for="li in config_lightspot_active" :key="li.value">
+                                    <view class="btn active">{{ li.value }}</view>
+                                    <view class="del_btn" @tap="delParams(li)">
+                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
+                                    </view>
+                                </view>
+                            </template>
+                        </view>
+                    </scroll-view>
                 </view>
-                <view class="filter_title"
-                      @tap="showModal(2, '价格')">
-                    <text class="title">价格</text>
-                    <text class="bottom_icon"></text>
-                </view>
-                <view class="filter_title"
-                      @tap="showModal(4, '路边距离')">
-                    <text class="title">路边距离</text>
-                    <text class="bottom_icon"></text>
-                </view>
-                <view class="filter_title"
-                      @tap="showModal(3, '更多')">
-                    <text class="title">更多</text>
-                    <text class="bottom_icon"></text>
-                </view>
-            </view>
-            <view class="cells_fd">
-                <scroll-view class="scroll_view"
-                             :scroll-x="true">
-                    <view class="m_flex">
-                        <template v-if="house_type_active">
-                            <view class="house_type"
-                                  v-for="li in house_type_active"
-                                  :key="li.value">
-                                <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn"
-                                      @tap="delParams(li)">
-                                    <image src="/static/image/index/del.png"
-                                           mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </template>
-                        <template v-if="price_active">
-                            <view class="house_type"
-                                  v-for="li in price_active"
-                                  :key="li.value">
-                                <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn"
-                                      @tap="delParams(li)">
-                                    <image src="/static/image/index/del.png"
-                                           mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </template>
-                        <template v-if="road_distance_active">
-                            <view class="house_type"
-                                  v-for="li in road_distance_active"
-                                  :key="li.value">
-                                <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn"
-                                      @tap="delParams(li)">
-                                    <image src="/static/image/index/del.png"
-                                           mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </template>
-                        <template v-if="config_base_active">
-                            <view class="house_type"
-                                  v-for="li in config_base_active"
-                                  :key="li.value">
-                                <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn"
-                                      @tap="delParams(li)">
-                                    <image src="/static/image/index/del.png"
-                                           mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </template>
-                        <template v-if="config_lightspot_active">
-                            <view class="house_type"
-                                  v-for="li in config_lightspot_active"
-                                  :key="li.value">
-                                <view class="btn active">{{li.value}}</view>
-                                <view class="del_btn"
-                                      @tap="delParams(li)">
-                                    <image src="/static/image/index/del.png"
-                                           mode="aspectFit"></image>
-                                </view>
-                            </view>
-                        </template>
-                    </view>
-                </scroll-view>
             </view>
         </view>
         <view class="list">
             <house-list :list.sync="list"></house-list>
-            <v-page ref="page"
-                    :list.sync="list"></v-page>
-            <view v-if="hasFocus"
-                  class="official-account"></view>
+            <v-page ref="page" :list.sync="list"></v-page>
+            <!-- #ifdef MP-WEIXIN -->
+            <view v-if="hasFocus" class="official-account"></view>
             <official-account @load="viewSucc"></official-account>
+            <!-- #endif -->
         </view>
-        <view class="fix_right_icon m_flex_center m_flex_middle"
-              @tap="goPage('/pages/index/hot')">
-            <image src="/static/image/index/hot.png"
-                   mode="aspectFill"></image>
+        <view class="fix_right_icon m_flex_center m_flex_middle" @tap="goPage('/pages/index/hot')">
+            <image src="/static/image/index/hot.png" mode="aspectFill"></image>
         </view>
         <!-- <view class="fix_right_icon" @tap="goPage('/pages/index/require')">
             <image src="/static/image/index/tie.png" mode="aspectFill"></image>
@@ -154,17 +130,11 @@
         <!-- <v-auth ref="auth"></v-auth> -->
         <v-modal ref="modal">
             <view slot="content">
-                <view class="modal"
-                      v-if="modalList && modalList.length">
-                    <view class="m_flex_center"
-                          v-for="(lis, i) in modalList"
-                          :key="i">
+                <view class="modal" v-if="modalList && modalList.length">
+                    <view class="m_flex_center" v-for="(lis, i) in modalList" :key="i">
                         <view class="modal_list m_flex_wrap">
-                            <view class="modal_item"
-                                  v-for="(li, j) in lis"
-                                  :key="j">
-                                <view :class="['m_button', 'main', {'plain': !li.tmpActive}]"
-                                      @tap="toggleList(i, j)">{{ li.value || li }}</view>
+                            <view class="modal_item" v-for="(li, j) in lis" :key="j">
+                                <view :class="['m_button', 'main', { plain: !li.tmpActive }]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
                             </view>
                         </view>
                     </view>
@@ -193,18 +163,10 @@ export default {
             )
         },
         house_type() {
-            return (
-                this.config &&
-                this.config.house_type &&
-                this.config.house_type.map(li => li.value)
-            )
+            return this.config && this.config.house_type && this.config.house_type.map(li => li.value)
         },
         price() {
-            return (
-                this.config &&
-                this.config.price &&
-                this.config.price.map(li => li.value)
-            )
+            return this.config && this.config.price && this.config.price.map(li => li.value)
         },
         house_type_active() {
             return (
@@ -269,7 +231,9 @@ export default {
     },
     data() {
         return {
+            addrVal: [],
             params: {
+                area_id: '',
                 address_street_id: '',
                 address_street: '',
                 house_type_id: '',
@@ -413,7 +377,7 @@ export default {
                     const addr = res.data.reduce((obj, item) => {
                         if (!item.pid) return obj
                         if (!obj[item.pid]) {
-                            obj[item.pid] = []
+                            obj[item.pid] = item.level === 4 ? [{ name: '不限' }] : []
                         }
                         obj[item.pid].push(item)
                         return obj
@@ -427,6 +391,7 @@ export default {
                             address_street.push([...county])
                         }
                     }
+                    console.log(address_street)
                     this.addr = addr
                     this.config = {
                         ...this.config,
@@ -440,25 +405,15 @@ export default {
             this.hasFocus = true
         },
         filterParams() {
-            const house_type = this.config.house_type
-                ? this.config.house_type.filter(item => item.active)
-                : []
+            const house_type = this.config.house_type ? this.config.house_type.filter(item => item.active) : []
             const price = this.config.price.filter(item => item.active)[0]
-            const road_distance = this.config.road_distance
-                ? this.config.road_distance.filter(item => item.active)
-                : []
-            const config_base = this.config.config_base
-                ? this.config.config_base.filter(item => item.active)
-                : []
-            const config_lightspot = this.config.config_lightspot
-                ? this.config.config_lightspot.filter(item => item.active)
-                : []
+            const road_distance = this.config.road_distance ? this.config.road_distance.filter(item => item.active) : []
+            const config_base = this.config.config_base ? this.config.config_base.filter(item => item.active) : []
+            const config_lightspot = this.config.config_lightspot ? this.config.config_lightspot.filter(item => item.active) : []
             // this.params.house_type = house_type
             //     .map(item => item.value)
             //     .join(",");
-            this.params.house_type_id = house_type
-                .map(item => item.id)
-                .join(',')
+            this.params.house_type_id = house_type.map(item => item.id).join(',')
             if (price) {
                 this.params.rental_begin = price.rental_begin || ''
                 this.params.rental_end = price.rental_end || ''
@@ -466,21 +421,15 @@ export default {
                 this.params.rental_begin = ''
                 this.params.rental_end = ''
             }
-            this.params.road_distance_ids = road_distance
-                .map(item => item.id)
-                .join(',')
+            this.params.road_distance_ids = road_distance.map(item => item.id).join(',')
             // this.params.config_base = config_base
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_base_ids = config_base
-                .map(item => item.id)
-                .join(',')
+            this.params.config_base_ids = config_base.map(item => item.id).join(',')
             // this.params.config_lightspot = config_lightspot
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_lightspot_ids = config_lightspot
-                .map(item => item.id)
-                .join(',')
+            this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
         },
         columnChange(e) {
             const self = this
@@ -504,12 +453,18 @@ export default {
         pickerChange(e) {
             const value = e.detail.value
             const item = this.config.address_street[2][value[2]]
-            if (!item) {
-                this.params.address_street = ''
-                this.params.address_street_id = ''
-            } else {
+            console.log(value)
+            this.addrVal = value
+            if (item && item.id) {
                 this.params.address_street = item.name
                 this.params.address_street_id = item.id
+            } else {
+                this.params.address_street = ''
+                this.params.address_street_id = ''
+                if (item) {
+                    console.log(this.config.address_street[1][value[1]])
+                    this.params.area_id = this.config.address_street[1][value[1]].id
+                }
             }
             this.init()
         },
@@ -562,9 +517,7 @@ export default {
                 if (item === 'price') {
                     this.config[item].map((it, k) => {
                         if (j === k) {
-                            this.config[item][j].tmpActive = !this.config[item][
-                                j
-                            ].tmpActive
+                            this.config[item][j].tmpActive = !this.config[item][j].tmpActive
                         } else {
                             this.config[item][k].tmpActive = false
                         }
@@ -585,16 +538,19 @@ export default {
 
 <style lang="scss">
 .swiper {
-    height: 398upx;
+    height: 360upx;
     padding: 0 30upx;
-    &-item {
-        image {
-            width: 690upx;
-            height: 398upx;
-        }
+    .swiper-item {
+        width: 100%;
+        height: 100%;
+    }
+    image {
+        width: 100%;
+        height: 100%;
     }
 }
 .cells {
+    background-color: #eee;
     &_hd {
         height: 80upx;
         line-height: 80upx;
@@ -623,6 +579,19 @@ export default {
                         border-right: none;
                     }
                 }
+                &:first-child::before {
+                    display: none;
+                }
+                &::before {
+                    content: ' ';
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    width: 0;
+                    height: 14upx;
+                    border-right: 1upx solid #eee;
+                    transform: translateY(-50%);
+                }
                 &::after {
                     content: ' ';
                     position: absolute;
@@ -641,12 +610,13 @@ export default {
             &_pull {
                 width: 16upx;
                 height: 10upx;
+                margin-left: 16upx;
             }
         }
     }
     &_bd {
         height: 80upx;
-        margin-top: 18upx;
+        margin-top: 20upx;
         padding: 0 30upx;
         line-height: 80upx;
         background-color: #fff;
@@ -659,26 +629,32 @@ export default {
             padding: 0 12upx;
         }
     }
+    &_fd {
+        border-bottom: 1upx solid #eee;
+    }
 }
 .scroll_view {
-    padding: 0 30upx;
+    padding: 0 30upx 12upx;
     line-height: 1;
     box-sizing: border-box;
+    background-color: #fff;
     .house_type {
         position: relative;
         width: 200upx;
         height: 56upx;
-        margin-right: 8upx;
-        padding: 22upx 22upx 0 0;
+        margin-right: 16upx;
+        padding: 18upx 20upx 0 0;
     }
     .btn {
-        width: 200upx;
-        height: 56upx;
-        line-height: 56upx;
-        border-radius: 4upx;
+        // width: 200upx;
+        // height: 56upx;
+        padding: 8upx 30upx;
+        line-height: 34upx;
+        border-radius: 8upx;
         background-color: #fff;
         text-align: center;
-        font-size: 25upx;
+        font-size: 26upx;
+        white-space: nowrap;
         color: $main-color;
     }
     .active {
@@ -694,9 +670,9 @@ export default {
         padding: 10upx;
     }
 }
-.list {
-    margin-top: 22upx;
-}
+// .list {
+//     margin-top: 22upx;
+// }
 .fix_right_icon {
     position: fixed;
     right: 40upx;

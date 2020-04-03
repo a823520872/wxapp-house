@@ -14,12 +14,17 @@ const store = new Vuex.Store({
         houseImg: [],
         homeReload: false,
         collectReload: false,
-		urlPrefix: 'https://house.zhiqiang.ink'
+        // #ifdef MP-WEIXIN
+        urlPrefix: 'https://house.zhiqiang.ink',
+        // #endif
+        // #ifdef H5
+        urlPrefix: 'http://127.0.0.1:8081'
+        // #endif
     },
     mutations: {
-		setVal(state, obj) {
-			state[obj.key] = obj.val
-		},
+        setVal(state, obj) {
+            state[obj.key] = obj.val
+        },
         setCode(state, code) {
             state.code = code
         },

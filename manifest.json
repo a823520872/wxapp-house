@@ -65,7 +65,8 @@
         },
         "uniStatistics" : {
             "enable" : true
-        }
+        },
+		"usingComponents" : true
     },
     "mp-alipay" : {
         "uniStatistics" : {
@@ -93,6 +94,7 @@
     "h5" : {
         "uniStatistics" : {
             "enable" : true
-        }
+        },
+		"usingComponents" : true
     }
 }

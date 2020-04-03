@@ -2,6 +2,28 @@
     <view class="content">
         <view class="step_one" v-if="step === 0">
             <view class="hd">
+                <view class="tips">请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚</view>
+                <view class="cells">
+                    <view class="cells_title m_flex_middle">照片视频</view>
+                    <view class="upload m_flex_justify">
+                        <view class="upload_box" v-if="houseImg && houseImg.length" @tap="chooseImg">
+                            <image :src="houseImg[0].url" :mode="CONFIG.house_mode"></image>
+                        </view>
+                        <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseImg">
+                            <view class="upload_icon"></view>
+                            <view class="upload_info">上传照片（必填）</view>
+                        </view>
+                        <view class="upload_box" v-if="form.videos && form.videos.length">
+                            <video class="vdo" :src="form.videos[0].url" controls></video>
+                        </view>
+                        <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseVideo">
+                            <view class="upload_icon"></view>
+                            <view class="upload_info">上传视频（选填）</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <!-- <view class="hd">
                 <view class="bg">
                     <image :src="houseImg[0] ? houseImg[0].url : '/static/image/publish/house_bg.png'" :mode="CONFIG.house_mode"></image>
                 </view>
@@ -9,11 +31,11 @@
                 <view class="main m_flex_column m_flex_middle">
                     <view class="photo_box m_flex_column m_flex_middle m_flex_center" @tap="chooseImg">
                         <image class="photo" src="/static/image/publish/photo.png" mode="aspectFit"></image>
-                        <text>{{houseImg[0] ? '编辑' : '上传'}}照片</text>
+                        <text>{{ houseImg[0] ? '编辑' : '上传' }}照片</text>
                     </view>
                     <view class="tips">上传房间、厨房、厕所、阳台、楼照租房率更高哦~</view>
                 </view>
-            </view>
+            </view> -->
             <view class="bd">
                 <view class="cells">
                     <view class="cells_title m_flex_middle">基本信息</view>
@@ -23,25 +45,31 @@
                             <input class="cell_bd" type="number" v-model="form.rental" placeholder="请输入房源租金" />
                         </view>
                     </view>
+                    <view class="cell m_flex_center m_flex_middle" v-if="config && config.deposit">
+                        <picker class="picker_box cell_box m_flex_item" :range="depositArray" mode="selector" @change="pickerChange('deposit', $event)">
+                            <view class="cell_hd">押金</view>
+                            <view class="cell_bd">{{ form.deposit ? form.deposit : '请选择房源押金' }}</view>
+                        </picker>
+                    </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config">
-                        <picker class="cell_box m_flex_item" :range="address_street" mode="multiSelector" @columnchange="columnChange" @change="pickerChange('address_street', $event)">
+                        <picker class="picker_box cell_box m_flex_item" :range="address_street" mode="multiSelector" @columnchange="columnChange" @change="pickerChange('address_street', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">地址</view>
-                            <view class="cell_bd">{{form.address_street ? form.address_street : '请选择'}}</view>
+                            <view class="cell_bd">{{ form.address_street ? form.address_street : '请选择' }}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.address_street" placeholder="请输入地址" /> -->
                             <!-- </view> -->
                         </picker>
-                        <picker class="cell_box m_flex_item" :range="address_flag" mode="selector" @change="pickerChange('address_flag', $event)">
+                        <picker class="picker_box cell_box m_flex_item" :range="address_flag" mode="selector" @change="pickerChange('address_flag', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">标志建筑</view>
-                            <view class="cell_bd">{{form.address_flag ? form.address_flag : '请选择'}}</view>
+                            <view class="cell_bd">{{ form.address_flag ? form.address_flag : '请选择' }}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.address_flag" placeholder="请输入标志建筑" /> -->
                             <!-- </view> -->
                         </picker>
-                        <picker class="cell_box m_flex_item" :range="road_distance" mode="selector" @change="pickerChange('road_distance', $event)">
+                        <picker class="picker_box cell_box m_flex_item" :range="road_distance" mode="selector" @change="pickerChange('road_distance', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">路边距离</view>
-                            <view class="cell_bd">{{form.road_distance ? form.road_distance : '请选择'}}</view>
+                            <view class="cell_bd">{{ form.road_distance ? form.road_distance : '请选择' }}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.road_distance" placeholder="请输入路边距离" /> -->
                             <!-- </view> -->
                         </picker>
@@ -53,17 +81,17 @@
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
-                        <picker class="cell_box m_flex_item" :range="house_type" mode="selector" @change="pickerChange('house_type', $event)">
+                        <picker class="picker_box cell_box m_flex_item" :range="house_type" mode="selector" @change="pickerChange('house_type', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">房型</view>
-                            <view class="cell_bd">{{form.house_type ? form.house_type : '请选择'}}</view>
+                            <view class="cell_bd">{{ form.house_type ? form.house_type : '请选择' }}</view>
                             <!-- <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
                         </view> -->
                         </picker>
-                        <picker class="cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
+                        <picker class="picker_box cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">楼层</view>
-                            <view class="cell_bd">{{form.floor_number ? form.floor_number : '请选择'}}</view>
+                            <view class="cell_bd">{{ form.floor_number ? form.floor_number : '请选择' }}</view>
                             <!-- <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
                         </view> -->
                         </picker>
@@ -85,7 +113,10 @@
                     </view>
                 </view>
             </view>
-            <view class="fd" @tap="next">下一步</view>
+            <view class="empty" :class="{ ipx: CONFIG.isIphoneX }"></view>
+            <view class="fd">
+                <button class="m_button btn" @tap="next">下一步</button>
+            </view>
         </view>
         <view class="step_two next" v-else-if="step === 1">
             <view class="cells" v-if="config && config.config_base && config && config.config_base.length">
@@ -93,7 +124,7 @@
                     一般配置
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config.config_base" :key="i" @tap="chooseCfgBase(li)">{{li.value}}</view>
+                    <view :class="{ info_item: true, active: li.active }" v-for="(li, i) in config.config_base" :key="i" @tap="chooseCfgBase(li)">{{ li.value }}</view>
                 </view>
             </view>
             <view class="cells" v-if="config && config.config_lightspot && config && config.config_lightspot.length">
@@ -101,7 +132,7 @@
                     房屋亮点
                 </view>
                 <view class="cell m_flex_wrap">
-                    <view :class="{'info_item': true, 'active': li.active}" v-for="(li, i) in config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{li.value}}</view>
+                    <view :class="{ info_item: true, active: li.active }" v-for="(li, i) in config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{ li.value }}</view>
                 </view>
             </view>
             <view class="cells">
@@ -112,14 +143,24 @@
                     <textarea placeholder="详细的介绍会加大租房率" v-model="form.remarks"></textarea>
                 </view>
             </view>
-            <view class="fd" @tap="confirm">确认发布</view>
+            <view class="empty" :class="{ ipx: CONFIG.isIphoneX }"></view>
+            <!-- <view class="fd" @tap="confirm">确认发布</view> -->
+            <view class="fd">
+                <button class="m_button btn" @tap="confirm">确认发布</button>
+            </view>
         </view>
-        <view class="empty"></view>
+        <v-modal ref="modal">
+            <view class="modal m_flex_middle" slot="content">
+                <input class="modal_input m_flex_item" type="number" v-model.number="deposit" placeholder="请输入押金" />
+                <text>元</text>
+            </view>
+        </v-modal>
     </view>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+const qiniuUploader = require('../../common/qiniuUploader.js')
 export default {
     computed: {
         ...mapState(['userInfo', 'houseTempImg', 'houseImg']),
@@ -133,35 +174,22 @@ export default {
             )
         },
         address_flag() {
-            return (
-                this.config &&
-                this.config.address_flag &&
-                this.config.address_flag.map(item => item.shortname || '')
-            )
+            return this.config && this.config.address_flag && this.config.address_flag.map(item => item.shortname || '')
         },
         road_distance() {
-            return (
-                this.config &&
-                this.config.road_distance &&
-                this.config.road_distance.map(item => item.value)
-            )
+            return this.config && this.config.road_distance && this.config.road_distance.map(item => item.value)
         },
         house_type() {
-            return (
-                this.config &&
-                this.config.house_type &&
-                this.config.house_type.map(item => item.value)
-            )
+            return this.config && this.config.house_type && this.config.house_type.map(item => item.value)
         },
         floor() {
-            return (
-                this.config &&
-                this.config.floor &&
-                this.config.floor.map(item => item.value)
-            )
+            return this.config && this.config.floor && this.config.floor.map(item => item.value)
         },
         address() {
             return this.form.address_street || ''
+        },
+        depositArray() {
+            return this.config && this.config.deposit && this.config.deposit.map(item => item.value)
         }
     },
     data() {
@@ -169,9 +197,11 @@ export default {
             step: 0,
             form: {
                 images: [],
+                videos: [],
                 landlord_id: '',
                 // landlord_mobile: "",
                 rental: '',
+                deposit: '',
                 address_street_id: 1969,
                 address_street: '',
                 address_flag_id: 3752,
@@ -198,9 +228,11 @@ export default {
                 address_street: null,
                 address_flag: null,
                 config_base: null,
-                config_lightspot: null
+                config_lightspot: null,
+                deposit: null
             },
-            addr: null
+            addr: null,
+            deposit: ''
         }
     },
     onLoad(res) {
@@ -210,24 +242,22 @@ export default {
         this.setHouseImg([])
     },
     onShow() {
-        // this.setHouseTempImg([])
         if (this.houseImg && this.houseImg.length) {
             this.form.images = this.houseImg
         }
     },
     onReady() {
+        // #ifdef MP-WEIXIN
         this.login().then(code => {
+            // #endif
             this.getData()
             this.getInfo()
+            // #ifdef MP-WEIXIN
         })
+        // #endif
     },
     methods: {
-        ...mapMutations([
-            'setHouseTempImg',
-            'setHouseImg',
-            'setHomeReload',
-            'setCollectReload'
-        ]),
+        ...mapMutations(['setHouseTempImg', 'setHouseImg', 'setHomeReload', 'setCollectReload']),
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         getData() {
             this.getConfig()
@@ -246,6 +276,11 @@ export default {
                         obj[item.type].push(item)
                         return obj
                     }, {})
+                    if (config.deposit && config.deposit.length) {
+                        config.deposit.push({
+                            value: '自定义'
+                        })
+                    }
 
                     this.config = { ...this.config, ...config }
                 }
@@ -298,19 +333,19 @@ export default {
             if (this.house_id) {
                 this.$request.getHouse({ id: this.house_id }).then(res => {
                     if (res && res.data) {
-                        const images = res.data.image_urls
-                            ? res.data.image_urls.split(',')
-                            : []
+                        let data = res.data
+                        const images = data.image_urls ? data.image_urls.split(',') : []
                         this.setHouseTempImg([...images])
                         this.setHouseImg(
                             images.map(item => ({
                                 url: item
                             }))
                         )
-                        res.data.images = images.map(item => ({
+                        data.images = images.map(item => ({
                             url: item
                         }))
-                        this.form = { ...res.data }
+                        data.videos = data.video_urls ? data.video_urls.split(',') : ''
+                        this.form = { ...data, address_detail: data.address_detail || '', remarks: data.remarks || '' }
                     }
                 })
             } else {
@@ -318,18 +353,8 @@ export default {
                 this.form.wechat_number = this.userInfo.landlord_mobile
             }
         },
-        // getLandlord() {
-        //     this.$request
-        //         .getLandlordDetail({ id: this.userInfo.landlord_id })
-        //         .then(res => {
-        //             if (res && res.data) {
-        //                 this.form.contact_mobile =
-        //                     res.data.landlord_mobile || "";
-        //             }
-        //         });
-        // },
         chooseImg() {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 if (this.houseImg && this.houseImg.length) {
                     resolve(this.houseImg.map(item => item.url))
                 } else {
@@ -339,10 +364,71 @@ export default {
                         }
                     })
                 }
-            }).then((imgs) => {
+            }).then(imgs => {
                 this.setHouseTempImg(imgs)
                 this.goPage(`/pages/publish/img`)
             })
+        },
+        chooseVideo() {
+            uni.chooseVideo({
+                sizeType: ['compressed'],
+                sourceType: ['album'],
+                count: 1,
+                success: e => {
+                    console.log(e)
+                    if (e.errMsg === 'chooseVideo:ok') {
+                        if (e.size > 20 * 1024 * 1024)
+                            return uni.showToast({
+                                title: '视频已超出20MB，请上传短视频',
+                                icon: 'none'
+                            })
+                        this.getQiniuToken().then(token => {
+                            qiniuUploader.upload(
+                                e.tempFilePath,
+                                res => {
+                                    this.form.videos = [
+                                        {
+                                            url: res.imageURL
+                                        }
+                                    ]
+                                },
+                                e => {
+                                    console.log(e)
+                                },
+                                {
+                                    uptoken: token,
+                                    // uploadURL: 'https://house.zhiqiang.ink/api/upload/uploadImage',
+                                    // uptokenURL: 'https://house.zhiqiang.ink/api/upload/getUploadToken',
+                                    uploadURL: 'https://upload-z0.qiniup.com',
+                                    domain: 'https://image.zhiqiang.ink/'
+                                }
+                            )
+                        })
+                    }
+                },
+                fail: e => {
+                    console.log(e)
+                }
+            })
+        },
+        getQiniuToken() {
+            return this.$request
+                .getQiniuToken()
+                .then(
+                    res => {
+                        if (res.data && res.data.token) {
+                            return res.data.token
+                        }
+                    },
+                    e => {
+                        if (e.data && e.data.token) {
+                            return res.data.token
+                        }
+                    }
+                )
+                .catch(e => {
+                    this.log(e)
+                })
         },
         columnChange(e) {
             let { column, value } = e.detail
@@ -364,35 +450,66 @@ export default {
         },
         pickerChange(key, e) {
             const value = e.detail.value
-            switch (key) {
-                case 'address_street':
-                    const item = this.config.address_street[2][value[2]]
-                    if (!item) {
-                        this.form.address_street = ''
-                        this.form.address_street_id = ''
-                    } else {
-                        this.form.address_street = item.name
-                        this.form.address_street_id = item.id
-                        this.getAreaFlag(item.id)
+            const mappings = new Map([
+                [
+                    'address_street',
+                    () => {
+                        const item = this.config.address_street[2][value[2]]
+                        this.form.address_street = item ? item.name : ''
+                        this.form.address_street_id = item ? item.id : ''
+                        item && this.getAreaFlag(item.id)
                     }
-                    break
-                case 'address_flag':
-                    this.form[key] = this.config[key][value].shortname
-                    this.form[`${key}_id`] = this.config[key][value].id
-                    break
-                case 'road_distance':
-                case 'house_type':
-                    this.form[key] = this.config[key][value].value
-                    this.form[`${key}_id`] = this.config[key][value].id
-                    break
-                case 'floor':
-                    this.form.floor_number = +this.config[key][
-                        value
-                    ].value.replace('楼', '')
-                    break
-                default:
-                    break
-            }
+                ],
+                [
+                    'address_flag',
+                    () => {
+                        this.form[key] = this.config[key][value].shortname
+                        this.form[`${key}_id`] = this.config[key][value].id
+                    }
+                ],
+                [
+                    'road_distance',
+                    () => {
+                        this.form[key] = this.config[key][value].value
+                        this.form[`${key}_id`] = this.config[key][value].id
+                    }
+                ],
+                [
+                    'house_type',
+                    () => {
+                        this.form[key] = this.config[key][value].value
+                        this.form[`${key}_id`] = this.config[key][value].id
+                    }
+                ],
+                [
+                    'floor',
+                    () => {
+                        this.form.floor_number = +this.config[key][value].value.replace('楼', '')
+                    }
+                ],
+                [
+                    'deposit',
+                    () => {
+                        let item = this.config[key][value]
+                        console.log(item)
+                        if (item.id) {
+                            this.form.deposit = item.value
+                        } else {
+                            this.$refs.modal.show({
+                                title: '押金',
+                                confirmText: '确定',
+                                success: () => {
+                                    if (this.deposit > 0) {
+                                        this.form.deposit = this.deposit + '元'
+                                    }
+                                }
+                            })
+                        }
+                    }
+                ]
+            ])
+            let fn = mappings.get(key)
+            fn && fn()
         },
         next() {
             this.checkAuth().then(res => {
@@ -400,6 +517,7 @@ export default {
 
                 this.$validate(this.form, {
                     rental: [{ required: true, msg: '请输入租金' }],
+                    deposit: [{ require: true, msg: '请选择押金' }],
                     address_street: [{ required: true, msg: '请选择地址' }],
                     address_flag: [{ required: true, msg: '请选择标志建筑' }],
                     road_distance: [{ required: true, msg: '请选择路边距离' }],
@@ -411,12 +529,8 @@ export default {
                     ]
                 }).then(
                     () => {
-                        const config_base = this.form.config_base
-                            ? this.form.config_base.split(',')
-                            : []
-                        const config_lightspot = this.form.config_lightspot
-                            ? this.form.config_lightspot.split(',')
-                            : []
+                        const config_base = this.form.config_base ? this.form.config_base.split(',') : []
+                        const config_lightspot = this.form.config_lightspot ? this.form.config_lightspot.split(',') : []
                         this.config.config_base.map(item => {
                             if (config_base.indexOf(item.value) > -1) {
                                 item.active = true
@@ -439,25 +553,13 @@ export default {
             })
         },
         filterForm() {
-            const config_base = this.config.config_base.filter(
-                item => item.active
-            )
-            const config_lightspot = this.config.config_lightspot.filter(
-                item => item.active
-            )
+            const config_base = this.config.config_base.filter(item => item.active)
+            const config_lightspot = this.config.config_lightspot.filter(item => item.active)
             this.form.landlord_id = this.userInfo.landlord_id
-            this.form.config_base_ids = config_base
-                .map(item => item.id)
-                .join(',')
-            this.form.config_base = config_base
-                .map(item => item.value)
-                .join(',')
-            this.form.config_lightspot_ids = config_lightspot
-                .map(item => item.id)
-                .join(',')
-            this.form.config_lightspot = config_lightspot
-                .map(item => item.value)
-                .join(',')
+            this.form.config_base_ids = config_base.map(item => item.id).join(',')
+            this.form.config_base = config_base.map(item => item.value).join(',')
+            this.form.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
+            this.form.config_lightspot = config_lightspot.map(item => item.value).join(',')
         },
         confirm() {
             this.checkAuth().then(res => {
@@ -476,15 +578,17 @@ export default {
                     ]
                 }).then(
                     () => {
-                        const api = this.form.id
-                            ? ((this.form.hr_id = this.form.id), 'editHouse')
-                            : 'addHouse'
-                        const {
-                            landlord_info,
-                            image_urls,
-                            ...params
-                        } = this.form
+                        const api = this.form.id ? ((this.form.hr_id = this.form.id), 'editHouse') : 'addHouse'
+                        const { landlord_info, image_urls, video_urls, ...params } = this.form
                         params.images = params.images.map(item => {
+                            if (typeof item === 'string') {
+                                item = {
+                                    url: item
+                                }
+                            }
+                            return item
+                        })
+                        params.videos = params.videos.map(item => {
                             if (typeof item === 'string') {
                                 item = {
                                     url: item
@@ -499,8 +603,7 @@ export default {
                                 this.setHomeReload(true)
                                 this.setCollectReload(true)
                                 this.goPage({
-                                    path: `/pages/publish/publish_succ?id=${this
-                                        .form.id || res.data}`,
+                                    path: `/pages/publish/publish_succ?id=${this.form.id || res.data}`,
                                     replace: true
                                 })
                             }
@@ -526,59 +629,58 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.step_one,
-.step_two {
-    overflow: auto;
-}
 .hd {
-    position: relative;
-    .bg {
-        width: 750upx;
-        height: 375upx;
-    }
-    .warn {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        height: 55upx;
-        padding: 0 30upx;
-        line-height: 55upx;
-        background-color: #283136;
-        font-size: 25upx;
-        color: #fff;
-    }
-    .main {
-        position: absolute;
-        top: 55upx;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-    .photo_box {
-        width: 166upx;
-        height: 166upx;
-        margin-top: 56upx;
-        border: 1upx solid #cad3d7;
-        background-color: #738995;
-        // background-color: transparent;
-        border-radius: 50%;
-        font-size: 25upx;
-        color: #fff;
-    }
-    .photo {
-        width: 56upx;
-        height: 42upx;
-        padding-bottom: 5upx;
-    }
     .tips {
-        margin-top: 39upx;
-        font-size: 25upx;
+        padding: 13upx 24upx;
+        background-color: #0e868f;
+        font-size: 26upx;
+        line-height: 34upx;
         color: #fff;
     }
 }
+.upload {
+    padding: 10upx 0 40upx;
+    .upload_box {
+        position: relative;
+        width: 335upx;
+        height: 252upx;
+        background-color: #f2f2f2;
+        overflow: hidden;
+    }
+    .upload_icon {
+        position: relative;
+        width: 81upx;
+        height: 81upx;
+        &::before,
+        &::after {
+            content: ' ';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 0;
+            height: 100%;
+            border-left: 10upx solid #d8d8d8;
+            border-radius: 5upx;
+            transform: translateX(-50%);
+        }
+        &::after {
+            transform-origin: center;
+            transform: translateX(-50%) rotate(90deg);
+        }
+    }
+    .upload_info {
+        margin-top: 21upx;
+        line-height: 34upx;
+        font-size: 26upx;
+        color: #666;
+    }
+    .vdo {
+        width: 100%;
+        height: 100%;
+    }
+}
+.hd,
 .bd {
-    text-align: center;
     .cells {
         padding: 0 30upx;
         background-color: #fff;
@@ -588,17 +690,21 @@ export default {
         }
 
         &_title {
-            height: 90upx;
-            line-height: 90upx;
-            font-size: 33upx;
+            // height: 90upx;
+            padding: 30upx 0 20upx;
+            line-height: 40upx;
+            font-weight: bold;
+            font-size: 32upx;
+            color: #333;
 
             &::before {
                 content: ' ';
                 display: inline-block;
-                width: 5upx;
-                height: 22upx;
-                margin-right: 7upx;
+                width: 8upx;
+                height: 30upx;
+                margin-right: 10upx;
                 background-color: $main-color;
+                border-radius: 4upx;
             }
         }
     }
@@ -609,20 +715,6 @@ export default {
         // &_box {
         //     height: 100%;
         // }
-
-        picker {
-            position: relative;
-            & + picker::before {
-                content: ' ';
-                position: absolute;
-                top: 50%;
-                left: 0;
-                width: 0;
-                height: 69upx;
-                border-left: 1upx solid #a8a8a8;
-                transform: translateY(-50%);
-            }
-        }
 
         &_hd {
             font-size: 33upx;
@@ -637,8 +729,23 @@ export default {
         }
     }
 }
-.empty {
-    height: 100upx;
+.bd {
+    margin-top: 20upx;
+    text-align: center;
+
+    .picker_box {
+        position: relative;
+        & + .picker_box::before {
+            content: ' ';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0;
+            height: 69upx;
+            border-left: 1upx solid #a8a8a8;
+            transform: translateY(-50%);
+        }
+    }
 }
 .fd {
     position: fixed;
@@ -646,12 +753,20 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 10;
-    height: 100upx;
-    line-height: 100upx;
-    text-align: center;
-    font-size: 33upx;
-    background-color: $main-color;
-    color: #fff;
+    background-color: #eee;
+    font-size: 0;
+
+    .btn {
+        width: 100%;
+        height: 100upx;
+        padding: 0;
+        line-height: 100upx;
+        background-color: $main-color;
+        border-radius: 0;
+        text-align: center;
+        font-size: 33upx;
+        color: #fff;
+    }
 }
 
 .next {
@@ -694,7 +809,17 @@ export default {
         line-height: 1.2;
     }
     .fd {
-        background-color: $primary-color;
+        .btn {
+            background-color: $primary-color;
+        }
+    }
+}
+.modal {
+    padding: 16upx 24upx 16upx 48upx;
+    background-color: #f2f2f2;
+    font-size: 24upx;
+    .modal_input {
+        font-size: 24upx;
     }
 }
 </style>

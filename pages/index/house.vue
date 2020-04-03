@@ -5,7 +5,7 @@
                 <view class="cells">
                     <view class="cell intro m_flex_wrap">
                         <view class="house_name m_flex_justify">
-                            <view class="title">{{detail.address_street}} · {{detail.house_type}}</view>
+                            <view class="title">{{ detail.address_street }} · {{ detail.house_type }}</view>
                             <button class="share m_button plain m_flex_middle" open-type="share">
                                 <image src="/static/image/index/share.png" mode="aspectFit"></image>
                                 <text>分享</text>
@@ -15,35 +15,39 @@
                             <text class="intro_hd">租金：</text>
                             <text class="intro_bd">
                                 <text class="price">
-                                    <text class="num">{{detail.rental}} </text>
+                                    <text class="num">{{ detail.rental }} </text>
                                     <text>元/月</text>
                                 </text>
                             </text>
                         </view>
                         <view class="intro_cell">
+                            <text class="intro_hd">押金：</text>
+                            <text class="intro_bd">{{ detail.deposit }}</text>
+                        </view>
+                        <view class="intro_cell">
                             <text class="intro_hd">楼层：</text>
-                            <text class="intro_bd">{{detail.floor_number}}楼</text>
+                            <text class="intro_bd">{{ detail.floor_number }}楼</text>
                         </view>
                         <view class="intro_cell" v-if="detail.address_flag">
                             <text class="intro_hd">标志建筑：</text>
-                            <text class="intro_bd">{{detail.address_flag}}</text>
+                            <text class="intro_bd">{{ detail.address_flag }}</text>
                         </view>
                         <view class="intro_cell" v-if="detail.road_distance">
                             <text class="intro_hd">路边距离：</text>
-                            <text class="intro_bd">{{detail.road_distance}}</text>
+                            <text class="intro_bd">{{ detail.road_distance }}</text>
                         </view>
                         <view class="intro_cell">
                             <text class="intro_hd">具体地址：</text>
                             <text class="intro_bd">
-                                <text v-if="detail.address_detail">{{detail.address_detail}}</text>
-                                <text v-else>{{detail.address_flag}}附近</text>
+                                <text v-if="detail.address_detail">{{ detail.address_detail }}</text>
+                                <text v-else>{{ detail.address_flag }}附近</text>
                             </text>
                         </view>
                         <view class="intro_cell" v-if="detail.config_base">
                             <text class="intro_hd">基础设施：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.config_base && detail.config_base.length">
-                                    <text v-for="(li, i) in detail.config_base" :key="i">{{li}}</text>
+                                    <text v-for="(li, i) in detail.config_base" :key="i">{{ li }}</text>
                                 </text>
                             </text>
                         </view>
@@ -51,13 +55,13 @@
                             <text class="intro_hd">亮点：</text>
                             <text class="intro_bd">
                                 <text v-if="detail.config_lightspot && detail.config_lightspot.length">
-                                    <text v-for="(li, i) in detail.config_lightspot" :key="i">{{li}}</text>
+                                    <text v-for="(li, i) in detail.config_lightspot" :key="i">{{ li }}</text>
                                 </text>
                             </text>
                         </view>
                         <view class="intro_cell" v-if="detail.remarks">
                             <text class="intro_hd">备注：</text>
-                            <text class="intro_bd">{{detail.remarks}}</text>
+                            <text class="intro_bd">{{ detail.remarks }}</text>
                         </view>
                     </view>
                 </view>
@@ -67,27 +71,29 @@
                             <image :src="detail.landlord_info.avatar" mode="aspectFit"></image>
                         </view>
                         <view class="user m_flex_item">
-                            <view class="name">{{detail.landlord_info.nickname}}</view>
+                            <view class="name">{{ detail.landlord_info.nickname }}</view>
                             <view class="m_flex_middle">
-                                <text>阅读量：{{detail.read_number}}</text>
+                                <text>阅读量：{{ detail.read_number }}</text>
                             </view>
                         </view>
-                        <view class="time" v-if="detail.public_time">
-                            {{detail.public_time}} 发布
-                        </view>
+                        <view class="time" v-if="detail.public_time"> {{ detail.public_time }} 发布 </view>
                     </view>
                 </view>
                 <view class="cells" v-if="detail.image_urls && detail.image_urls.length">
-                    <view class="cells_title title">房源图片</view>
+                    <view class="cells_title title">视频/图片</view>
                     <view class="cell">
-                        <view class="house_img" v-for="(li, i) in detail.image_urls" :key="i">
+                        <view class="house_img" v-for="(li, i) in detail.video_urls" :key="li">
+                            <video class="vdo" :src="li" controls></video>
+                        </view>
+                        <view class="house_img" v-for="(li, i) in detail.image_urls" :key="li">
                             <!-- <image :src="li" :mode="CONFIG.house_mode"></image> -->
                             <image :src="li" mode="widthFix" @tap="showImg(li)"></image>
                         </view>
                     </view>
                 </view>
                 <view class="cells" v-if="detail.location && detail.location.lng && detail.location.lat">
-                    <view class="cells_title title">房源位置
+                    <view class="cells_title title">
+                        <text>房源位置</text>
                         <text class="intro">（房源在</text>
                         <image src="/static/image/index/marker.png" mode="aspectFit"></image>
                         <text class="intro">附近）</text>
@@ -99,11 +105,11 @@
                     </view>
                 </view>
             </view>
-            <view class="empty"></view>
+            <view class="empty" :class="{ ipx: CONFIG.isIphoneX }"></view>
             <view class="fd m_flex">
-                <view class="collection m_flex_column m_flex_middle m_flex_center m_flex_item" @tap=" collect">
+                <view class="collection m_flex_column m_flex_middle m_flex_center m_flex_item" @tap="collect">
                     <image :src="detail.collection_status === 1 ? '/static/image/index/collected.png' : '/static/image/index/collect.png'" mode="aspectFit"></image>
-                    <text>{{detail.collection_status === 1 ? '取消收藏' : '收藏'}}</text>
+                    <text>{{ detail.collection_status === 1 ? '取消收藏' : '收藏' }}</text>
                 </view>
                 <!-- <button class="gift m_flex_column m_flex_middle m_flex_center m_flex_item" open-type="contact" plain>
                     <image src="/static/image/index/gift.png" mode="aspectFit"></image>
@@ -134,12 +140,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
-import linkModal from "../components/link-modal";
-import poster from "../components/poster.vue";
+import { mapState, mapMutations, mapActions } from 'vuex'
+import linkModal from '../components/link-modal'
+import poster from '../components/poster.vue'
 export default {
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(['userInfo'])
     },
     components: {
         linkModal,
@@ -147,31 +153,26 @@ export default {
     },
     data() {
         return {
-            id: "",
+            id: '',
             detail: null,
             markers: null,
             uri: ''
-        };
+        }
     },
     onShareAppMessage(obj) {
         return {
-            title: "房源详情",
-            path:
-                `/pages/index/index?p=` +
-                encodeURIComponent(
-                    `/pages/index/house?id=${this.id}` +
-                        (this.userInfo ? `&uid=${this.userInfo.id}` : ``)
-                )
-        };
+            title: '房源详情',
+            path: `/pages/index/index?p=` + encodeURIComponent(`/pages/index/house?id=${this.id}` + (this.userInfo ? `&uid=${this.userInfo.id}` : ``))
+        }
     },
     onLoad(res) {
         if (res.id) {
-            this.id = res.id;
+            this.id = res.id
         } else {
             uni.showToast({
-                title: "地址错误",
-                icon: "none"
-            });
+                title: '地址错误',
+                icon: 'none'
+            })
         }
     },
     onShow() {
@@ -186,47 +187,43 @@ export default {
         })
     },
     onReady() {
-        this.getData();
+        this.getData()
         this.addReader()
     },
     methods: {
-        ...mapMutations(["setCollectReload"]),
-        ...mapActions(["login", "getInfo"]),
+        ...mapMutations(['setCollectReload']),
+        ...mapActions(['login', 'getInfo']),
         getData() {
             const params = {
                 id: this.id
-            };
+            }
             if (this.userInfo) {
-                params.user_id = this.userInfo.user_id;
+                params.user_id = this.userInfo.user_id
             }
             this.$request.getHouse(params).then(res => {
                 if (res && res.data) {
-                    const data = this.filterHouse(res.data, "string");
+                    const data = this.filterHouse(res.data, 'string')
                     // 数据库数据经纬度传反了
                     // 这里对调一下
-                    const tmp = +data.location.lng;
-                    data.location.lng = +data.location.lat;
-                    data.location.lat = +tmp;
-                    this.detail = { ...data };
-                    if (
-                        this.detail.location &&
-                        this.detail.location.lng &&
-                        this.detail.location.lat
-                    ) {
+                    const tmp = +data.location.lng
+                    data.location.lng = +data.location.lat
+                    data.location.lat = +tmp
+                    this.detail = { ...data }
+                    if (this.detail.location && this.detail.location.lng && this.detail.location.lat) {
                         this.markers = [
                             {
                                 id: 0,
                                 latitude: this.detail.location.lat,
                                 longitude: this.detail.location.longitude,
                                 title: this.detail.address_flag,
-                                iconPath: "/static/image/index/marker.png",
+                                iconPath: '/static/image/index/marker.png',
                                 width: 15,
                                 height: 20
                             }
-                        ];
+                        ]
                     }
                 }
-            });
+            })
         },
         getPoster() {
             this.$request
@@ -235,40 +232,40 @@ export default {
                 })
                 .then(res => {
                     if (res && res.data) {
-                        this.uri = res.data;
-                        this.$refs.poster.show();
+                        this.uri = res.data
+                        this.$refs.poster.show()
                     }
-                });
+                })
         },
         showMap(e) {
             uni.openLocation({
                 longitude: this.detail.location.lng,
                 latitude: this.detail.location.lat
-            });
+            })
         },
         addReader() {
             const params = {
                 id: this.id
-            };
+            }
             if (this.userInfo) {
-                params.user_id = this.userInfo.user_id;
+                params.user_id = this.userInfo.user_id
             }
             this.$request.addReader(params)
         },
         getUserInfo(e) {
-            this.$refs.auth.getUserInfo(e);
+            this.$refs.auth.getUserInfo(e)
         },
         getPhone(e) {
-            this.$refs.auth.getPhone(e);
+            this.$refs.auth.getPhone(e)
         },
         showImg(li) {
             uni.previewImage({
                 current: li,
                 urls: this.detail.image_urls
-            });
+            })
         },
         viewLandlord() {
-            this.goPage(`/pages/me/publish?user_id=${this.detail.user_id}`);
+            this.goPage(`/pages/me/publish?user_id=${this.detail.user_id}`)
         },
         collect() {
             if (this.userInfo) {
@@ -278,46 +275,45 @@ export default {
                             hr_id: this.id
                         })
                         .then(() => {
-                            this.detail.collection_status = 1;
+                            this.detail.collection_status = 1
                             uni.showToast({
-                                title: "收藏成功",
-                                icon: "success"
-                            });
-                        });
+                                title: '收藏成功',
+                                icon: 'success'
+                            })
+                        })
                 } else if (this.detail.collection_status === 1) {
                     this.$request
                         .cancelCollect({
                             id: this.id
                         })
                         .then(() => {
-                            this.detail.collection_status = 0;
+                            this.detail.collection_status = 0
                             uni.showToast({
-                                title: "取消成功",
-                                icon: "success"
-                            });
-                        });
+                                title: '取消成功',
+                                icon: 'success'
+                            })
+                        })
                 }
-                this.setCollectReload(true);
+                this.setCollectReload(true)
             } else {
-                this.getUserInfo();
+                this.getUserInfo()
             }
         },
         linkLandlord() {
             this.userInfo
-                // ? this.userInfo.mobile
-                    ? (this.$refs.modal.show({
-                          title: "联系方式",
-                          confirmText: "确定",
-                          success() {}
-                      }),
-                      this.$request.viewPhone({
-                          id: this.id
-                      }))
-                    // : this.getPhone()
-                : this.getUserInfo();
+                ? (this.$refs.modal.show({
+                      title: '联系方式',
+                      confirmText: '确定',
+                      success() {}
+                  }),
+                  this.$request.viewPhone({
+                      id: this.id
+                  }) /*: this.getPhone()*/)
+                : // : this.getPhone()
+                  this.getUserInfo()
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -438,6 +434,10 @@ export default {
             padding-bottom: 30upx;
         }
     }
+    .vdo {
+        width: 690upx;
+        height: 450upx;
+    }
     .map {
         position: relative;
         width: 750upx;
@@ -482,7 +482,7 @@ export default {
     left: 0;
     z-index: 10;
     height: 100upx;
-    background-color: #fff;
+    background-color: #eee;
     font-size: 20upx;
     .collection {
         background-color: #f5f5f5;

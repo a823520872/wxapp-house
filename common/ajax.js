@@ -28,14 +28,15 @@ const ajax = (path, params, options = {}) => {
     }
     const success = res => {
         options.loading && uni.hideLoading()
+        console.log(res)
         if (res.length && res.length === 2) {
             res = res[1]
         } else {
-			if (res[0] && ~res[0].errMsg.indexOf('fail')) {
-				store.commit('setUrlPrefix')
-				return ajax(path, params, options)
-			}
-		}
+            if (res[0] && ~res[0].errMsg.indexOf('fail')) {
+                store.commit('setUrlPrefix')
+                return ajax(path, params, options)
+            }
+        }
         let data = res.data
         if (typeof data === 'string') {
             data = JSON.parse(data)

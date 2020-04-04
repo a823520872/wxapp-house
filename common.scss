@@ -171,10 +171,10 @@ image {
 
     &.ipx {
         height: 168upx;
-    }
 
-    + .fd {
-        padding-bottom: 68upx;
+        + .fd {
+            padding-bottom: 68upx;
+        }
     }
 }
 .modal {

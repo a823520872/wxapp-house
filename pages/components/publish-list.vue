@@ -8,33 +8,36 @@
                         <!-- <view v-if="li.is_rented === 1" class="rent m_textover">租金：¥{{li.rental}}/月</view> -->
                     </view>
                     <view class="intro m_flex_item">
-                        <view class="intro_cell name">{{li.address_street}} · {{li.house_type}}</view>
-                        <view class="intro_cell price">¥{{li.rental}}/月</view>
+                        <view class="intro_cell name">{{ li.address_street }} · {{ li.house_type }}</view>
+                        <view class="intro_cell price">¥{{ li.rental }}/月</view>
                         <!-- <view v-if="li.is_public === 1" class="intro_cell price">¥{{li.rental}}/月</view> -->
                         <view class="intro_cell addr m_textover">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
-                            <text v-if="li.address_street">{{li.address_street}}</text>
-                            <text v-if="li.address_flag">{{li.address_flag}}</text>
-                            <text v-if="li.address_detail">{{li.address_detail}}</text>
-                            <text v-if="li.road_distance">{{li.road_distance}}</text>
+                            <text v-if="li.address_street">{{ li.address_street }}</text>
+                            <text v-if="li.address_flag">{{ li.address_flag }}</text>
+                            <text v-if="li.address_detail">{{ li.address_detail }}</text>
+                            <text v-if="li.road_distance">{{ li.road_distance }}</text>
                         </view>
                         <view class="intro_cell addr">
                             <image src="/static/image/index/addr.png" mode="aspectFit"></image>
-                            <text>{{li.floor_number}}楼</text>
+                            <text>{{ li.floor_number }}楼</text>
                         </view>
                     </view>
                 </view>
                 <view class="fd m_flex_right" v-if="userInfo && userInfo.user_id === li.user_id">
-                    <block v-if="li.is_rented === 2">
-                        <button class="m_button primary" @tap.stop="refresh(li)">刷新</button>
+                    <block v-if="li.is_public === 2">
+                        <button class="m_button plain btn" @tap.stop="del(li)">删除</button>
                     </block>
-                    <button class="m_button plain" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
-                        <button class="m_button plain" @tap.stop="rented(li)">下架</button>
-                        <!-- <button class="m_button primary" @tap.stop="getQRCode(li)">生成海报</button> -->
+                        <button class="m_button primary btn" @tap.stop="refresh(li)">刷新</button>
+                    </block>
+                    <button class="m_button plain btn" @tap.stop="edit(li)">编辑</button>
+                    <block v-if="li.is_rented === 2">
+                        <button class="m_button plain btn" @tap.stop="rented(li)">下架</button>
+                        <!-- <button class="m_button primary btn" @tap.stop="getQRCode(li)">生成海报</button> -->
                     </block>
                     <block v-if="li.is_public === 2">
-                        <button class="m_button primary" @tap.stop="public(li)">发布</button>
+                        <button class="m_button primary btn" @tap.stop="pblc(li)">发布</button>
                     </block>
                 </view>
             </view>
@@ -45,12 +48,10 @@
                 <view class="modal">
                     <radio-group>
                         <view class="link m_flex_justify">
-                            <label @tap="rent_type = 1">
-                                <radio :checked="rent_type === 1" />住户来自平台</label>
+                            <label @tap="rent_type = 1"> <radio :checked="rent_type === 1" />住户来自平台</label>
                         </view>
                         <view class="link m_flex_justify">
-                            <label @tap="rent_type = 2">
-                                <radio :checked="rent_type === 2" />住户来自您</label>
+                            <label @tap="rent_type = 2"> <radio :checked="rent_type === 2" />住户来自您</label>
                         </view>
                     </radio-group>
                 </view>
@@ -60,59 +61,59 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
-import poster from "../components/poster.vue";
+import { mapState, mapMutations, mapActions } from 'vuex'
+import poster from '../components/poster.vue'
 export default {
     props: {
         list: {
             type: Array,
             default() {
-                return [];
+                return []
             }
         }
     },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(['userInfo'])
     },
     components: {
         poster
     },
     data() {
         return {
-            uri: "",
-            rent_type: ""
-        };
+            uri: '',
+            rent_type: ''
+        }
     },
     methods: {
-        ...mapMutations(["setHomeReload"]),
+        ...mapMutations(['setHomeReload']),
         edit(li) {
-            this.goPage(`/pages/publish/house?id=${li.id}`);
+            this.goPage(`/pages/publish/house?id=${li.id}`)
         },
         getQRCode(li) {
-            const self = this;
+            const self = this
             uni.showLoading({
-                title: "图片正在生成",
+                title: '图片正在生成',
                 mask: true
-            });
+            })
             this.$request
                 .getQRCode({
                     house_id: li.id
                 })
                 .then(res => {
-                    uni.hideLoading();
+                    uni.hideLoading()
                     if (res && res.data) {
-                        this.uri = res.data;
-                        this.$refs.poster.show();
+                        this.uri = res.data
+                        this.$refs.poster.show()
                     }
                 })
                 .catch(e => {
-                    uni.hideLoading();
-                });
+                    uni.hideLoading()
+                })
         },
         rented(li) {
-            const self = this;
+            const self = this
             this.$refs.modal.show({
-                confirmText: "确定",
+                confirmText: '确定',
                 success() {
                     if (self.rent_type) {
                         self.$request
@@ -122,17 +123,17 @@ export default {
                             })
                             .then(res => {
                                 // if (res && res.data) {
-                                self.$emit("reload");
-                                self.setHomeReload(true);
+                                self.$emit('reload')
+                                self.setHomeReload(true)
                                 uni.showToast({
-                                    title: "操作成功",
-                                    icon: "success"
-                                });
+                                    title: '操作成功',
+                                    icon: 'success'
+                                })
                                 // }
-                            });
+                            })
                     }
                 }
-            });
+            })
         },
         refresh(li) {
             this.$request
@@ -140,20 +141,20 @@ export default {
                     id: li.id,
                     is_public: 1,
                     is_rented: 2,
-                    type: "refresh"
+                    type: 'refresh'
                 })
                 .then(res => {
                     // if (res && res.data) {
-                    this.$emit("reload");
-                    this.setHomeReload(true);
+                    this.$emit('reload')
+                    this.setHomeReload(true)
                     uni.showToast({
-                        title: "操作成功",
-                        icon: "success"
-                    });
+                        title: '操作成功',
+                        icon: 'success'
+                    })
                     // }
-                });
+                })
         },
-        public(li) {
+        pblc(li) {
             this.$request
                 .public({
                     id: li.id,
@@ -162,17 +163,31 @@ export default {
                 })
                 .then(res => {
                     // if (res && res.data) {
-                    this.$emit("reload");
-                    this.setHomeReload(true);
+                    this.$emit('reload')
+                    this.setHomeReload(true)
                     uni.showToast({
-                        title: "操作成功",
-                        icon: "success"
-                    });
+                        title: '操作成功',
+                        icon: 'success'
+                    })
                     // }
-                });
+                })
+        },
+        del(li) {
+            this.$request
+                .del({
+                    id: li.id
+                })
+                .then(res => {
+                    this.$emit('reload')
+                    this.setHomeReload(true)
+                    uni.showToast({
+                        title: '操作成功',
+                        icon: 'success'
+                    })
+                })
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -225,15 +240,11 @@ export default {
 }
 .fd {
     margin-top: 30upx;
-    .m_button {
+    .btn {
         min-width: 97upx;
         margin-left: 20upx;
-        &::after {
+        &.plain::after {
             border: 1px solid $text-color-inverse;
-        }
-
-        &.primary::after {
-            border: 1px solid $primary-color;
         }
     }
 }

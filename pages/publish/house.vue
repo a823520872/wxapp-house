@@ -6,19 +6,28 @@
                 <view class="cells">
                     <view class="cells_title m_flex_middle">照片视频</view>
                     <view class="upload m_flex_justify">
-                        <view class="upload_box" v-if="houseImg && houseImg.length" @tap="chooseImg">
-                            <image :src="houseImg[0].url" :mode="CONFIG.house_mode"></image>
+                        <view class="media_box">
+                            <view class="upload_box" v-if="houseImg && houseImg.length" @tap="chooseImg">
+                                <image :src="houseImg[0].url" :mode="CONFIG.house_mode"></image>
+                            </view>
+                            <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseImg">
+                                <view class="upload_icon"></view>
+                                <!-- <view class="upload_info">上传照片（必填）</view> -->
+                                <!-- <image class="upload_img" src="/static/image/publish/choose_image.png" mode="aspectFit"></image> -->
+                            </view>
+                            <button class="m_button btn" @tap.stop="chooseImg">{{ houseImg && houseImg.length ? '编辑' : '上传' }}照片(必填)</button>
                         </view>
-                        <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseImg">
-                            <view class="upload_icon"></view>
-                            <view class="upload_info">上传照片（必填）</view>
-                        </view>
-                        <view class="upload_box" v-if="form.videos && form.videos.length">
-                            <video class="vdo" :src="form.videos[0].url" controls></video>
-                        </view>
-                        <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseVideo">
-                            <view class="upload_icon"></view>
-                            <view class="upload_info">上传视频（选填）</view>
+                        <view class="media_box">
+                            <view class="upload_box" v-if="form.videos && form.videos.length">
+                                <video class="vdo" :src="form.videos[0].url" controls></video>
+                            </view>
+                            <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseVdo">
+                                <view class="tips">支持20s内</view>
+                                <view class="upload_icon"></view>
+                                <!-- <view class="upload_info">上传视频（选填）</view> -->
+                                <!-- <image class="upload_img" src="/static/image/publish/choose_video.png" mode="aspectFit"></image> -->
+                            </view>
+                            <button class="m_button btn" @tap.stop="chooseVdo">{{ form.videos && form.videos.length ? '重新选择' : '上传视频' }}(选填)</button>
                         </view>
                     </view>
                 </view>
@@ -168,29 +177,29 @@ export default {
             return (
                 this.config &&
                 this.config.address_street &&
-                this.config.address_street.map(lis => {
-                    return lis.map(li => li.name)
+                this.config.address_street.map((lis) => {
+                    return lis.map((li) => li.name)
                 })
             )
         },
         address_flag() {
-            return this.config && this.config.address_flag && this.config.address_flag.map(item => item.shortname || '')
+            return this.config && this.config.address_flag && this.config.address_flag.map((item) => item.shortname || '')
         },
         road_distance() {
-            return this.config && this.config.road_distance && this.config.road_distance.map(item => item.value)
+            return this.config && this.config.road_distance && this.config.road_distance.map((item) => item.value)
         },
         house_type() {
-            return this.config && this.config.house_type && this.config.house_type.map(item => item.value)
+            return this.config && this.config.house_type && this.config.house_type.map((item) => item.value)
         },
         floor() {
-            return this.config && this.config.floor && this.config.floor.map(item => item.value)
+            return this.config && this.config.floor && this.config.floor.map((item) => item.value)
         },
         address() {
             return this.form.address_street || ''
         },
         depositArray() {
-            return this.config && this.config.deposit && this.config.deposit.map(item => item.value)
-        }
+            return this.config && this.config.deposit && this.config.deposit.map((item) => item.value)
+        },
     },
     data() {
         return {
@@ -218,7 +227,7 @@ export default {
                 config_base: '',
                 config_lightspot_ids: '',
                 config_lightspot: '',
-                remarks: ''
+                remarks: '',
             },
             house_id: '',
             config: {
@@ -229,10 +238,10 @@ export default {
                 address_flag: null,
                 config_base: null,
                 config_lightspot: null,
-                deposit: null
+                deposit: null,
             },
             addr: null,
-            deposit: ''
+            deposit: '',
         }
     },
     onLoad(res) {
@@ -248,7 +257,7 @@ export default {
     },
     onReady() {
         // #ifdef MP-WEIXIN
-        this.login().then(code => {
+        this.login().then((code) => {
             // #endif
             this.getData()
             this.getInfo()
@@ -266,7 +275,7 @@ export default {
             // this.getLandlord();
         },
         getConfig() {
-            this.$request.getConfig().then(res => {
+            this.$request.getConfig().then((res) => {
                 if (res && res.data) {
                     const config = res.data.reduce((obj, item) => {
                         if (!obj[item.type]) {
@@ -278,7 +287,7 @@ export default {
                     }, {})
                     if (config.deposit && config.deposit.length) {
                         config.deposit.push({
-                            value: '自定义'
+                            value: '自定义',
                         })
                     }
 
@@ -287,9 +296,9 @@ export default {
             })
         },
         getAddr() {
-            this.$request.getAddrList().then(res => {
+            this.$request.getAddrList().then((res) => {
                 if (res && res.data) {
-                    const city = res.data.filter(item => item.level === 2)
+                    const city = res.data.filter((item) => item.level === 2)
                     const addr = res.data.reduce((obj, item) => {
                         if (!item.pid) return obj
                         if (!obj[item.pid]) {
@@ -310,18 +319,18 @@ export default {
                     this.addr = addr
                     this.config = {
                         ...this.config,
-                        address_street
+                        address_street,
                     }
                 }
             })
         },
         getAreaFlag(id) {
-            this.$request.getAreaFlag({ pid_area_street: id }).then(res => {
+            this.$request.getAreaFlag({ pid_area_street: id }).then((res) => {
                 if (res && res.data) {
                     try {
                         this.config = {
                             ...this.config,
-                            address_flag: res.data
+                            address_flag: res.data,
                         }
                     } catch (error) {
                         this.log(error)
@@ -331,18 +340,18 @@ export default {
         },
         getHouse() {
             if (this.house_id) {
-                this.$request.getHouse({ id: this.house_id }).then(res => {
+                this.$request.getHouse({ id: this.house_id }).then((res) => {
                     if (res && res.data) {
                         let data = res.data
                         const images = data.image_urls ? data.image_urls.split(',') : []
                         this.setHouseTempImg([...images])
                         this.setHouseImg(
-                            images.map(item => ({
-                                url: item
+                            images.map((item) => ({
+                                url: item,
                             }))
                         )
-                        data.images = images.map(item => ({
-                            url: item
+                        data.images = images.map((item) => ({
+                            url: item,
                         }))
                         data.videos = data.video_urls ? data.video_urls.split(',') : ''
                         this.form = { ...data, address_detail: data.address_detail || '', remarks: data.remarks || '' }
@@ -354,45 +363,59 @@ export default {
             }
         },
         chooseImg() {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 if (this.houseImg && this.houseImg.length) {
-                    resolve(this.houseImg.map(item => item.url))
+                    resolve(this.houseImg.map((item) => item.url))
                 } else {
-                    this.chooseImage(9).then(e => {
+                    this.chooseImage(9).then((e) => {
                         if (e.errMsg === 'chooseImage:ok') {
                             resolve(e.tempFilePaths)
                         }
                     })
                 }
-            }).then(imgs => {
+            }).then((imgs) => {
                 this.setHouseTempImg(imgs)
                 this.goPage(`/pages/publish/img`)
             })
         },
-        chooseVideo() {
-            uni.chooseVideo({
-                sizeType: ['compressed'],
-                sourceType: ['album'],
-                count: 1,
-                success: e => {
-                    console.log(e)
-                    if (e.errMsg === 'chooseVideo:ok') {
-                        if (e.size > 20 * 1024 * 1024)
-                            return uni.showToast({
-                                title: '视频已超出20MB，请上传短视频',
-                                icon: 'none'
-                            })
-                        this.getQiniuToken().then(token => {
+        chooseVdo() {
+            this.chooseVideo().then((video) => {
+                if (video.errMsg === 'chooseVideo:ok') {
+                    if (video.duration > 20)
+                        return uni.showToast({
+                            title: '视频已超过20S，请上传短视频',
+                            icon: 'none',
+                        })
+                    if (video.size > 20 * 1024 * 1024)
+                        return uni.showToast({
+                            title: '视频已超出20MB，请上传短视频',
+                            icon: 'none',
+                        })
+                    uni.showLoading({
+                        title: '上传视频中',
+                    })
+                    this.getQiniuToken().then(
+                        (token) => {
                             qiniuUploader.upload(
-                                e.tempFilePath,
-                                res => {
+                                video.tempFilePath,
+                                (res) => {
+                                    uni.hideLoading()
+                                    uni.showToast({
+                                        title: '上传成功',
+                                        icon: 'success',
+                                    })
                                     this.form.videos = [
                                         {
-                                            url: res.imageURL
-                                        }
+                                            url: res.imageURL,
+                                        },
                                     ]
                                 },
-                                e => {
+                                (e) => {
+                                    uni.hideLoading()
+                                    uni.showToast({
+                                        title: '上传失败',
+                                        icon: 'none',
+                                    })
                                     console.log(e)
                                 },
                                 {
@@ -400,14 +423,14 @@ export default {
                                     // uploadURL: 'https://house.zhiqiang.ink/api/upload/uploadImage',
                                     // uptokenURL: 'https://house.zhiqiang.ink/api/upload/getUploadToken',
                                     uploadURL: 'https://upload-z0.qiniup.com',
-                                    domain: 'https://image.zhiqiang.ink/'
+                                    domain: 'https://image.zhiqiang.ink/',
                                 }
                             )
-                        })
-                    }
-                },
-                fail: e => {
-                    console.log(e)
+                        },
+                        (e) => {
+                            uni.hideLoading()
+                        }
+                    )
                 }
             })
         },
@@ -415,18 +438,18 @@ export default {
             return this.$request
                 .getQiniuToken()
                 .then(
-                    res => {
+                    (res) => {
                         if (res.data && res.data.token) {
                             return res.data.token
                         }
                     },
-                    e => {
+                    (e) => {
                         if (e.data && e.data.token) {
                             return res.data.token
                         }
                     }
                 )
-                .catch(e => {
+                .catch((e) => {
                     this.log(e)
                 })
         },
@@ -440,7 +463,7 @@ export default {
                     p[column] = this.addr[item.id] || []
                     this.config = {
                         ...this.config,
-                        address_street: p
+                        address_street: p,
                     }
                     value = 0
                     setColumn()
@@ -458,34 +481,34 @@ export default {
                         this.form.address_street = item ? item.name : ''
                         this.form.address_street_id = item ? item.id : ''
                         item && this.getAreaFlag(item.id)
-                    }
+                    },
                 ],
                 [
                     'address_flag',
                     () => {
                         this.form[key] = this.config[key][value].shortname
                         this.form[`${key}_id`] = this.config[key][value].id
-                    }
+                    },
                 ],
                 [
                     'road_distance',
                     () => {
                         this.form[key] = this.config[key][value].value
                         this.form[`${key}_id`] = this.config[key][value].id
-                    }
+                    },
                 ],
                 [
                     'house_type',
                     () => {
                         this.form[key] = this.config[key][value].value
                         this.form[`${key}_id`] = this.config[key][value].id
-                    }
+                    },
                 ],
                 [
                     'floor',
                     () => {
                         this.form.floor_number = +this.config[key][value].value.replace('楼', '')
-                    }
+                    },
                 ],
                 [
                     'deposit',
@@ -502,17 +525,17 @@ export default {
                                     if (this.deposit > 0) {
                                         this.form.deposit = this.deposit + '元'
                                     }
-                                }
+                                },
                             })
                         }
-                    }
-                ]
+                    },
+                ],
             ])
             let fn = mappings.get(key)
             fn && fn()
         },
         next() {
-            this.checkAuth().then(res => {
+            this.checkAuth().then((res) => {
                 if (!res) return
 
                 this.$validate(this.form, {
@@ -525,44 +548,44 @@ export default {
                     floor_number: [{ required: true, msg: '请输入楼层' }],
                     images: [
                         { type: 'array', msg: '请上传图片' },
-                        { min: 2, msg: '请至少上传2张图片' }
-                    ]
+                        { min: 2, msg: '请至少上传2张图片' },
+                    ],
                 }).then(
                     () => {
                         const config_base = this.form.config_base ? this.form.config_base.split(',') : []
                         const config_lightspot = this.form.config_lightspot ? this.form.config_lightspot.split(',') : []
-                        this.config.config_base.map(item => {
+                        this.config.config_base.map((item) => {
                             if (config_base.indexOf(item.value) > -1) {
                                 item.active = true
                             }
                         })
-                        this.config.config_lightspot.map(item => {
+                        this.config.config_lightspot.map((item) => {
                             if (config_lightspot.indexOf(item.value) > -1) {
                                 item.active = true
                             }
                         })
                         this.step = 1
                     },
-                    e => {
+                    (e) => {
                         uni.showToast({
                             title: e.msg,
-                            icon: 'none'
+                            icon: 'none',
                         })
                     }
                 )
             })
         },
         filterForm() {
-            const config_base = this.config.config_base.filter(item => item.active)
-            const config_lightspot = this.config.config_lightspot.filter(item => item.active)
+            const config_base = this.config.config_base.filter((item) => item.active)
+            const config_lightspot = this.config.config_lightspot.filter((item) => item.active)
             this.form.landlord_id = this.userInfo.landlord_id
-            this.form.config_base_ids = config_base.map(item => item.id).join(',')
-            this.form.config_base = config_base.map(item => item.value).join(',')
-            this.form.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
-            this.form.config_lightspot = config_lightspot.map(item => item.value).join(',')
+            this.form.config_base_ids = config_base.map((item) => item.id).join(',')
+            this.form.config_base = config_base.map((item) => item.value).join(',')
+            this.form.config_lightspot_ids = config_lightspot.map((item) => item.id).join(',')
+            this.form.config_lightspot = config_lightspot.map((item) => item.value).join(',')
         },
         confirm() {
-            this.checkAuth().then(res => {
+            this.checkAuth().then((res) => {
                 if (!res) return
                 this.filterForm()
                 this.$validate(this.form, {
@@ -574,29 +597,29 @@ export default {
                     floor_number: [{ required: true, msg: '请输入楼层' }],
                     images: [
                         { type: 'array', msg: '请上传图片' },
-                        { min: 2, msg: '请至少上传2张图片' }
-                    ]
+                        { min: 2, msg: '请至少上传2张图片' },
+                    ],
                 }).then(
                     () => {
                         const api = this.form.id ? ((this.form.hr_id = this.form.id), 'editHouse') : 'addHouse'
                         const { landlord_info, image_urls, video_urls, ...params } = this.form
-                        params.images = params.images.map(item => {
+                        params.images = params.images.map((item) => {
                             if (typeof item === 'string') {
                                 item = {
-                                    url: item
+                                    url: item,
                                 }
                             }
                             return item
                         })
-                        params.videos = params.videos.map(item => {
+                        params.videos = params.videos.map((item) => {
                             if (typeof item === 'string') {
                                 item = {
-                                    url: item
+                                    url: item,
                                 }
                             }
                             return item
                         })
-                        this.$request[api](params).then(res => {
+                        this.$request[api](params).then((res) => {
                             if (res && res.data) {
                                 this.setHouseTempImg([])
                                 this.setHouseImg([])
@@ -604,15 +627,15 @@ export default {
                                 this.setCollectReload(true)
                                 this.goPage({
                                     path: `/pages/publish/publish_succ?id=${this.form.id || res.data}`,
-                                    replace: true
+                                    replace: true,
                                 })
                             }
                         })
                     },
-                    e => {
+                    (e) => {
                         uni.showToast({
                             title: e.msg,
-                            icon: 'none'
+                            icon: 'none',
                         })
                     }
                 )
@@ -623,8 +646,8 @@ export default {
         },
         chooseCfgLight(li) {
             li.active = !li.active
-        }
-    }
+        },
+    },
 }
 </script>
 
@@ -640,6 +663,15 @@ export default {
 }
 .upload {
     padding: 10upx 0 40upx;
+    text-align: center;
+    .tips {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: transparent;
+        color: #0e868f;
+    }
     .upload_box {
         position: relative;
         width: 335upx;
@@ -674,9 +706,25 @@ export default {
         font-size: 26upx;
         color: #666;
     }
+    .upload_img {
+        width: 66upx;
+        height: 66upx;
+    }
     .vdo {
         width: 100%;
         height: 100%;
+    }
+    .btn {
+        width: 250upx;
+        height: 60upx;
+        margin-top: 32upx;
+        padding: 0;
+        line-height: 60upx;
+        text-align: center;
+        background-color: #e9fbfb;
+        border-radius: 30upx;
+        font-size: 26upx;
+        color: #0e868f;
     }
 }
 .hd,
@@ -753,16 +801,17 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 10;
-    background-color: #eee;
+    padding: 15upx 30upx;
+    background-color: #fff;
     font-size: 0;
 
     .btn {
         width: 100%;
-        height: 100upx;
+        height: 90upx;
         padding: 0;
-        line-height: 100upx;
+        line-height: 90upx;
         background-color: $main-color;
-        border-radius: 0;
+        border-radius: 45upx;
         text-align: center;
         font-size: 33upx;
         color: #fff;
@@ -812,6 +861,12 @@ export default {
         .btn {
             background-color: $primary-color;
         }
+    }
+}
+.empty {
+    height: 120upx;
+    &.ipx {
+        height: 188upx;
     }
 }
 .modal {

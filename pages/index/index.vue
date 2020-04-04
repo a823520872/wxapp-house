@@ -17,14 +17,14 @@
                         </view>
                         <view class="addr_box m_flex">
                             <picker :range="address_street" @change="pickerChange" @columnchange="columnChange" :value="addrVal" mode="multiSelector">
-                                <view class="m_flex_middle" v-if="addrVal && addrVal.length && (params.address_street || params.area_id)">
+                                <view class="m_flex_middle" v-if="addrVal && addrVal.length && (address_city || params.address_street || params.area_id)">
                                     <view class="addr_picker m_flex_middle">
                                         <view class="addr_item m_textover">{{ address_street[0][addrVal[0]] }}</view>
                                         <view class="addr_pull">
                                             <image src="/static/image/index/pull.png" mode="aspectFit"></image>
                                         </view>
                                     </view>
-                                    <view class="addr_picker m_flex_middle" :class="{ last: !params.address_street }">
+                                    <view class="addr_picker m_flex_middle" :class="{ last: !params.address_street }" v-if="!address_city">
                                         <view class="addr_item m_textover">{{ address_street[1][addrVal[1]] }}</view>
                                         <view class="addr_pull">
                                             <image src="/static/image/index/pull.png" mode="aspectFit"></image>
@@ -149,7 +149,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import HouseList from '../components/house-list'
 export default {
     components: {
-        HouseList
+        HouseList,
     },
     computed: {
         ...mapState(['homeReload']),
@@ -157,16 +157,16 @@ export default {
             return (
                 this.config &&
                 this.config.address_street &&
-                this.config.address_street.map(lis => {
-                    return lis.map(li => li.name)
+                this.config.address_street.map((lis) => {
+                    return lis.map((li) => li.name)
                 })
             )
         },
         house_type() {
-            return this.config && this.config.house_type && this.config.house_type.map(li => li.value)
+            return this.config && this.config.house_type && this.config.house_type.map((li) => li.value)
         },
         price() {
-            return this.config && this.config.price && this.config.price.map(li => li.value)
+            return this.config && this.config.price && this.config.price.map((li) => li.value)
         },
         house_type_active() {
             return (
@@ -227,7 +227,7 @@ export default {
                     return arr
                 }, [])
             )
-        }
+        },
     },
     data() {
         return {
@@ -243,7 +243,7 @@ export default {
                 rental_end: '',
                 config_base_ids: '',
                 // config_base: "",
-                config_lightspot_ids: ''
+                config_lightspot_ids: '',
                 // config_lightspot: ""
             },
             list: [],
@@ -256,47 +256,48 @@ export default {
                         rental_end: 500,
                         value: '500以下',
                         active: false,
-                        tmpActive: false
+                        tmpActive: false,
                     },
                     {
                         rental_begin: 500,
                         rental_end: 700,
                         value: '500-700',
                         active: false,
-                        tmpActive: false
+                        tmpActive: false,
                     },
                     {
                         rental_begin: 700,
                         rental_end: 900,
                         value: '700-900',
                         active: false,
-                        tmpActive: false
+                        tmpActive: false,
                     },
                     {
                         rental_begin: 900,
                         rental_end: 1200,
                         value: '900-1200',
                         active: false,
-                        tmpActive: false
+                        tmpActive: false,
                     },
                     {
                         rental_begin: 1500,
                         rental_end: '',
                         value: '1500以上',
                         active: false,
-                        tmpActive: false
-                    }
+                        tmpActive: false,
+                    },
                 ],
                 road_distance: null,
                 address_street: null,
                 address_flag: null,
                 config_base: null,
-                config_lightspot: null
+                config_lightspot: null,
             },
             addr: null,
             modalType: null,
             modalList: null,
-            hasFocus: false
+            hasFocus: false,
+            address_city: '',
         }
     },
     onLoad(res) {
@@ -313,7 +314,7 @@ export default {
         }
     },
     onShow() {
-        this.login().then(code => {
+        this.login().then((code) => {
             this.getInfo()
         })
         if (this.homeReload) {
@@ -340,7 +341,7 @@ export default {
         return {
             title: '村里租房',
             desc: '村里租房',
-            path: '/pages/index/index'
+            path: '/pages/index/index',
         }
     },
     methods: {
@@ -353,11 +354,11 @@ export default {
                 this.$refs.page.init({
                     url: 'getHouseList',
                     params: self.params,
-                    fn: null
+                    fn: null,
                 })
         },
         getData() {
-            this.$request.getConfig().then(res => {
+            this.$request.getConfig().then((res) => {
                 if (res.data) {
                     const config = res.data.reduce((obj, item) => {
                         if (!obj[item.type]) {
@@ -371,13 +372,13 @@ export default {
                     this.config = { ...this.config, ...config }
                 }
             })
-            this.$request.getAddrList().then(res => {
+            this.$request.getAddrList().then((res) => {
                 if (res.data) {
-                    const city = res.data.filter(item => item.level === 2)
+                    const city = res.data.filter((item) => item.level === 2)
                     const addr = res.data.reduce((obj, item) => {
                         if (!item.pid) return obj
                         if (!obj[item.pid]) {
-                            obj[item.pid] = item.level === 4 ? [{ name: '不限' }] : []
+                            obj[item.pid] = item.level === 4 || item.level === 3 ? [{ name: '不限' }] : []
                         }
                         obj[item.pid].push(item)
                         return obj
@@ -386,16 +387,19 @@ export default {
                     const district = addr[city[0].id]
                     if (district && district.length) {
                         address_street.push([...district])
-                        const county = addr[district[0].id]
-                        if (county && county.length) {
-                            address_street.push([...county])
+                        if (district[0] && district[0].id) {
+                            const county = addr[district[0].id]
+                            if (county && county.length) {
+                                address_street.push([...county])
+                            }
+                        } else {
+                            address_street.push([{ name: '不限' }])
                         }
                     }
-                    console.log(address_street)
                     this.addr = addr
                     this.config = {
                         ...this.config,
-                        address_street
+                        address_street,
                     }
                     // this.params.address_street = address_street[2][0].name;
                 }
@@ -405,15 +409,15 @@ export default {
             this.hasFocus = true
         },
         filterParams() {
-            const house_type = this.config.house_type ? this.config.house_type.filter(item => item.active) : []
-            const price = this.config.price.filter(item => item.active)[0]
-            const road_distance = this.config.road_distance ? this.config.road_distance.filter(item => item.active) : []
-            const config_base = this.config.config_base ? this.config.config_base.filter(item => item.active) : []
-            const config_lightspot = this.config.config_lightspot ? this.config.config_lightspot.filter(item => item.active) : []
+            const house_type = this.config.house_type ? this.config.house_type.filter((item) => item.active) : []
+            const price = this.config.price.filter((item) => item.active)[0]
+            const road_distance = this.config.road_distance ? this.config.road_distance.filter((item) => item.active) : []
+            const config_base = this.config.config_base ? this.config.config_base.filter((item) => item.active) : []
+            const config_lightspot = this.config.config_lightspot ? this.config.config_lightspot.filter((item) => item.active) : []
             // this.params.house_type = house_type
             //     .map(item => item.value)
             //     .join(",");
-            this.params.house_type_id = house_type.map(item => item.id).join(',')
+            this.params.house_type_id = house_type.map((item) => item.id).join(',')
             if (price) {
                 this.params.rental_begin = price.rental_begin || ''
                 this.params.rental_end = price.rental_end || ''
@@ -421,15 +425,15 @@ export default {
                 this.params.rental_begin = ''
                 this.params.rental_end = ''
             }
-            this.params.road_distance_ids = road_distance.map(item => item.id).join(',')
+            this.params.road_distance_ids = road_distance.map((item) => item.id).join(',')
             // this.params.config_base = config_base
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_base_ids = config_base.map(item => item.id).join(',')
+            this.params.config_base_ids = config_base.map((item) => item.id).join(',')
             // this.params.config_lightspot = config_lightspot
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
+            this.params.config_lightspot_ids = config_lightspot.map((item) => item.id).join(',')
         },
         columnChange(e) {
             const self = this
@@ -442,7 +446,7 @@ export default {
                     p[column] = self.addr[item.id] || []
                     self.config = {
                         ...self.config,
-                        address_street: p
+                        address_street: p,
                     }
                     value = 0
                     setColumn()
@@ -452,18 +456,35 @@ export default {
         },
         pickerChange(e) {
             const value = e.detail.value
-            const item = this.config.address_street[2][value[2]]
-            console.log(value)
+            let item = {}
+            if (value.length === 3) {
+                item = this.config.address_street[2][value[2]]
+            }
             this.addrVal = value
             if (item && item.id) {
+                // 选择了市区村
                 this.params.address_street = item.name
                 this.params.address_street_id = item.id
+                this.params.area_id = ''
+                this.address_city = ''
             } else {
                 this.params.address_street = ''
                 this.params.address_street_id = ''
                 if (item) {
-                    console.log(this.config.address_street[1][value[1]])
-                    this.params.area_id = this.config.address_street[1][value[1]].id
+                    let area = this.config.address_street[1][value[1]]
+                    this.params.area_id = area && area.id ? area.id : ''
+                    if (area && area.id) {
+                        // 选择了市区
+                        this.params.area_id = area.id
+                        this.address_city = ''
+                    } else {
+                        // 选择了市
+                        this.params.area_id = ''
+                        this.address_city = this.config.address_street[0][value[0]].name
+                    }
+                } else {
+                    this.params.area_id = ''
+                    this.address_city = ''
                 }
             }
             this.init()
@@ -487,7 +508,7 @@ export default {
             const self = this
             const key = this.filterType(type)
             this.modalType = type
-            this.modalList = key.map(item => {
+            this.modalList = key.map((item) => {
                 return this.config[item]
             })
             if (key && key.length) {
@@ -495,14 +516,14 @@ export default {
                     title,
                     confirmText: '确定',
                     success() {
-                        key.map(item => {
-                            self.config[item].map(it => {
+                        key.map((item) => {
+                            self.config[item].map((it) => {
                                 it.active = it.tmpActive
                             })
                         })
                         self.init()
                     },
-                    fail() {}
+                    fail() {},
                 })
             }
         },
@@ -513,7 +534,7 @@ export default {
         },
         toggleList(i, j) {
             const key = this.filterType(this.modalType)
-            key.map(item => {
+            key.map((item) => {
                 if (item === 'price') {
                     this.config[item].map((it, k) => {
                         if (j === k) {
@@ -531,8 +552,8 @@ export default {
                 //                     return;
                 this.config[item][j].tmpActive = !this.config[item][j].tmpActive
             })
-        }
-    }
+        },
+    },
 }
 </script>
 

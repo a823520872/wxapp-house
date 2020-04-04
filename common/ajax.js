@@ -7,35 +7,37 @@ const ajax = (path, params, options = {}) => {
     options.loading &&
         uni.showLoading({
             title: '加载中……',
-            mask: options.mask
+            mask: options.mask,
         })
     if (!options.noToken && !token) {
         !options.noAlert &&
             uni.showToast({
                 title: '请先登录小程序',
-                icon: 'none'
+                icon: 'none',
             })
         return Promise.reject({
-            msg: '未登录'
+            msg: '未登录',
         })
     }
 
     const header = {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
     }
     if (token) {
         header['token'] = token
     }
-    const success = res => {
+    const success = (res) => {
         options.loading && uni.hideLoading()
-        console.log(res)
+        // console.log(res)
         if (res.length && res.length === 2) {
             res = res[1]
+            // #ifdef MP-WEIXIN
         } else {
             if (res[0] && ~res[0].errMsg.indexOf('fail')) {
                 store.commit('setUrlPrefix')
                 return ajax(path, params, options)
             }
+            // #endif
         }
         let data = res.data
         if (typeof data === 'string') {
@@ -51,10 +53,10 @@ const ajax = (path, params, options = {}) => {
                         .then(() => {
                             return uni.request(obj).then(success, fail)
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             uni.showToast({
                                 title: '登录失败',
-                                icon: 'none'
+                                icon: 'none',
                             })
                         })
                 }
@@ -71,13 +73,13 @@ const ajax = (path, params, options = {}) => {
             return Promise.reject({ code: res.statusCode, msg: res.errMsg })
         }
     }
-    const fail = e => {
+    const fail = (e) => {
         utils.log({ url: path, data, response: e })
         options.loading && uni.hideLoading()
         !options.noAlert &&
             uni.showToast({
                 title: '网络异常',
-                icon: 'none'
+                icon: 'none',
             })
         if (e && e.errMsg === 'request:fail abort') return
         return Promise.reject(e)
@@ -85,7 +87,7 @@ const ajax = (path, params, options = {}) => {
 
     const obj = {
         url,
-        header
+        header,
     }
     let method = 'request'
     if (options.upload) {

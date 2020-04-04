@@ -88,6 +88,9 @@ export default {
     public(data = {}) {
         return ajax('/api/House_Resource/publicHouse', data, { type: 'post' })
     },
+    del(data = {}) {
+        return ajax('/api/house_resource/wxappDelete', data, { type: 'post' })
+    },
     getConfig(data = {}) {
         return ajax('/api/keyvalue/getAllList', data, { noToken: true })
     },

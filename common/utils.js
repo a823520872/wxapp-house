@@ -34,7 +34,7 @@ export default {
     },
     call(v) {
         uni.makePhoneCall({
-            phoneNumber: v
+            phoneNumber: v,
         })
     },
     copy(v) {
@@ -43,9 +43,9 @@ export default {
             success() {
                 uni.showToast({
                     title: '复制成功',
-                    icon: 'success'
+                    icon: 'success',
                 })
-            }
+            },
         })
     },
     goPage(value) {
@@ -54,20 +54,20 @@ export default {
             const tabs = ['/pages/index/index', '/pages/publish/index', '/pages/me/index']
             if (tabs.indexOf(value) !== -1) {
                 uni.switchTab({
-                    url: value
+                    url: value,
                 })
             } else {
                 uni.navigateTo({
-                    url: value
+                    url: value,
                 })
             }
         } else if (value.replace) {
             uni.redirectTo({
-                url: value.path
+                url: value.path,
             })
         } else {
             uni.navigateTo({
-                url: value.path
+                url: value.path,
             })
         }
     },
@@ -78,8 +78,19 @@ export default {
                 sourceType: ['album'],
                 count: count,
                 success: resolve,
-                fail: reject
+                fail: reject,
             })
         })
-    }
+    },
+    chooseVideo(count = 1) {
+        return new Promise((resolve, reject) => {
+            uni.chooseVideo({
+                compressed: true,
+                sourceType: ['album'],
+                count: count,
+                success: resolve,
+                fail: reject,
+            })
+        })
+    },
 }

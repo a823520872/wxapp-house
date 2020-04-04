@@ -20,7 +20,7 @@
                                 </text>
                             </text>
                         </view>
-                        <view class="intro_cell">
+                        <view class="intro_cell" v-if="detail.deposit">
                             <text class="intro_hd">押金：</text>
                             <text class="intro_bd">{{ detail.deposit }}</text>
                         </view>
@@ -66,21 +66,33 @@
                     </view>
                 </view>
                 <view class="cells">
-                    <view class="cell m_flex_middle" @tap="viewLandlord">
-                        <view class="avatar">
-                            <image :src="detail.landlord_info.avatar" mode="aspectFit"></image>
-                        </view>
-                        <view class="user m_flex_item">
-                            <view class="name">{{ detail.landlord_info.nickname }}</view>
-                            <view class="m_flex_middle">
-                                <text>阅读量：{{ detail.read_number }}</text>
+                    <!-- <view class="cells_title title m_flex_middle">房东描述</view> -->
+                    <view class="cell">
+                        <view class="info m_flex_middle" @tap="viewLandlord">
+                            <view class="avatar">
+                                <image :src="detail.landlord_info.avatar" mode="aspectFit"></image>
                             </view>
+                            <view class="user m_flex_item">
+                                <view class="name m_flex_middle">
+                                    <text>{{ detail.landlord_info.nickname }}</text>
+                                    <!-- <button class="m_button main btn" v-if="detail.landlord_info.is_auth && detail.landlord_info.is_auth === 1">认证房东</button> -->
+                                </view>
+                                <view class="m_flex_middle">
+                                    <text>阅读量：{{ detail.read_number }}</text>
+                                    <!-- <text> {{ detail.public_time }} 发布 </text> -->
+                                </view>
+                            </view>
+                            <view class="time" v-if="detail.public_time"> {{ detail.public_time }} 发布 </view>
+                            <!-- <view class="time m_flex_middle">
+                                <text>Ta的房源</text>
+                                <text class="right_icon"></text>
+                            </view> -->
                         </view>
-                        <view class="time" v-if="detail.public_time"> {{ detail.public_time }} 发布 </view>
+                        <!-- <view class="remark" v-if="detail.remarks">{{ detail.remarks }}</view> -->
                     </view>
                 </view>
                 <view class="cells" v-if="detail.image_urls && detail.image_urls.length">
-                    <view class="cells_title title">视频/图片</view>
+                    <view class="cells_title title m_flex_middle">视频/图片</view>
                     <view class="cell">
                         <view class="house_img" v-for="(li, i) in detail.video_urls" :key="li">
                             <video class="vdo" :src="li" controls></video>
@@ -92,15 +104,17 @@
                     </view>
                 </view>
                 <view class="cells" v-if="detail.location && detail.location.lng && detail.location.lat">
-                    <view class="cells_title title">
-                        <text>房源位置</text>
-                        <text class="intro">（房源在</text>
-                        <image src="/static/image/index/marker.png" mode="aspectFit"></image>
-                        <text class="intro">附近）</text>
+                    <view class="cells_title title m_flex_middle">
+						<view>
+							<text>房源位置</text>
+							<text class="intro">（房源在</text>
+							<image src="/static/image/index/marker.png" mode="aspectFit"></image>
+							<text class="intro">附近）</text>
+						</view>
                     </view>
                     <view class="cell map">
                         <map :longitude="detail.location.lng" :latitude="detail.location.lat" :scale="18" :markers="markers" :enable-scroll="false" :enable-zoom="false" @tap="showMap">
-                            <cover-image class="marker" src="/static/image/index/marker.png"></cover-image>
+                            <!-- <cover-image class="marker" src="/static/image/index/marker.png"></cover-image> -->
                         </map>
                     </view>
                 </view>
@@ -214,7 +228,7 @@ export default {
                             {
                                 id: 0,
                                 latitude: this.detail.location.lat,
-                                longitude: this.detail.location.longitude,
+                                longitude: this.detail.location.lng,
                                 title: this.detail.address_flag,
                                 iconPath: '/static/image/index/marker.png',
                                 width: 15,
@@ -333,18 +347,20 @@ export default {
         }
 
         &_title {
-            padding-left: 30upx;
-            padding-right: 30upx;
-            line-height: 90upx;
-            font-size: 33upx;
+            padding: 30upx 30upx 20upx;
+            line-height: 40upx;
+            font-weight: bold;
+            font-size: 32upx;
+            color: #333;
 
             &::before {
                 content: ' ';
                 display: inline-block;
-                width: 5upx;
-                height: 22upx;
-                margin-right: 7upx;
+                width: 8upx;
+                height: 30upx;
+                margin-right: 10upx;
                 background-color: $main-color;
+                border-radius: 4upx;
             }
 
             .intro {
@@ -398,21 +414,27 @@ export default {
             font-size: 28upx;
         }
     }
+    .info {
+        padding-top: 28upx;
+        padding-bottom: 28upx;
+    }
     .avatar {
         width: 100upx;
         height: 100upx;
-        margin-top: 28upx;
         margin-right: 24upx;
-        margin-bottom: 28upx;
         border-radius: 50%;
         overflow: hidden;
     }
     .user {
         color: $text-color-inverse;
-        image {
-            width: 32upx;
-            height: 18upx;
-            padding-right: 16upx;
+        .btn {
+            width: 110upx;
+            height: 38upx;
+            margin-left: 20upx;
+            padding: 0;
+            line-height: 36upx;
+            border-radius: 4upx;
+            font-size: 24upx;
         }
     }
     .name {
@@ -423,6 +445,14 @@ export default {
     .time {
         width: 160upx;
         color: $text-color-inverse;
+
+        .right_icon {
+            width: 12upx;
+            height: 12upx;
+            margin-left: 10upx;
+            border-width: 1upx;
+            border-color: $text-color-inverse;
+        }
     }
     .has {
         color: $primary-color;

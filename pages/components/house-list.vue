@@ -28,7 +28,7 @@
                 </view>
                 <view class="bd m_flex" v-if="li.image_urls && li.image_urls.length">
                     <block v-for="(it, j) in li.image_urls" :key="j">
-                        <view :class="{ img_box: true, has_video: li.video_urls, last: li.image_urls.length > 3 && j === 2 }" v-if="j < 3">
+                        <view :class="{ img_box: true, has_video: li.video_urls && j === 0, last: li.image_urls.length > 3 && j === 2 }" v-if="j < 3">
                             <image :src="it" :mode="CONFIG.house_mode"></image>
                         </view>
                     </block>

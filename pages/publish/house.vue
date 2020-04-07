@@ -353,7 +353,7 @@ export default {
                         data.images = images.map((item) => ({
                             url: item,
                         }))
-                        data.videos = data.video_urls ? data.video_urls.split(',') : ''
+                        data.videos = data.video_urls ? data.video_urls.split(',') : []
                         this.form = { ...data, address_detail: data.address_detail || '', remarks: data.remarks || '' }
                     }
                 })

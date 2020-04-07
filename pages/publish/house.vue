@@ -11,9 +11,9 @@
                                 <image :src="houseImg[0].url" :mode="CONFIG.house_mode"></image>
                             </view>
                             <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseImg">
-                                <view class="upload_icon"></view>
+                                <!-- <view class="upload_icon"></view> -->
                                 <!-- <view class="upload_info">上传照片（必填）</view> -->
-                                <!-- <image class="upload_img" src="/static/image/publish/choose_image.png" mode="aspectFit"></image> -->
+                                <image class="upload_img" src="/static/image/publish/choose_image.png" mode="aspectFit"></image>
                             </view>
                             <button class="m_button btn" @tap.stop="chooseImg">{{ houseImg && houseImg.length ? '编辑' : '上传' }}照片(必填)</button>
                         </view>
@@ -23,9 +23,9 @@
                             </view>
                             <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseVdo">
                                 <view class="tips">支持20s内</view>
-                                <view class="upload_icon"></view>
+                                <!-- <view class="upload_icon"></view> -->
                                 <!-- <view class="upload_info">上传视频（选填）</view> -->
-                                <!-- <image class="upload_img" src="/static/image/publish/choose_video.png" mode="aspectFit"></image> -->
+                                <image class="upload_img" src="/static/image/publish/choose_video.png" mode="aspectFit"></image>
                             </view>
                             <button class="m_button btn" @tap.stop="chooseVdo">{{ form.videos && form.videos.length ? '重新选择' : '上传视频' }}(选填)</button>
                         </view>

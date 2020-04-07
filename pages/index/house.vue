@@ -105,12 +105,12 @@
                 </view>
                 <view class="cells" v-if="detail.location && detail.location.lng && detail.location.lat">
                     <view class="cells_title title m_flex_middle">
-						<view>
-							<text>房源位置</text>
-							<text class="intro">（房源在</text>
+                        <view>
+                            <text>房源位置</text>
+                            <!-- <text class="intro">（房源在</text>
 							<image src="/static/image/index/marker.png" mode="aspectFit"></image>
-							<text class="intro">附近）</text>
-						</view>
+							<text class="intro">附近）</text> -->
+                        </view>
                     </view>
                     <view class="cell map">
                         <map :longitude="detail.location.lng" :latitude="detail.location.lat" :scale="18" :markers="markers" :enable-scroll="false" :enable-zoom="false" @tap="showMap">
@@ -159,24 +159,24 @@ import linkModal from '../components/link-modal'
 import poster from '../components/poster.vue'
 export default {
     computed: {
-        ...mapState(['userInfo'])
+        ...mapState(['userInfo']),
     },
     components: {
         linkModal,
-        poster
+        poster,
     },
     data() {
         return {
             id: '',
             detail: null,
             markers: null,
-            uri: ''
+            uri: '',
         }
     },
     onShareAppMessage(obj) {
         return {
             title: '房源详情',
-            path: `/pages/index/index?p=` + encodeURIComponent(`/pages/index/house?id=${this.id}` + (this.userInfo ? `&uid=${this.userInfo.id}` : ``))
+            path: `/pages/index/index?p=` + encodeURIComponent(`/pages/index/house?id=${this.id}` + (this.userInfo ? `&uid=${this.userInfo.id}` : ``)),
         }
     },
     onLoad(res) {
@@ -185,7 +185,7 @@ export default {
         } else {
             uni.showToast({
                 title: '地址错误',
-                icon: 'none'
+                icon: 'none',
             })
         }
     },
@@ -196,7 +196,7 @@ export default {
         // } else {
         //     this.login()
         // }
-        this.login().then(code => {
+        this.login().then((code) => {
             this.getInfo()
         })
     },
@@ -209,12 +209,12 @@ export default {
         ...mapActions(['login', 'getInfo']),
         getData() {
             const params = {
-                id: this.id
+                id: this.id,
             }
             if (this.userInfo) {
                 params.user_id = this.userInfo.user_id
             }
-            this.$request.getHouse(params).then(res => {
+            this.$request.getHouse(params).then((res) => {
                 if (res && res.data) {
                     const data = this.filterHouse(res.data, 'string')
                     // 数据库数据经纬度传反了
@@ -231,9 +231,9 @@ export default {
                                 longitude: this.detail.location.lng,
                                 title: this.detail.address_flag,
                                 iconPath: '/static/image/index/marker.png',
-                                width: 15,
-                                height: 20
-                            }
+                                width: 120,
+                                height: 60,
+                            },
                         ]
                     }
                 }
@@ -242,9 +242,9 @@ export default {
         getPoster() {
             this.$request
                 .getQRCode({
-                    house_id: this.id
+                    house_id: this.id,
                 })
-                .then(res => {
+                .then((res) => {
                     if (res && res.data) {
                         this.uri = res.data
                         this.$refs.poster.show()
@@ -254,12 +254,12 @@ export default {
         showMap(e) {
             uni.openLocation({
                 longitude: this.detail.location.lng,
-                latitude: this.detail.location.lat
+                latitude: this.detail.location.lat,
             })
         },
         addReader() {
             const params = {
-                id: this.id
+                id: this.id,
             }
             if (this.userInfo) {
                 params.user_id = this.userInfo.user_id
@@ -275,7 +275,7 @@ export default {
         showImg(li) {
             uni.previewImage({
                 current: li,
-                urls: this.detail.image_urls
+                urls: this.detail.image_urls,
             })
         },
         viewLandlord() {
@@ -286,25 +286,25 @@ export default {
                 if (this.detail.collection_status === 0) {
                     this.$request
                         .collect({
-                            hr_id: this.id
+                            hr_id: this.id,
                         })
                         .then(() => {
                             this.detail.collection_status = 1
                             uni.showToast({
                                 title: '收藏成功',
-                                icon: 'success'
+                                icon: 'success',
                             })
                         })
                 } else if (this.detail.collection_status === 1) {
                     this.$request
                         .cancelCollect({
-                            id: this.id
+                            id: this.id,
                         })
                         .then(() => {
                             this.detail.collection_status = 0
                             uni.showToast({
                                 title: '取消成功',
-                                icon: 'success'
+                                icon: 'success',
                             })
                         })
                 }
@@ -318,15 +318,15 @@ export default {
                 ? (this.$refs.modal.show({
                       title: '联系方式',
                       confirmText: '确定',
-                      success() {}
+                      success() {},
                   }),
                   this.$request.viewPhone({
-                      id: this.id
-                  }) /*: this.getPhone()*/)
+                      id: this.id,
+                  })) /*: this.getPhone()*/
                 : // : this.getPhone()
                   this.getUserInfo()
-        }
-    }
+        },
+    },
 }
 </script>
 

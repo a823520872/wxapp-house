@@ -6,6 +6,7 @@ import api from './api/index.js'
 import util from './common/utils.js'
 import config from './common/config.js'
 import validator from './common/validator.js'
+import filter from './common/filter.js'
 
 import vMask from './components/mask.vue'
 import vModal from './components/modal.vue'
@@ -19,10 +20,13 @@ Vue.component('vPage', vPage)
 Vue.mixin({
     data() {
         return {
-            CONFIG: config
+            CONFIG: config,
         }
     },
-    methods: util
+    methods: util,
+    filters: {
+        ...filter,
+    },
 })
 
 Vue.prototype.$request = api
@@ -34,6 +38,6 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 
 const app = new Vue({
-    ...App
+    ...App,
 })
 app.$mount()

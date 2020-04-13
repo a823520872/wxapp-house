@@ -94,6 +94,12 @@
             "style": {
                 "navigationBarTitleText": "邀请入驻"
             }
+        },
+        {
+            "path": "pages/me/code",
+            "style": {
+                "navigationBarTitleText": "村里租房"
+            }
         }
     ],
     "tabBar": {

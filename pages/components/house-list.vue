@@ -11,25 +11,23 @@
                         </view>
                         <!-- <button class="m_button main plain" @tap.stop="linkLandlord(li)">联系房东</button> -->
                     </view>
-                    <view class="intro">
-                        <view class="intro_cell m_textover">
-                            <text>楼层：</text>
-                            <text class="intro_cell_bd">{{ li.floor_number }}楼</text>
-                        </view>
-                        <view class="intro_cell m_textover">
-                            <text>标志建筑：</text>
-                            <text class="intro_cell_bd" v-if="li.address_flag">{{ li.address_flag }}</text>
-                        </view>
-                        <view class="intro_cell m_textover">
-                            <text>路边距离：</text>
-                            <text class="intro_cell_bd" v-if="li.road_distance">{{ li.road_distance }}</text>
-                        </view>
+                    <view class="intro m_textover">
+                        <text class="intro_cell">{{ li.floor_number }}楼</text>
+                        <text>丨</text>
+                        <text class="intro_cell">{{ li.road_distance }}</text>
+                        <template v-if="li.address_flag">
+                            <text>丨</text>
+                            <text class="intro_cell">{{ li.address_flag }}</text>
+                        </template>
+                    </view>
+                    <view class="lightspot m_flex_middle" v-if="li.config_lightspot && li.config_lightspot.length">
+                        <view class="lightspot_cell" v-for="(l, j) in li.config_lightspot" :key="j">{{ l }}</view>
                     </view>
                 </view>
                 <view class="bd m_flex" v-if="li.image_urls && li.image_urls.length">
-                    <block v-for="(it, j) in li.image_urls" :key="j">
-                        <view :class="{ img_box: true, has_video: li.video_urls && j === 0, last: li.image_urls.length > 3 && j === 2 }" v-if="j < 3">
-                            <image :src="it" :mode="CONFIG.house_mode"></image>
+                    <block v-for="(l, k) in li.image_urls" :key="k">
+                        <view :class="{ img_box: true, has_video: li.video_urls && k === 0, last: li.image_urls.length > 3 && k === 2 }" v-if="k < 3">
+                            <image :src="l" :mode="CONFIG.house_mode"></image>
                         </view>
                     </block>
                 </view>
@@ -53,21 +51,21 @@ export default {
             type: Array,
             default() {
                 return []
-            }
-        }
+            },
+        },
     },
     computed: {
         ...mapState(['userInfo']),
         items() {
-            return this.list.map(item => this.filterHouse({ ...item }, 'string'))
-        }
+            return this.list.map(item => this.filterHouse({ ...item }))
+        },
     },
     components: {
-        linkModal
+        linkModal,
     },
     data() {
         return {
-            temp: null
+            temp: null,
         }
     },
     methods: {
@@ -88,7 +86,7 @@ export default {
                 // if (this.userInfo.mobile) {
                 this.temp = {
                     contact_mobile: li.contact_mobile,
-                    wechat_number: li.wechat_number
+                    wechat_number: li.wechat_number,
                 }
                 this.$refs.modal2.show({
                     title: '联系方式',
@@ -98,10 +96,10 @@ export default {
                     },
                     fail() {
                         self.temp = null
-                    }
+                    },
                 })
                 this.$request.viewPhone({
-                    id: li.id
+                    id: li.id,
                 })
                 // } else {
                 //     this.getPhone();
@@ -109,25 +107,26 @@ export default {
             } else {
                 this.getUserInfo()
             }
-        }
-    }
+        },
+    },
 }
 </script>
 
 <style lang="scss" scoped>
 .list {
     .cell {
-        padding: 10upx 30upx;
+        padding: 30upx;
         margin-bottom: 20upx;
         background-color: #fff;
     }
 
-    .hd {
-        padding-top: 12upx;
-    }
+    // .hd {
+    //     padding-top: 12upx;
+    // }
 
     .title {
         width: 40%;
+        font-weight: bold;
         font-size: 34upx;
         color: #333;
     }
@@ -155,27 +154,48 @@ export default {
     }
 
     .intro {
-        padding: 17upx 0 0;
-        font-size: 24upx;
+        padding: 20upx 0 0;
         font-size: 28upx;
         line-height: 36upx;
-        color: $text-color-inverse;
         color: #666;
+    }
 
-        &_cell {
-            margin-bottom: 10upx;
+    .intro_cell + .intro_cell {
+        margin-left: 30upx;
+    }
+
+    .lightspot {
+        position: relative;
+        margin-top: 20upx;
+        overflow: hidden;
+        flex-wrap: nowrap;
+        &::after {
+            content: ' ';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            width: 80upx;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
         }
+    }
 
-        &_cell_bd {
-            color: $text-color;
-            color: #666;
-            font-size: 28upx;
+    .lightspot_cell {
+        flex-shrink: 0;
+        line-height: 34upx;
+        padding: 1upx 10upx;
+        border-radius: 4upx;
+        border: 1upx solid #0e868f;
+        color: #0e868f;
+        & + .lightspot_cell {
+            margin-left: 20upx;
         }
     }
 
     .bd {
-        padding-top: 10upx;
-        padding-bottom: 20upx;
+        padding-top: 20upx;
+        padding-bottom: 10upx;
         margin-right: -15upx;
     }
 
@@ -195,7 +215,7 @@ export default {
         top: 0;
         left: 0;
         padding: 6upx 12upx;
-        background-color: #fe620a;
+        background-color: $primary-color;
         border-radius: 4upx 0 8upx 0;
         line-height: 24upx;
         font-size: 22upx;

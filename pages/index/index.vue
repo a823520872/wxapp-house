@@ -60,15 +60,21 @@
                         <text class="title">路边距离</text>
                         <text class="triangle_down_icon"></text>
                     </view>
-                    <view class="filter_title" @tap="showModal(3, '更多')">
-                        <text class="title">更多</text>
+                    <view class="filter_title" @tap="showModal(3, '个性筛选')">
+                        <text class="title">个性筛选</text>
                         <text class="triangle_down_icon"></text>
                     </view>
                 </view>
                 <view class="cells_fd">
-                    <scroll-view class="scroll_view" :scroll-x="true">
-                        <view class="m_flex">
-                            <template v-if="house_type_active">
+                    <scroll-view class="scroll_view" :scroll-x="true" v-if="activeItems && activeItems.length">
+                        <view class="m_flex_middle">
+                            <view class="house_type" v-for="li in activeItems" :key="li.value">
+                                <view class="btn active">{{ li.value }}</view>
+                                <view class="del_btn" @tap="delParams(li)">
+                                    <image src="/static/image/index/close.png" mode="aspectFit"></image>
+                                </view>
+                            </view>
+                            <!-- <template v-if="house_type_active">
                                 <view class="house_type" v-for="li in house_type_active" :key="li.value">
                                     <view class="btn active">{{ li.value }}</view>
                                     <view class="del_btn" @tap="delParams(li)">
@@ -107,7 +113,7 @@
                                         <image src="/static/image/index/del.png" mode="aspectFit"></image>
                                     </view>
                                 </view>
-                            </template>
+                            </template> -->
                         </view>
                     </scroll-view>
                 </view>
@@ -157,76 +163,84 @@ export default {
             return (
                 this.config &&
                 this.config.address_street &&
-                this.config.address_street.map((lis) => {
-                    return lis.map((li) => li.name)
+                this.config.address_street.map(lis => {
+                    return lis.map(li => li.name)
                 })
             )
         },
         house_type() {
-            return this.config && this.config.house_type && this.config.house_type.map((li) => li.value)
+            return this.config && this.config.house_type && this.config.house_type.map(li => li.value)
         },
         price() {
-            return this.config && this.config.price && this.config.price.map((li) => li.value)
+            return this.config && this.config.price && this.config.price.map(li => li.value)
         },
         house_type_active() {
             return (
-                this.config &&
-                this.config.house_type &&
-                this.config.house_type.reduce((arr, li) => {
-                    if (li.active) {
-                        arr.push(li)
-                    }
-                    return arr
-                }, [])
+                (this.config &&
+                    this.config.house_type &&
+                    this.config.house_type.reduce((arr, li) => {
+                        if (li.active) {
+                            arr.push(li)
+                        }
+                        return arr
+                    }, [])) ||
+                []
             )
         },
         price_active() {
             return (
-                this.config &&
-                this.config.price &&
-                this.config.price.reduce((arr, li) => {
-                    if (li.active) {
-                        arr.push(li)
-                    }
-                    return arr
-                }, [])
+                (this.config &&
+                    this.config.price &&
+                    this.config.price.reduce((arr, li) => {
+                        if (li.active) {
+                            arr.push(li)
+                        }
+                        return arr
+                    }, [])) ||
+                []
             )
         },
         road_distance_active() {
             return (
-                this.config &&
-                this.config.road_distance &&
-                this.config.road_distance.reduce((arr, li) => {
-                    if (li.active) {
-                        arr.push(li)
-                    }
-                    return arr
-                }, [])
+                (this.config &&
+                    this.config.road_distance &&
+                    this.config.road_distance.reduce((arr, li) => {
+                        if (li.active) {
+                            arr.push(li)
+                        }
+                        return arr
+                    }, [])) ||
+                []
             )
         },
         config_base_active() {
             return (
-                this.config &&
-                this.config.config_base &&
-                this.config.config_base.reduce((arr, li) => {
-                    if (li.active) {
-                        arr.push(li)
-                    }
-                    return arr
-                }, [])
+                (this.config &&
+                    this.config.config_base &&
+                    this.config.config_base.reduce((arr, li) => {
+                        if (li.active) {
+                            arr.push(li)
+                        }
+                        return arr
+                    }, [])) ||
+                []
             )
         },
         config_lightspot_active() {
             return (
-                this.config &&
-                this.config.config_lightspot &&
-                this.config.config_lightspot.reduce((arr, li) => {
-                    if (li.active) {
-                        arr.push(li)
-                    }
-                    return arr
-                }, [])
+                (this.config &&
+                    this.config.config_lightspot &&
+                    this.config.config_lightspot.reduce((arr, li) => {
+                        if (li.active) {
+                            arr.push(li)
+                        }
+                        return arr
+                    }, [])) ||
+                []
             )
+        },
+        activeItems() {
+            return [...this.house_type_active, ...this.price_active, ...this.road_distance_active, ...this.config_base_active, ...this.config_lightspot_active]
         },
     },
     data() {
@@ -314,7 +328,7 @@ export default {
         }
     },
     onShow() {
-        this.login().then((code) => {
+        this.login().then(code => {
             this.getInfo()
         })
         if (this.homeReload) {
@@ -358,7 +372,7 @@ export default {
                 })
         },
         getData() {
-            this.$request.getConfig().then((res) => {
+            this.$request.getConfig().then(res => {
                 if (res.data) {
                     const config = res.data.reduce((obj, item) => {
                         if (!obj[item.type]) {
@@ -372,9 +386,9 @@ export default {
                     this.config = { ...this.config, ...config }
                 }
             })
-            this.$request.getAddrList().then((res) => {
+            this.$request.getAddrList().then(res => {
                 if (res.data) {
-                    const city = res.data.filter((item) => item.level === 2)
+                    const city = res.data.filter(item => item.level === 2)
                     const addr = res.data.reduce((obj, item) => {
                         if (!item.pid) return obj
                         if (!obj[item.pid]) {
@@ -409,15 +423,15 @@ export default {
             this.hasFocus = true
         },
         filterParams() {
-            const house_type = this.config.house_type ? this.config.house_type.filter((item) => item.active) : []
-            const price = this.config.price.filter((item) => item.active)[0]
-            const road_distance = this.config.road_distance ? this.config.road_distance.filter((item) => item.active) : []
-            const config_base = this.config.config_base ? this.config.config_base.filter((item) => item.active) : []
-            const config_lightspot = this.config.config_lightspot ? this.config.config_lightspot.filter((item) => item.active) : []
+            const house_type = this.config.house_type ? this.config.house_type.filter(item => item.active) : []
+            const price = this.config.price.filter(item => item.active)[0]
+            const road_distance = this.config.road_distance ? this.config.road_distance.filter(item => item.active) : []
+            const config_base = this.config.config_base ? this.config.config_base.filter(item => item.active) : []
+            const config_lightspot = this.config.config_lightspot ? this.config.config_lightspot.filter(item => item.active) : []
             // this.params.house_type = house_type
             //     .map(item => item.value)
             //     .join(",");
-            this.params.house_type_id = house_type.map((item) => item.id).join(',')
+            this.params.house_type_id = house_type.map(item => item.id).join(',')
             if (price) {
                 this.params.rental_begin = price.rental_begin || ''
                 this.params.rental_end = price.rental_end || ''
@@ -425,15 +439,15 @@ export default {
                 this.params.rental_begin = ''
                 this.params.rental_end = ''
             }
-            this.params.road_distance_ids = road_distance.map((item) => item.id).join(',')
+            this.params.road_distance_ids = road_distance.map(item => item.id).join(',')
             // this.params.config_base = config_base
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_base_ids = config_base.map((item) => item.id).join(',')
+            this.params.config_base_ids = config_base.map(item => item.id).join(',')
             // this.params.config_lightspot = config_lightspot
             //     .map(item => item.value)
             //     .join(",");
-            this.params.config_lightspot_ids = config_lightspot.map((item) => item.id).join(',')
+            this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
         },
         columnChange(e) {
             const self = this
@@ -508,7 +522,7 @@ export default {
             const self = this
             const key = this.filterType(type)
             this.modalType = type
-            this.modalList = key.map((item) => {
+            this.modalList = key.map(item => {
                 return this.config[item]
             })
             if (key && key.length) {
@@ -516,8 +530,8 @@ export default {
                     title,
                     confirmText: '确定',
                     success() {
-                        key.map((item) => {
-                            self.config[item].map((it) => {
+                        key.map(item => {
+                            self.config[item].map(it => {
                                 it.active = it.tmpActive
                             })
                         })
@@ -534,7 +548,7 @@ export default {
         },
         toggleList(i, j) {
             const key = this.filterType(this.modalType)
-            key.map((item) => {
+            key.map(item => {
                 if (item === 'price') {
                     this.config[item].map((it, k) => {
                         if (j === k) {
@@ -641,6 +655,7 @@ export default {
         padding: 0 30upx;
         line-height: 80upx;
         background-color: #fff;
+        border-bottom: 1upx solid #eee;
 
         .filter_title {
             padding: 0 16upx;
@@ -651,20 +666,20 @@ export default {
         }
     }
     &_fd {
-        border-bottom: 1upx solid #eee;
     }
 }
 .scroll_view {
-    padding: 0 30upx 12upx;
+    padding: 0 30upx;
     line-height: 1;
     box-sizing: border-box;
     background-color: #fff;
+    font-size: 0;
     .house_type {
         position: relative;
-        width: 200upx;
-        height: 56upx;
-        margin-right: 16upx;
-        padding: 18upx 20upx 0 0;
+        // width: 200upx;
+        margin-right: 36upx;
+        padding: 18upx 20upx 12upx 0;
+        font-size: 0;
     }
     .btn {
         // width: 200upx;

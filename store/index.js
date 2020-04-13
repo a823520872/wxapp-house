@@ -18,7 +18,7 @@ const store = new Vuex.Store({
         urlPrefix: 'https://house.zhiqiang.ink',
         // #endif
         // #ifdef H5
-        urlPrefix: 'http://127.0.0.1:8081'
+        urlPrefix: 'http://127.0.0.1:8081',
         // #endif
     },
     mutations: {
@@ -49,9 +49,9 @@ const store = new Vuex.Store({
         setCollectReload(state, bl) {
             state.collectReload = bl
         },
-		setUrlPrefix(state) {
-			state.urlPrefix = state.urlPrefix === 'https://house.zhiqiang.ink' ? 'https://house.ioupian.com' : 'https://house.zhiqiang.ink'
-		}
+        setUrlPrefix(state) {
+            state.urlPrefix = state.urlPrefix === 'https://house.zhiqiang.ink' ? 'https://house.ioupian.com' : 'https://house.zhiqiang.ink'
+        },
     },
     actions: {
         login(context, bl) {
@@ -61,7 +61,7 @@ const store = new Vuex.Store({
                         success(res) {
                             context.commit('setCode', res.code)
                             resolve(res.code)
-                        }
+                        },
                     })
                 } else {
                     uni.checkSession({
@@ -73,9 +73,9 @@ const store = new Vuex.Store({
                                 success(res) {
                                     context.commit('setCode', res.code)
                                     resolve(res.code)
-                                }
+                                },
                             })
-                        }
+                        },
                     })
                 }
             })
@@ -92,7 +92,7 @@ const store = new Vuex.Store({
         getInfo(context, noCache = false) {
             if (!noCache && context.state.userInfo) {
                 return Promise.resolve({
-                    data: context.state.userInfo
+                    data: context.state.userInfo,
                 })
             }
             return api.getInfo().then(res => {
@@ -115,8 +115,8 @@ const store = new Vuex.Store({
                 uni.setStorageSync('auth', res.data)
                 return res.data
             })
-        }
-    }
+        },
+    },
 })
 
 export default store

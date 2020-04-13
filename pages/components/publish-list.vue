@@ -3,23 +3,27 @@
         <view class="list">
             <view class="item" v-for="(li, i) in list" :key="i" @tap="goPage(`/pages/index/house?id=${li.id}`)">
                 <view class="bd m_flex">
-                    <view class="img">
+                    <view class="img" :class="{ has_video: li.video_urls }">
                         <image :src="li.images && li.images[0]" :mode="CONFIG.house_mode"></image>
                         <!-- <view v-if="li.is_rented === 1" class="rent m_textover">租金：¥{{li.rental}}/月</view> -->
                     </view>
                     <view class="intro m_flex_item">
-                        <view class="intro_cell name">{{ li.address_street }} · {{ li.house_type }}</view>
-                        <view class="intro_cell price">¥{{ li.rental }}/月</view>
+                        <view class="m_flex_middle m_flex_justify">
+                            <view class="intro_cell name m_textover">{{ li.address_street }} · {{ li.house_type }}</view>
+                            <view class="intro_cell price m_textover">{{ li.rental }}元/月</view>
+                        </view>
                         <!-- <view v-if="li.is_public === 1" class="intro_cell price">¥{{li.rental}}/月</view> -->
-                        <view class="intro_cell addr m_textover">
-                            <image src="/static/image/index/addr.png" mode="aspectFit"></image>
+                        <view class="intro_cell addr">
+                            <!-- <image src="/static/image/index/addr.png" mode="aspectFit"></image> -->
+                            <text>地址：</text>
                             <text v-if="li.address_street">{{ li.address_street }}</text>
                             <text v-if="li.address_flag">{{ li.address_flag }}</text>
                             <text v-if="li.address_detail">{{ li.address_detail }}</text>
                             <text v-if="li.road_distance">{{ li.road_distance }}</text>
                         </view>
-                        <view class="intro_cell addr">
-                            <image src="/static/image/index/addr.png" mode="aspectFit"></image>
+                        <view class="intro_cell">
+                            <!-- <image src="/static/image/index/addr.png" mode="aspectFit"></image> -->
+                            <text>楼层：</text>
                             <text>{{ li.floor_number }}楼</text>
                         </view>
                     </view>
@@ -29,15 +33,14 @@
                         <button class="m_button plain btn" @tap.stop="del(li)">删除</button>
                     </block>
                     <block v-if="li.is_rented === 2">
-                        <button class="m_button primary btn" @tap.stop="refresh(li)">刷新</button>
+                        <button class="m_button plain btn" @tap.stop="refresh(li)">刷新</button>
                     </block>
                     <button class="m_button plain btn" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
                         <button class="m_button plain btn" @tap.stop="rented(li)">下架</button>
-                        <!-- <button class="m_button primary btn" @tap.stop="getQRCode(li)">生成海报</button> -->
                     </block>
                     <block v-if="li.is_public === 2">
-                        <button class="m_button primary btn" @tap.stop="pblc(li)">发布</button>
+                        <button class="m_button main btn" @tap.stop="pblc(li)">发布</button>
                     </block>
                 </view>
             </view>
@@ -69,19 +72,19 @@ export default {
             type: Array,
             default() {
                 return []
-            }
-        }
+            },
+        },
     },
     computed: {
-        ...mapState(['userInfo'])
+        ...mapState(['userInfo']),
     },
     components: {
-        poster
+        poster,
     },
     data() {
         return {
             uri: '',
-            rent_type: ''
+            rent_type: '',
         }
     },
     methods: {
@@ -93,11 +96,11 @@ export default {
             const self = this
             uni.showLoading({
                 title: '图片正在生成',
-                mask: true
+                mask: true,
             })
             this.$request
                 .getQRCode({
-                    house_id: li.id
+                    house_id: li.id,
                 })
                 .then(res => {
                     uni.hideLoading()
@@ -119,7 +122,7 @@ export default {
                         self.$request
                             .rent({
                                 id: li.id,
-                                rent_type: self.rent_type
+                                rent_type: self.rent_type,
                             })
                             .then(res => {
                                 // if (res && res.data) {
@@ -127,12 +130,12 @@ export default {
                                 self.setHomeReload(true)
                                 uni.showToast({
                                     title: '操作成功',
-                                    icon: 'success'
+                                    icon: 'success',
                                 })
                                 // }
                             })
                     }
-                }
+                },
             })
         },
         refresh(li) {
@@ -141,7 +144,7 @@ export default {
                     id: li.id,
                     is_public: 1,
                     is_rented: 2,
-                    type: 'refresh'
+                    type: 'refresh',
                 })
                 .then(res => {
                     // if (res && res.data) {
@@ -149,7 +152,7 @@ export default {
                     this.setHomeReload(true)
                     uni.showToast({
                         title: '操作成功',
-                        icon: 'success'
+                        icon: 'success',
                     })
                     // }
                 })
@@ -159,7 +162,7 @@ export default {
                 .public({
                     id: li.id,
                     is_public: 1,
-                    is_rented: 2
+                    is_rented: 2,
                 })
                 .then(res => {
                     // if (res && res.data) {
@@ -167,7 +170,7 @@ export default {
                     this.setHomeReload(true)
                     uni.showToast({
                         title: '操作成功',
-                        icon: 'success'
+                        icon: 'success',
                     })
                     // }
                 })
@@ -175,32 +178,49 @@ export default {
         del(li) {
             this.$request
                 .del({
-                    id: li.id
+                    id: li.id,
                 })
                 .then(res => {
                     this.$emit('reload')
                     this.setHomeReload(true)
                     uni.showToast({
                         title: '操作成功',
-                        icon: 'success'
+                        icon: 'success',
                     })
                 })
-        }
-    }
+        },
+    },
 }
 </script>
 
 <style lang="scss" scoped>
 .item {
+    position: relative;
     margin-bottom: 18upx;
-    padding: 34upx 30upx;
+    padding: 30upx 30upx 0;
     background-color: #fff;
+    overflow: hidden;
 }
 .bd {
+    padding-bottom: 20upx;
+    border-bottom: 1upx solid $border-color;
     .img {
         position: relative;
         width: 277upx;
         height: 180upx;
+    }
+    .has_video::before {
+        content: '有视频';
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 6upx 12upx;
+        background-color: $primary-color;
+        border-radius: 4upx 0 8upx 0;
+        line-height: 24upx;
+        font-size: 22upx;
+        color: #fff;
+        z-index: 1;
     }
     .rent {
         position: absolute;
@@ -214,35 +234,51 @@ export default {
         color: $primary-color;
     }
     .intro {
-        // margin-top: 12upx;
         margin-left: 30upx;
-        color: $text-color-inverse;
+        line-height: 34upx;
+        font-size: 26upx;
+        color: #666;
 
-        &_cell {
-            line-height: 1.2;
-            padding: 6upx 0;
-        }
+        // &_cell {
+        //     line-height: 1.2;
+        //     padding: 6upx 0;
+        // }
     }
     .name {
-        font-size: 33upx;
-        color: $text-color;
+        max-width: 160upx;
+        line-height: 40upx;
+        font-weight: bold;
+        font-size: 32upx;
+        color: #333;
     }
     .price {
+        max-width: 160upx;
+        line-height: 38upx;
+        font-size: 30upx;
         color: $primary-color;
     }
     .addr {
-        image {
-            width: 21upx;
-            height: 31upx;
-            padding-right: 6upx;
-        }
+        display: -webkit-box;
+        height: 68upx;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        overflow: hidden;
+        margin-top: 10upx;
+        margin-bottom: 14upx;
+        // image {
+        //     width: 21upx;
+        //     height: 31upx;
+        //     padding-right: 6upx;
+        // }
     }
 }
 .fd {
-    margin-top: 30upx;
+    padding: 20upx 0 30upx;
     .btn {
         min-width: 97upx;
         margin-left: 20upx;
+        border-radius: 4upx;
         &.plain::after {
             border: 1px solid $text-color-inverse;
         }

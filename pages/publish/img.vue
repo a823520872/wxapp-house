@@ -39,7 +39,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
     computed: {
-        ...mapState(['houseTempImg', 'houseImg'])
+        ...mapState(['houseTempImg', 'houseImg']),
     },
     data() {
         return {}
@@ -49,7 +49,7 @@ export default {
         showImg(li) {
             uni.previewImage({
                 current: li,
-                urls: this.houseTempImg
+                urls: this.houseTempImg,
             })
         },
         chooseImg() {
@@ -70,12 +70,12 @@ export default {
             return new Promise((resolve, reject) => {
                 if (filePath.indexOf('zhiqiang.ink') > 0) {
                     resolve({
-                        url: filePath
+                        url: filePath,
                     })
                 } else {
                     this.$request
                         .uploadImg({
-                            filePath
+                            filePath,
                         })
                         .then(
                             res => {
@@ -92,7 +92,7 @@ export default {
             if (this.houseTempImg.length < 2) {
                 uni.showToast({
                     title: '至少上传两张图片',
-                    icon: 'none'
+                    icon: 'none',
                 })
                 return
             }
@@ -106,7 +106,7 @@ export default {
         queneUpload(tasks) {
             uni.showLoading({
                 title: '正在上传中……',
-                mask: true
+                mask: true,
             })
             let houseImg = []
             new Promise((resolve, reject) => {
@@ -127,18 +127,18 @@ export default {
                     this.setHouseImg(houseImg)
                     uni.hideLoading()
                     uni.navigateBack({
-                        delta: 1
+                        delta: 1,
                     })
                 })
                 .catch(e => {
                     uni.hideLoading()
                     uni.showToast({
                         title: e && e.message,
-                        icon: 'none'
+                        icon: 'none',
                     })
                 })
-        }
-    }
+        },
+    },
 }
 </script>
 

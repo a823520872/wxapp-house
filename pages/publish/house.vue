@@ -15,19 +15,19 @@
                                 <!-- <view class="upload_info">上传照片（必填）</view> -->
                                 <image class="upload_img" src="/static/image/publish/choose_image.png" mode="aspectFit"></image>
                             </view>
-                            <button class="m_button btn" @tap.stop="chooseImg">{{ houseImg && houseImg.length ? '编辑' : '上传' }}照片(必填)</button>
+                            <button class="m_button btn" @tap.stop="chooseImg">{{ houseImg && houseImg.length ? '编辑' : '*上传' }}照片</button>
                         </view>
                         <view class="media_box">
                             <view class="upload_box" v-if="form.videos && form.videos.length">
                                 <video class="vdo" :src="form.videos[0].url" controls></video>
                             </view>
                             <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseVdo">
-                                <view class="tips">支持20s内</view>
+                                <!-- <view class="tips">支持20s内</view> -->
                                 <!-- <view class="upload_icon"></view> -->
                                 <!-- <view class="upload_info">上传视频（选填）</view> -->
                                 <image class="upload_img" src="/static/image/publish/choose_video.png" mode="aspectFit"></image>
                             </view>
-                            <button class="m_button btn" @tap.stop="chooseVdo">{{ form.videos && form.videos.length ? '重新选择' : '上传视频' }}(选填)</button>
+                            <button class="m_button btn" @tap.stop="chooseVdo">{{ form.videos && form.videos.length ? '重新选择' : '上传视频（20s内）' }}</button>
                         </view>
                     </view>
                 </view>
@@ -49,9 +49,33 @@
                 <view class="cells">
                     <view class="cells_title m_flex_middle">基本信息</view>
                     <view class="cell m_flex_center m_flex_middle">
+                        <picker class="picker_box cell_box m_flex_item" :range="house_type" mode="selector" @change="pickerChange('house_type', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
+                            <view class="cell_hd">房型</view>
+                            <view class="cell_bd">{{ form.house_type ? form.house_type : '请选择' }}</view>
+                            <!-- <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
+                        </view> -->
+                        </picker>
+                        <picker class="picker_box cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
+                            <!-- <view class="cell_box m_flex_item"> -->
+                            <view class="cell_hd">楼层</view>
+                            <view class="cell_bd">{{ form.floor_number ? form.floor_number : '请选择' }}</view>
+                            <!-- <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
+                        </view> -->
+                        </picker>
+                    </view>
+                    <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">租金</view>
-                            <input class="cell_bd" type="number" v-model="form.rental" placeholder="请输入房源租金" />
+                            <input class="cell_bd" type="number" v-model="form.rental" placeholder="请输入" />
+                        </view>
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">水费/度</view>
+                            <input class="cell_bd" type="number" v-model.number="form.fee_wather" placeholder="请输入" />
+                        </view>
+                        <view class="cell_box m_flex_item">
+                            <view class="cell_hd">电费/吨</view>
+                            <input class="cell_bd" type="number" v-model.number="form.fee_electric" placeholder="请输入" />
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config && config.deposit">
@@ -85,25 +109,9 @@
                     </view>
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
-                            <view class="cell_hd">具体地址</view>
-                            <input class="cell_bd" type="text" v-model="form.address_detail" placeholder="可不填" />
+                            <view class="cell_hd">详细地址（选填）</view>
+                            <input class="cell_bd" type="text" v-model="form.address_detail" placeholder="请输入具体地址" />
                         </view>
-                    </view>
-                    <view class="cell m_flex_center m_flex_middle">
-                        <picker class="picker_box cell_box m_flex_item" :range="house_type" mode="selector" @change="pickerChange('house_type', $event)">
-                            <!-- <view class="cell_box m_flex_item"> -->
-                            <view class="cell_hd">房型</view>
-                            <view class="cell_bd">{{ form.house_type ? form.house_type : '请选择' }}</view>
-                            <!-- <input class="cell_bd" type="text" v-model="form.house_type" placeholder="请输入房型" />
-                        </view> -->
-                        </picker>
-                        <picker class="picker_box cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
-                            <!-- <view class="cell_box m_flex_item"> -->
-                            <view class="cell_hd">楼层</view>
-                            <view class="cell_bd">{{ form.floor_number ? form.floor_number : '请选择' }}</view>
-                            <!-- <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
-                        </view> -->
-                        </picker>
                     </view>
                 </view>
                 <view class="cells">
@@ -128,28 +136,30 @@
             </view>
         </view>
         <view class="step_two next" v-else-if="step === 1">
-            <view class="cells" v-if="config && config.config_base && config && config.config_base.length">
-                <view class="cells_title">
-                    一般配置
-                </view>
-                <view class="cell m_flex_wrap">
-                    <view :class="{ info_item: true, active: li.active }" v-for="(li, i) in config.config_base" :key="i" @tap="chooseCfgBase(li)">{{ li.value }}</view>
-                </view>
-            </view>
-            <view class="cells" v-if="config && config.config_lightspot && config && config.config_lightspot.length">
-                <view class="cells_title">
-                    房屋亮点
-                </view>
-                <view class="cell m_flex_wrap">
-                    <view :class="{ info_item: true, active: li.active }" v-for="(li, i) in config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{ li.value }}</view>
-                </view>
+            <view class="cells">
+                <template v-if="config && config.config_base && config && config.config_base.length">
+                    <view class="cells_title m_flex_middle">
+                        一般配置
+                    </view>
+                    <view class="cell m_flex_wrap">
+                        <view :class="{ info_item: true, active: li.active }" v-for="(li, i) in config.config_base" :key="i" @tap="chooseCfgBase(li)">{{ li.value }}</view>
+                    </view>
+                </template>
+                <template v-if="config && config.config_lightspot && config && config.config_lightspot.length">
+                    <view class="cells_title m_flex_middle">
+                        房屋亮点
+                    </view>
+                    <view class="cell m_flex_wrap">
+                        <view :class="{ info_item: true, active: li.active }" v-for="(li, i) in config.config_lightspot" :key="i" @tap="chooseCfgLight(li)">{{ li.value }}</view>
+                    </view>
+                </template>
             </view>
             <view class="cells">
-                <view class="cells_title">
-                    补充说明（选填）
+                <view class="cells_title m_flex_middle">
+                    房屋描述
                 </view>
                 <view class="cell">
-                    <textarea placeholder="详细的介绍会加大租房率" v-model="form.remarks"></textarea>
+                    <textarea class="txta" placeholder="详细的介绍会加大租房率" v-model="form.remarks"></textarea>
                 </view>
             </view>
             <view class="empty" :class="{ ipx: CONFIG.isIphoneX }"></view>
@@ -177,28 +187,28 @@ export default {
             return (
                 this.config &&
                 this.config.address_street &&
-                this.config.address_street.map((lis) => {
-                    return lis.map((li) => li.name)
+                this.config.address_street.map(lis => {
+                    return lis.map(li => li.name)
                 })
             )
         },
         address_flag() {
-            return this.config && this.config.address_flag && this.config.address_flag.map((item) => item.shortname || '')
+            return this.config && this.config.address_flag && this.config.address_flag.map(item => item.shortname || '')
         },
         road_distance() {
-            return this.config && this.config.road_distance && this.config.road_distance.map((item) => item.value)
+            return this.config && this.config.road_distance && this.config.road_distance.map(item => item.value)
         },
         house_type() {
-            return this.config && this.config.house_type && this.config.house_type.map((item) => item.value)
+            return this.config && this.config.house_type && this.config.house_type.map(item => item.value)
         },
         floor() {
-            return this.config && this.config.floor && this.config.floor.map((item) => item.value)
+            return this.config && this.config.floor && this.config.floor.map(item => item.value)
         },
         address() {
             return this.form.address_street || ''
         },
         depositArray() {
-            return this.config && this.config.deposit && this.config.deposit.map((item) => item.value)
+            return this.config && this.config.deposit && this.config.deposit.map(item => item.value)
         },
     },
     data() {
@@ -210,6 +220,8 @@ export default {
                 landlord_id: '',
                 // landlord_mobile: "",
                 rental: '',
+                fee_wather: '',
+                fee_electric: '',
                 deposit: '',
                 address_street_id: 1969,
                 address_street: '',
@@ -257,7 +269,7 @@ export default {
     },
     onReady() {
         // #ifdef MP-WEIXIN
-        this.login().then((code) => {
+        this.login().then(code => {
             // #endif
             this.getData()
             this.getInfo()
@@ -275,9 +287,10 @@ export default {
             // this.getLandlord();
         },
         getConfig() {
-            this.$request.getConfig().then((res) => {
+            this.$request.getConfig().then(res => {
                 if (res && res.data) {
                     const config = res.data.reduce((obj, item) => {
+                        if (item.remark && item.remark === 'calculate') return obj
                         if (!obj[item.type]) {
                             obj[item.type] = []
                         }
@@ -296,9 +309,9 @@ export default {
             })
         },
         getAddr() {
-            this.$request.getAddrList().then((res) => {
+            this.$request.getAddrList().then(res => {
                 if (res && res.data) {
-                    const city = res.data.filter((item) => item.level === 2)
+                    const city = res.data.filter(item => item.level === 2)
                     const addr = res.data.reduce((obj, item) => {
                         if (!item.pid) return obj
                         if (!obj[item.pid]) {
@@ -325,7 +338,7 @@ export default {
             })
         },
         getAreaFlag(id) {
-            this.$request.getAreaFlag({ pid_area_street: id }).then((res) => {
+            this.$request.getAreaFlag({ pid_area_street: id }).then(res => {
                 if (res && res.data) {
                     try {
                         this.config = {
@@ -340,17 +353,17 @@ export default {
         },
         getHouse() {
             if (this.house_id) {
-                this.$request.getHouse({ id: this.house_id }).then((res) => {
+                this.$request.getHouse({ id: this.house_id }).then(res => {
                     if (res && res.data) {
                         let data = res.data
                         const images = data.image_urls ? data.image_urls.split(',') : []
                         this.setHouseTempImg([...images])
                         this.setHouseImg(
-                            images.map((item) => ({
+                            images.map(item => ({
                                 url: item,
                             }))
                         )
-                        data.images = images.map((item) => ({
+                        data.images = images.map(item => ({
                             url: item,
                         }))
                         data.videos = data.video_urls ? data.video_urls.split(',') : []
@@ -363,23 +376,23 @@ export default {
             }
         },
         chooseImg() {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 if (this.houseImg && this.houseImg.length) {
-                    resolve(this.houseImg.map((item) => item.url))
+                    resolve(this.houseImg.map(item => item.url))
                 } else {
-                    this.chooseImage(9).then((e) => {
+                    this.chooseImage(9).then(e => {
                         if (e.errMsg === 'chooseImage:ok') {
                             resolve(e.tempFilePaths)
                         }
                     })
                 }
-            }).then((imgs) => {
+            }).then(imgs => {
                 this.setHouseTempImg(imgs)
                 this.goPage(`/pages/publish/img`)
             })
         },
         chooseVdo() {
-            this.chooseVideo().then((video) => {
+            this.chooseVideo().then(video => {
                 if (video.errMsg === 'chooseVideo:ok') {
                     if (video.duration > 20)
                         return uni.showToast({
@@ -395,10 +408,10 @@ export default {
                         title: '上传视频中',
                     })
                     this.getQiniuToken().then(
-                        (token) => {
+                        token => {
                             qiniuUploader.upload(
                                 video.tempFilePath,
-                                (res) => {
+                                res => {
                                     uni.hideLoading()
                                     uni.showToast({
                                         title: '上传成功',
@@ -410,7 +423,7 @@ export default {
                                         },
                                     ]
                                 },
-                                (e) => {
+                                e => {
                                     uni.hideLoading()
                                     uni.showToast({
                                         title: '上传失败',
@@ -427,7 +440,7 @@ export default {
                                 }
                             )
                         },
-                        (e) => {
+                        e => {
                             uni.hideLoading()
                         }
                     )
@@ -438,18 +451,18 @@ export default {
             return this.$request
                 .getQiniuToken()
                 .then(
-                    (res) => {
+                    res => {
                         if (res.data && res.data.token) {
                             return res.data.token
                         }
                     },
-                    (e) => {
+                    e => {
                         if (e.data && e.data.token) {
                             return res.data.token
                         }
                     }
                 )
-                .catch((e) => {
+                .catch(e => {
                     this.log(e)
                 })
         },
@@ -535,7 +548,7 @@ export default {
             fn && fn()
         },
         next() {
-            this.checkAuth().then((res) => {
+            this.checkAuth().then(res => {
                 if (!res) return
 
                 this.$validate(this.form, {
@@ -554,19 +567,19 @@ export default {
                     () => {
                         const config_base = this.form.config_base ? this.form.config_base.split(',') : []
                         const config_lightspot = this.form.config_lightspot ? this.form.config_lightspot.split(',') : []
-                        this.config.config_base.map((item) => {
+                        this.config.config_base.map(item => {
                             if (config_base.indexOf(item.value) > -1) {
                                 item.active = true
                             }
                         })
-                        this.config.config_lightspot.map((item) => {
+                        this.config.config_lightspot.map(item => {
                             if (config_lightspot.indexOf(item.value) > -1) {
                                 item.active = true
                             }
                         })
                         this.step = 1
                     },
-                    (e) => {
+                    e => {
                         uni.showToast({
                             title: e.msg,
                             icon: 'none',
@@ -576,25 +589,25 @@ export default {
             })
         },
         filterForm() {
-            const config_base = this.config.config_base.filter((item) => item.active)
-            const config_lightspot = this.config.config_lightspot.filter((item) => item.active)
+            const config_base = this.config.config_base.filter(item => item.active)
+            const config_lightspot = this.config.config_lightspot.filter(item => item.active)
             this.form.landlord_id = this.userInfo.landlord_id
-            this.form.config_base_ids = config_base.map((item) => item.id).join(',')
-            this.form.config_base = config_base.map((item) => item.value).join(',')
-            this.form.config_lightspot_ids = config_lightspot.map((item) => item.id).join(',')
-            this.form.config_lightspot = config_lightspot.map((item) => item.value).join(',')
+            this.form.config_base_ids = config_base.map(item => item.id).join(',')
+            this.form.config_base = config_base.map(item => item.value).join(',')
+            this.form.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
+            this.form.config_lightspot = config_lightspot.map(item => item.value).join(',')
         },
         confirm() {
-            this.checkAuth().then((res) => {
+            this.checkAuth().then(res => {
                 if (!res) return
                 this.filterForm()
                 this.$validate(this.form, {
+                    house_type: [{ required: true, msg: '请选择房型' }],
+                    floor_number: [{ required: true, msg: '请输入楼层' }],
                     rental: [{ required: true, msg: '请输入租金' }],
                     address_street: [{ required: true, msg: '请选择地址' }],
                     address_flag: [{ required: true, msg: '请选择标志建筑' }],
                     road_distance: [{ required: true, msg: '请选择路边距离' }],
-                    house_type: [{ required: true, msg: '请选择房型' }],
-                    floor_number: [{ required: true, msg: '请输入楼层' }],
                     images: [
                         { type: 'array', msg: '请上传图片' },
                         { min: 2, msg: '请至少上传2张图片' },
@@ -603,7 +616,7 @@ export default {
                     () => {
                         const api = this.form.id ? ((this.form.hr_id = this.form.id), 'editHouse') : 'addHouse'
                         const { landlord_info, image_urls, video_urls, ...params } = this.form
-                        params.images = params.images.map((item) => {
+                        params.images = params.images.map(item => {
                             if (typeof item === 'string') {
                                 item = {
                                     url: item,
@@ -611,7 +624,7 @@ export default {
                             }
                             return item
                         })
-                        params.videos = params.videos.map((item) => {
+                        params.videos = params.videos.map(item => {
                             if (typeof item === 'string') {
                                 item = {
                                     url: item,
@@ -619,7 +632,7 @@ export default {
                             }
                             return item
                         })
-                        this.$request[api](params).then((res) => {
+                        this.$request[api](params).then(res => {
                             if (res && res.data) {
                                 this.setHouseTempImg([])
                                 this.setHouseImg([])
@@ -632,7 +645,7 @@ export default {
                             }
                         })
                     },
-                    (e) => {
+                    e => {
                         uni.showToast({
                             title: e.msg,
                             icon: 'none',
@@ -754,6 +767,10 @@ export default {
                 background-color: $main-color;
                 border-radius: 4upx;
             }
+
+            & + .cell {
+                border-top: none;
+            }
         }
     }
     .cell {
@@ -819,43 +836,64 @@ export default {
 }
 
 .next {
-    padding-top: 30upx;
     .cells {
+        margin-bottom: 20upx;
         padding: 0 30upx;
+        background-color: #fff;
         &_title {
-            padding-bottom: 30upx;
-            font-size: 33upx;
+            padding: 30upx 0;
+            line-height: 40upx;
+            font-weight: bold;
+            font-size: 32upx;
+            color: #333;
+
+            &::before {
+                content: ' ';
+                display: inline-block;
+                width: 8upx;
+                height: 30upx;
+                margin-right: 10upx;
+                background-color: $main-color;
+                border-radius: 4upx;
+            }
         }
     }
     .cell {
+        padding-bottom: 20upx;
+        + .cells_title {
+            padding-top: 0;
+        }
         &.m_flex_wrap {
-            margin-right: -26upx;
+            margin-right: -20upx;
         }
     }
     .info_item {
-        height: 56upx;
-        margin-right: 26upx;
-        margin-bottom: 30upx;
-        padding: 0 30upx;
-        min-width: 80upx;
-        line-height: 56upx;
+        // height: 56upx;
+        margin-right: 20upx;
+        margin-bottom: 20upx;
+        padding: 6upx 20upx;
+        // min-width: 80upx;
+        line-height: 38upx;
         background-color: #f5f5f5;
-        border-radius: 20upx;
-        font-size: 25upx;
+        border-radius: 25upx;
+        font-size: 30upx;
         text-align: center;
-        color: $text-color-inverse;
+        color: #666;
         &.active {
             background-color: $primary-color;
             color: #fff;
         }
     }
-    textarea {
+    .txta {
         width: 100%;
-        padding: 10upx 16upx;
-        border: 1upx solid $border-color;
-        font-size: 33upx;
+        padding: 20upx;
+        margin-bottom: 100upx;
         box-sizing: border-box;
-        line-height: 1.2;
+        border-radius: 10upx;
+        background-color: #f2f2f2;
+        line-height: 38upx;
+        font-size: 30upx;
+        color: #666;
     }
     .fd {
         .btn {
@@ -864,9 +902,9 @@ export default {
     }
 }
 .empty {
-    height: 120upx;
+    height: 150upx;
     &.ipx {
-        height: 188upx;
+        height: 218upx;
     }
 }
 .modal {

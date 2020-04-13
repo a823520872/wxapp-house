@@ -1,8 +1,20 @@
 <template>
     <view class="content">
+        <view class="tips">
+            <template v-if="tab === 2">
+                <view>温馨提示：已经租掉的房源请及时下架，以免住户看到房源后来电骚扰</view>
+            </template>
+            <template v-else-if="tab === 1">
+                <view>编辑：点击编辑可重新修改房源信息；</view>
+                <view>发布：点击发布，房源再次发布；</view>
+            </template>
+        </view>
         <view class="hd" v-if="user_info">
             <view class="avatar">
-                <image :src="user_info.avatar" mode="aspectFit"></image>
+                <image class="img_avatar" :src="user_info.avatar" mode="aspectFit"></image>
+                <view class="avatar_auth" v-if="user_info.is_auth && user_info.is_auth === 2">
+                    <auth-img></auth-img>
+                </view>
             </view>
             <view class="name">{{ user_info.nickname }}</view>
             <!-- <view class="tips" v-if="(user_info.public_num || user_info.rented_num) && !landlord_id">
@@ -24,13 +36,15 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import authImg from '../components/auth-img'
 import publishList from '../components/publish-list.vue'
 export default {
     components: {
-        publishList
+        authImg,
+        publishList,
     },
     computed: {
-        ...mapState(['userInfo', 'collectReload'])
+        ...mapState(['userInfo', 'collectReload']),
     },
     data() {
         return {
@@ -38,21 +52,21 @@ export default {
             list: [],
             user_id: '',
             user_info: null,
-            landlord_id: ''
+            landlord_id: '',
         }
     },
     onLoad(res) {
         if (res.user_id) {
             this.landlord_id = res.user_id
             uni.setNavigationBarTitle({
-                title: '房源列表'
+                title: '房源列表',
             })
         } else if (this.userInfo && this.userInfo.is_landlord === 1) {
             this.user_id = this.userInfo.user_id
         } else {
             uni.showToast({
                 title: '页面错误',
-                icon: 'none'
+                icon: 'none',
             })
         }
     },
@@ -76,7 +90,7 @@ export default {
         getData() {
             const self = this
             const params = {
-                user_id: this.landlord_id || this.user_id
+                user_id: this.landlord_id || this.user_id,
             }
             if (this.tab === 2) {
                 params.is_public = 1
@@ -90,7 +104,7 @@ export default {
                         params,
                         fn(data) {
                             return (data || []).map(item => ((item.images = item.image_urls && item.image_urls.split(',')), item))
-                        }
+                        },
                     })
                     .then(res => {
                         if (res && res.data) {
@@ -101,71 +115,94 @@ export default {
         chooseTab(v) {
             this.tab = v
             this.getData()
-        }
-    }
+        },
+    },
 }
 </script>
 
 <style lang="scss" scoped>
+.tips {
+    padding: 10upx 30upx;
+    background-color: #f0fffc;
+    line-height: 34upx;
+    font-size: 26upx;
+    color: #0e868f;
+}
 .hd {
-    height: 347upx;
+    // height: 358upx;
+    padding: 60upx 0 30upx;
     background-color: $main-color;
     text-align: center;
     overflow: hidden;
     .avatar {
         position: relative;
-        width: 131upx;
-        height: 131upx;
-        margin: 82upx auto 0;
+        width: 130upx;
+        height: 130upx;
+        margin: 0 auto;
+    }
+    .img_avatar {
+        position: relative;
+        width: 126upx;
+        height: 126upx;
         border-radius: 50%;
-        background-color: $uni-bg-color;
+        // background-color: $uni-bg-color;
         overflow: hidden;
         border: 2upx solid #fff;
     }
+    .avatar_auth {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        margin-bottom: -18upx;
+        transform: translateX(-50%);
+    }
     .name {
-        margin-top: 16upx;
-        font-size: 33upx;
+        margin-top: 38upx;
+        font-size: 34upx;
+        color: #033a42;
     }
-    .tips {
-        margin-top: 6upx;
-        color: $primary-color;
-    }
+    // .tips {
+    //     margin-top: 6upx;
+    //     color: $primary-color;
+    // }
 }
 .tabs {
     position: relative;
-    padding: 0 30upx;
     background-color: #fff;
-    line-height: 100upx;
     text-align: center;
-    font-size: 33upx;
+    border-bottom: 1upx solid $border-color;
 
-    &::after {
-        content: ' ';
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 0;
-        border-bottom: 1upx solid $border-color;
-        z-index: 1;
-    }
+    // &::after {
+    //     content: ' ';
+    //     position: absolute;
+    //     right: 0;
+    //     bottom: 0;
+    //     left: 0;
+    //     width: 100%;
+    //     height: 0;
+    //     z-index: 1;
+    // }
     .tab {
         position: relative;
-        color: $text-color-inverse;
+        padding: 30upx 0;
+        line-height: 40upx;
+        font-size: 34upx;
+        color: #666;
     }
     .active {
         color: $text-color;
         &::after {
             content: ' ';
             position: absolute;
-            right: 0;
+            // right: 0;
             bottom: 0;
-            left: 0;
-            width: 100%;
+            left: 50%;
+            width: 100upx;
             height: 0;
-            border-bottom: 2upx solid $main-color;
+            border-bottom: 8upx solid $main-color;
             z-index: 10;
+            transform: translateX(-50%);
+            border-radius: 4upx;
         }
     }
 }

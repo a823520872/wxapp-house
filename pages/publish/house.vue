@@ -67,15 +67,15 @@
                     <view class="cell m_flex_center m_flex_middle">
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">租金</view>
-                            <input class="cell_bd" type="number" v-model="form.rental" placeholder="请输入" />
+                            <input class="cell_bd" type="digit" v-model="form.rental" placeholder="请输入" />
                         </view>
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">水费/度</view>
-                            <input class="cell_bd" type="number" v-model.number="form.fee_wather" placeholder="请输入" />
+                            <input class="cell_bd" type="digit" v-model.number="form.fee_wather" placeholder="请输入" />
                         </view>
                         <view class="cell_box m_flex_item">
                             <view class="cell_hd">电费/吨</view>
-                            <input class="cell_bd" type="number" v-model.number="form.fee_electric" placeholder="请输入" />
+                            <input class="cell_bd" type="digit" v-model.number="form.fee_electric" placeholder="请输入" />
                         </view>
                     </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config && config.deposit">
@@ -170,7 +170,7 @@
         </view>
         <v-modal ref="modal">
             <view class="modal m_flex_middle" slot="content">
-                <input class="modal_input m_flex_item" type="number" v-model.number="deposit" placeholder="请输入押金" />
+                <input class="modal_input m_flex_item" type="digit" v-model.number="deposit" placeholder="请输入押金" />
                 <text>元</text>
             </view>
         </v-modal>

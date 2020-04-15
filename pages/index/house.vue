@@ -3,13 +3,13 @@
         <view v-if="detail">
             <view class="hd">
                 <view class="m_flex_middle m_flex_justify">
-                    <view class="title m_textover m_flex_item">{{ detail.address_street }} · {{ detail.house_type }}</view>
+                    <view class="title m_textover m_flex_item">{{ detail.address_flag }}附近 丨 {{ detail.house_type }}</view>
                     <view class="read_number">{{ (detail && detail.read_number) | numberFilter }}人浏览过</view>
                 </view>
                 <view class="cells">
                     <view class="cell m_flex">
                         <view class="cell_item m_flex_item">
-                            <view class="value">{{ detail.rental }}元</view>
+                            <view class="value price">{{ detail.rental }}元</view>
                             <view class="label">租金/月</view>
                         </view>
                         <view class="cell_item m_flex_item" v-if="detail.deposit">
@@ -26,11 +26,11 @@
                         </view>
                     </view>
                     <view class="cell m_flex" v-if="detail.fee_wather || detail.fee_electric">
-                        <view class="cell_item m_flex_middle m_flex_center m_flex_item line" v-if="detail.fee_wather">
+                        <view class="cell_item m_flex_middle m_flex_item line" v-if="detail.fee_wather">
                             <text class="label">水费</text>
                             <text class="value">{{ detail.fee_wather }}元/吨</text>
                         </view>
-                        <view class="cell_item m_flex_middle m_flex_center m_flex_item line" v-if="detail.fee_electric">
+                        <view class="cell_item m_flex_middle m_flex_item line" v-if="detail.fee_electric">
                             <text class="label">电费</text>
                             <text class="value">{{ detail.fee_electric }}元/度</text>
                         </view>
@@ -179,6 +179,9 @@ export default {
             path: `/pages/index/index?p=` + encodeURIComponent(`/pages/index/house?id=${this.id}` + (this.userInfo ? `&uid=${this.userInfo.id}` : ``)),
         }
     },
+    onPullDownRefresh() {
+        this.getData()
+    },
     onLoad(res) {
         if (res.id) {
             this.id = res.id
@@ -241,6 +244,7 @@ export default {
                         ]
                     }
                 }
+                uni.stopPullDownRefresh()
             })
         },
         // getPoster() {
@@ -259,6 +263,7 @@ export default {
             const mappings = new Map([
                 ['冰箱', '/static/image/index/bingxiang.png'],
                 ['茶几', '/static/image/index/chaji.png'],
+                ['床', '/static/image/index/chuan.png'],
                 ['空调', '/static/image/index/kongtiao.png'],
                 ['宽带', '/static/image/index/kuandai.png'],
                 ['热水器', '/static/image/index/reshuiqi.png'],
@@ -373,13 +378,13 @@ export default {
     .title {
         line-height: 50upx;
         font-weight: bold;
-        font-size: 42upx;
+        font-size: 40upx;
         color: #333;
     }
     .read_number {
-        margin-left: 20upx;
+        margin-left: 30upx;
         line-height: 38upx;
-        font-size: 30upx;
+        font-size: 24upx;
         color: #999;
     }
     .cells {
@@ -396,10 +401,13 @@ export default {
     }
     .cell_item {
         position: relative;
-        padding: 10upx 0;
-        text-align: center;
-        &:first-child::before {
-            display: none;
+        padding: 10upx 0 10upx 40upx;
+        // text-align: center;
+        &:first-child {
+            padding-left: 0;
+            &::before {
+                display: none;
+            }
         }
         &::before {
             content: ' ';
@@ -411,7 +419,10 @@ export default {
             border-left: 2upx solid #f2f2f2;
         }
         &.line {
-            padding: 12upx 0;
+            padding: 12upx 0 12upx 20upx;
+            &:first-child {
+                padding-left: 0;
+            }
             &::before {
                 top: 15upx;
                 bottom: 15upx;
@@ -431,6 +442,9 @@ export default {
         font-size: 34upx;
         color: #0e868f;
     }
+    .price {
+        color: #fe620a;
+    }
     .label {
         line-height: 32upx;
         font-size: 24upx;
@@ -439,18 +453,18 @@ export default {
     .lightspot {
         position: relative;
         padding-top: 20upx;
-        margin: 0 -10upx -20upx;
+        margin: 0 -10upx -22upx;
         overflow: hidden;
     }
 
     .lightspot_cell {
-        margin: 0 10upx 20upx;
+        margin: 0 10upx 22upx;
         flex-shrink: 0;
         line-height: 34upx;
         padding: 1upx 10upx;
-        border-radius: 8upx;
-        border: 1upx solid #0e868f;
-        color: #0e868f;
+        border-radius: 4upx;
+        border: 1upx solid #999;
+        color: #666;
     }
 }
 .bd {
@@ -631,9 +645,10 @@ export default {
     .link {
         width: 426upx;
         padding: 25upx 0;
-        background-color: $main-color;
-        line-height: 40upx;
+        background-color: #2cdbdb;
         border-radius: 45upx;
+        line-height: 40upx;
+        font-weight: bold;
         font-size: 32upx;
         color: #fff;
     }

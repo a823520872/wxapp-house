@@ -128,7 +128,11 @@
             <!-- #endif -->
         </view>
         <view class="fix_right_icon m_flex_center m_flex_middle" @tap="goPage('/pages/index/hot')">
-            <image src="/static/image/index/hot.png" mode="aspectFill"></image>
+            <!-- <image src="/static/image/index/hot.png" mode="aspectFill"></image> -->
+            <view>
+                <view>最热</view>
+                <view>房源</view>
+            </view>
         </view>
         <!-- <view class="fix_right_icon" @tap="goPage('/pages/index/require')">
             <image src="/static/image/index/tie.png" mode="aspectFill"></image>
@@ -594,8 +598,8 @@ export default {
         font-size: 25upx;
         color: $text-color-inverse;
         .title {
-            font-size: 33upx;
-            color: $main-color;
+            font-size: 34upx;
+            color: #2cdbdb;
         }
         .addr {
             &_icon {
@@ -677,7 +681,7 @@ export default {
     .house_type {
         position: relative;
         // width: 200upx;
-        margin-right: 36upx;
+        margin-right: 16upx;
         padding: 18upx 20upx 12upx 0;
         font-size: 0;
     }
@@ -717,10 +721,15 @@ export default {
     // height: 143upx;
     width: 120upx;
     height: 120upx;
-    line-height: 1.2;
+    line-height: 40upx;
     // background: linear-gradient(to bottom, #ffffbe, rgba(255, 255, 190, 0.75));
+    background: linear-gradient(137deg, rgba(255, 137, 71, 1) 0%, rgba(254, 98, 10, 1) 100%);
+    box-shadow: 0 2upx 30upx 0 rgba(254, 98, 10, 0.2);
+    text-shadow: 0 2upx 30upx rgba(254, 98, 10, 0.2);
     border-radius: 50%;
+    font-size: 32upx;
     overflow: hidden;
+    color: #fff;
 }
 .modal {
     &_list {

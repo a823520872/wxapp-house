@@ -1,6 +1,6 @@
 <template>
     <view class="content">
-        <view class="tips">
+        <view class="tips" v-if="!landlord_id">
             <template v-if="tab === 2">
                 <view>温馨提示：已经租掉的房源请及时下架，以免住户看到房源后来电骚扰</view>
             </template>

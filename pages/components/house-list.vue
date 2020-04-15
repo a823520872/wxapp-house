@@ -126,7 +126,7 @@ export default {
 
     .title {
         width: 40%;
-        font-weight: bold;
+        // font-weight: bold;
         font-size: 34upx;
         color: #333;
     }
@@ -189,7 +189,7 @@ export default {
         border: 1upx solid #0e868f;
         color: #0e868f;
         & + .lightspot_cell {
-            margin-left: 20upx;
+            margin-left: 12upx;
         }
     }
 

@@ -75,7 +75,7 @@
                                 <text class="right_icon"></text>
                             </view>
                         </view>
-                        <view class="remark" v-if="detail.remarks">{{ detail.remarks }}</view>
+                        <view class="remark">{{ detail.remarks || '我的房性价比高，欢迎致电咨询。' }}</view>
                     </view>
                 </view>
                 <view class="cells">
@@ -567,9 +567,9 @@ export default {
     }
     .more {
         position: relative;
-        line-height: 34upx;
-        font-size: 26upx;
-        color: #999;
+        line-height: 36upx;
+        font-size: 28upx;
+        color: #0e868f;
 
         &::before {
             content: ' ';

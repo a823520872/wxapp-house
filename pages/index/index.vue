@@ -577,11 +577,15 @@ export default {
 
 <style lang="scss">
 .swiper {
-    height: 360upx;
-    padding: 0 30upx;
+    height: 330upx;
+    padding: 30upx 30upx 0;
+    background-color: #fff;
     .swiper-item {
+        position: relative;
         width: 100%;
         height: 100%;
+        border-radius: 20upx;
+        overflow: hidden;
     }
     image {
         width: 100%;

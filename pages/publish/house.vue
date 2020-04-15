@@ -15,19 +15,19 @@
                                 <!-- <view class="upload_info">上传照片（必填）</view> -->
                                 <image class="upload_img" src="/static/image/publish/choose_image.png" mode="aspectFit"></image>
                             </view>
-                            <button class="m_button btn" @tap.stop="chooseImg">{{ houseImg && houseImg.length ? '编辑' : '*上传' }}照片</button>
+                            <button class="m_button btn" @tap.stop="chooseImg">{{ houseImg && houseImg.length ? '编辑' : '上传' }}照片（必填）</button>
                         </view>
                         <view class="media_box">
                             <view class="upload_box" v-if="form.videos && form.videos.length">
                                 <video class="vdo" :src="form.videos[0].url" controls></video>
                             </view>
                             <view class="upload_box m_flex_center m_flex_middle m_flex_column" v-else @tap="chooseVdo">
-                                <!-- <view class="tips">支持20s内</view> -->
+                                <view class="tips">支持20s内</view>
                                 <!-- <view class="upload_icon"></view> -->
                                 <!-- <view class="upload_info">上传视频（选填）</view> -->
                                 <image class="upload_img" src="/static/image/publish/choose_video.png" mode="aspectFit"></image>
                             </view>
-                            <button class="m_button btn" @tap.stop="chooseVdo">{{ form.videos && form.videos.length ? '重新选择' : '上传视频（20s内）' }}</button>
+                            <button class="m_button btn" @tap.stop="chooseVdo">{{ form.videos && form.videos.length ? '重新选择' : '上传视频' }}（选填）</button>
                         </view>
                     </view>
                 </view>
@@ -871,16 +871,17 @@ export default {
         // height: 56upx;
         margin-right: 20upx;
         margin-bottom: 20upx;
-        padding: 6upx 20upx;
+        padding: 10upx 40upx;
         // min-width: 80upx;
         line-height: 38upx;
         background-color: #f5f5f5;
-        border-radius: 25upx;
+        border-radius: 29upx;
         font-size: 30upx;
         text-align: center;
         color: #666;
         &.active {
-            background-color: $primary-color;
+            background-color: $main-color;
+            // background-color: #0e868f;
             color: #fff;
         }
     }
@@ -895,11 +896,11 @@ export default {
         font-size: 30upx;
         color: #666;
     }
-    .fd {
-        .btn {
-            background-color: $primary-color;
-        }
-    }
+    // .fd {
+    //     .btn {
+    //         background-color: $primary-color;
+    //     }
+    // }
 }
 .empty {
     height: 150upx;

@@ -59,8 +59,8 @@
                         <picker class="picker_box cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">楼层</view>
-                            <view class="cell_bd">{{ form.floor_number ? form.floor_number : '请选择' }}</view>
-                            <!-- <input class="cell_bd" type="number" v-model="form.floor_number" placeholder="请输入楼层" />
+                            <view class="cell_bd">{{ form.floor ? form.floor : '请选择' }}</view>
+                            <!-- <input class="cell_bd" type="number" v-model="form.floor" placeholder="请输入楼层" />
                         </view> -->
                         </picker>
                     </view>
@@ -85,7 +85,7 @@
                         </picker>
                     </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config">
-                        <picker class="picker_box cell_box m_flex_item" :range="address_street" mode="multiSelector" @columnchange="columnChange" @change="pickerChange('address_street', $event)">
+                        <picker class="picker_box cell_box m_flex_item" :range="address_street" mode="multiSelector" @change="pickerChange('address_street', $event)" @columnchange="columnChange">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">地址</view>
                             <view class="cell_bd">{{ form.address_street ? form.address_street : '请选择' }}</view>
@@ -232,6 +232,7 @@ export default {
                 address_detail: '',
                 house_type_id: '',
                 house_type: '',
+                floor: '',
                 floor_number: '',
                 contact_mobile: '',
                 wechat_number: '',
@@ -520,14 +521,15 @@ export default {
                 [
                     'floor',
                     () => {
-                        this.form.floor_number = +this.config[key][value].value.replace('楼', '')
+                        let item = this.config[key][value]
+                        this.form.floor_number = item.key
+                        this.form.floor = item.value
                     },
                 ],
                 [
                     'deposit',
                     () => {
                         let item = this.config[key][value]
-                        console.log(item)
                         if (item.id) {
                             this.form.deposit = item.value
                         } else {
@@ -909,7 +911,7 @@ export default {
     }
 }
 .modal {
-    padding: 16upx 24upx 16upx 48upx;
+    padding: 16upx 72upx 40upx 96upx;
     background-color: #f2f2f2;
     font-size: 24upx;
     .modal_input {

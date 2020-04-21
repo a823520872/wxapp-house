@@ -99,5 +99,8 @@ export default {
     },
     getQRCode(data = {}) {
         return ajax('/api/House_Resource/getPoster', data, { type: 'post' })
-    }
+    },
+    getPublishQRCode(data = {}) {
+        return ajax('/api/qrcode/createWxappQrcode', data, { loading: true })
+    },
 }

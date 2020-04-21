@@ -67,7 +67,9 @@
             </button>
             <v-modal ref="modal">
                 <view slot="content">
-                    <link-modal :temp="CONFIG"></link-modal>
+                    <view class="modal">
+                        <link-modal :temp="CONFIG"></link-modal>
+                    </view>
                 </view>
             </v-modal>
         </view>
@@ -83,7 +85,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import linkModal from '../components/link-modal'
 export default {
     components: {
-        linkModal
+        linkModal,
     },
     computed: {
         ...mapState(['userInfo']),
@@ -98,11 +100,11 @@ export default {
                 default:
                     return '您未入驻，暂无法发布房源'
             }
-        }
+        },
     },
     data() {
         return {
-            step: 2
+            step: 2,
         }
     },
     onShow() {
@@ -114,7 +116,7 @@ export default {
             // #ifdef MP-WEIXIN
             this.login()
                 .then(code => {
-                    return this.getInfo(true)
+                    return this.getInfo()
                 })
                 .then(
                     userInfo => {
@@ -182,11 +184,11 @@ export default {
             this.userInfo
                 ? this.$refs.modal.show({
                       title: '联系方式',
-                      confirmText: '确定'
+                      confirmText: '确定',
                   })
                 : this.getUserInfo()
-        }
-    }
+        },
+    },
 }
 </script>
 
@@ -266,5 +268,10 @@ export default {
         line-height: 100upx;
         font-size: 33upx;
     }
+}
+
+.modal {
+    padding: 0 1.6em 0.8em;
+    font-size: 30upx;
 }
 </style>

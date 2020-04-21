@@ -62,7 +62,7 @@
                 <view class="cell_hd">推荐好友</view>
                 <view class="cell_fd">获得88元分享基金</view>
             </view> -->
-            <view class="cell m_flex_justify m_flex_middle" @tap="to('/pages/me/code')">
+            <view class="cell m_flex_justify m_flex_middle" v-if="userInfo && userInfo.is_landlord === 1" @tap="to('/pages/me/code')">
                 <view class="cell_hd">二维码名片</view>
                 <view class="cell_fd">扫码可看我的所有房源</view>
             </view>
@@ -457,6 +457,8 @@ export default {
     }
 }
 .cells {
+    padding: 0 1.6em 0.8em;
+    font-size: 30upx;
     color: $text-color;
     .cell {
         padding: 10upx 0;

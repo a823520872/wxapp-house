@@ -1,22 +1,22 @@
 <template>
-    <view v-if="isShow">
+    <view v-if="isShow" @touchmove.stop.prevent="empty">
         <v-mask @click="hide"></v-mask>
-        <view class="ui-dialog ui-dialog-ani">
+        <view class="ui-dialog ui-dialog-ani" :class="[cls]">
             <view v-if="titleModal" class="ui-dialog__hd">
-                <view class="ui-dialog__title">{{titleModal}}</view>
+                <view class="ui-dialog__title">{{ titleModal }}</view>
             </view>
-            <view class="ui-dialog__bd">
+            <scroll-view scroll-y class="ui-dialog__bd">
                 <slot name="content">
-                    {{contentModal}}
+                    {{ contentModal }}
                 </slot>
-            </view>
+            </scroll-view>
             <view class="ui-dialog__ft">
                 <view v-if="cancelTextModal" class="ui-dialog__btn ui-dialog__btn_default" @tap.stop="hide(true)">
-                    <text>{{cancelTextModal}}</text>
+                    <text>{{ cancelTextModal }}</text>
                 </view>
                 <view class="ui-dialog__btn ui-dialog__btn_primary">
                     <slot name="footer">
-                        <view @tap.stop="confirm">{{confirmTextModal}}</view>
+                        <view @tap.stop="confirm">{{ confirmTextModal }}</view>
                     </slot>
                 </view>
             </view>
@@ -32,38 +32,41 @@ export default {
             type: String,
             default() {
                 return ''
-            }
+            },
         },
         content: {
             type: String,
             default() {
                 return ''
-            }
+            },
         },
         cancelText: {
             type: String,
             default() {
                 return ''
-            }
+            },
         },
         confirmText: {
             default() {
                 return ''
-            }
-        }
+            },
+        },
     },
     data() {
         return {
             isShow: false,
+            cls: '',
             titleModal: '',
             contentModal: '',
             cancelTextModal: '',
-            confirmTextModal: ''
+            confirmTextModal: '',
         }
     },
     methods: {
         show(cfg) {
             this.isShow = true
+
+            this.cls = cfg.bodyCls
 
             this.titleModal = cfg.title || this.title
 
@@ -92,8 +95,9 @@ export default {
             } else {
                 this.isShow = false
             }
-        }
-    }
+        },
+        empty() {},
+    },
 }
 </script>
 
@@ -111,6 +115,11 @@ export default {
     border-radius: 6upx;
     overflow: hidden;
     font-size: 32upx;
+
+    &.width-91 {
+        width: 91%;
+        max-width: 100%;
+    }
 
     &-ani {
         animation: aniDialog 0.3s forwards ease-in 0s 1 normal;
@@ -136,7 +145,6 @@ export default {
     }
 
     &__bd {
-        padding: 0 1.6em 0.8em;
         min-height: 80upx;
         max-height: 700upx;
         overflow: auto;
@@ -154,7 +162,7 @@ export default {
 
     &__ft {
         position: relative;
-        height: 96upx;
+        // height: 96upx;
         line-height: 96upx;
         font-size: 36upx;
         display: -webkit-box;

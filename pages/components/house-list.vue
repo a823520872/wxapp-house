@@ -125,7 +125,7 @@ export default {
     // }
 
     .title {
-        width: 40%;
+        width: 50%;
         // font-weight: bold;
         font-size: 34upx;
         color: #333;

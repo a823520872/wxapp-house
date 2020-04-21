@@ -104,6 +104,12 @@ image {
         display: block;
     }
 
+    &.grey {
+        background-color: #f2f2f2;
+        border: 1upx solid #f2f2f2;
+        color: #666666;
+    }
+
     &.primary {
         background-color: $primary-color;
         border: 1upx solid $primary-color;

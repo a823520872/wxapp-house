@@ -10,9 +10,9 @@
                     <view class="intro m_flex_item">
                         <view class="m_flex_middle m_flex_justify">
                             <view class="intro_cell name m_textover">{{ li.address_street }} · {{ li.house_type }}</view>
-                            <view class="intro_cell price m_textover">{{ li.rental }}元/月</view>
+                            <!-- <view class="intro_cell price m_textover">{{ li.rental }}元/月</view> -->
                         </view>
-                        <!-- <view v-if="li.is_public === 1" class="intro_cell price">¥{{li.rental}}/月</view> -->
+                        <view class="intro_cell price">{{ li.rental }}/月</view>
                         <view class="intro_cell addr">
                             <!-- <image src="/static/image/index/addr.png" mode="aspectFit"></image> -->
                             <text>地址：</text>
@@ -33,7 +33,7 @@
                         <button class="m_button plain btn" @tap.stop="del(li)">删除</button>
                     </block>
                     <block v-if="li.is_rented === 2">
-                        <button class="m_button plain btn" @tap.stop="refresh(li)">刷新</button>
+                        <button class="m_button plain btn" @tap.stop="refrs(li)">刷新</button>
                     </block>
                     <button class="m_button plain btn" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
@@ -138,7 +138,7 @@ export default {
                 },
             })
         },
-        refresh(li) {
+        refrs(li) {
             this.$request
                 .public({
                     id: li.id,
@@ -245,14 +245,15 @@ export default {
         // }
     }
     .name {
-        max-width: 160upx;
+        // max-width: 160upx;
         line-height: 40upx;
         font-weight: bold;
         font-size: 32upx;
         color: #333;
     }
     .price {
-        max-width: 160upx;
+        // max-width: 160upx;
+        margin-top: 10upx;
         line-height: 38upx;
         font-size: 30upx;
         color: $primary-color;
@@ -285,6 +286,8 @@ export default {
     }
 }
 .modal {
+    padding: 0 1.6em 0.8em;
+    font-size: 30upx;
     radio {
         margin-right: 10upx;
         vertical-align: top;

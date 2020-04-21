@@ -48,20 +48,8 @@
                     </view>
                 </view>
                 <view class="cells_bd m_flex_justify">
-                    <view class="filter_title" @tap="showModal(1, '户型')">
-                        <text class="title">户型</text>
-                        <text class="triangle_down_icon"></text>
-                    </view>
-                    <view class="filter_title" @tap="showModal(2, '价格')">
-                        <text class="title">价格</text>
-                        <text class="triangle_down_icon"></text>
-                    </view>
-                    <view class="filter_title" @tap="showModal(4, '路边距离')">
-                        <text class="title">路边距离</text>
-                        <text class="triangle_down_icon"></text>
-                    </view>
-                    <view class="filter_title" @tap="showModal(3, '个性筛选')">
-                        <text class="title">个性筛选</text>
+                    <view class="filter_title" v-for="(li, i) in houseParam" :key="i" @tap="showModal(li.key, li.title)">
+                        <text class="title">{{ li.title }}</text>
                         <text class="triangle_down_icon"></text>
                     </view>
                 </view>
@@ -74,46 +62,6 @@
                                     <image src="/static/image/index/close.png" mode="aspectFit"></image>
                                 </view>
                             </view>
-                            <!-- <template v-if="house_type_active">
-                                <view class="house_type" v-for="li in house_type_active" :key="li.value">
-                                    <view class="btn active">{{ li.value }}</view>
-                                    <view class="del_btn" @tap="delParams(li)">
-                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
-                                    </view>
-                                </view>
-                            </template>
-                            <template v-if="price_active">
-                                <view class="house_type" v-for="li in price_active" :key="li.value">
-                                    <view class="btn active">{{ li.value }}</view>
-                                    <view class="del_btn" @tap="delParams(li)">
-                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
-                                    </view>
-                                </view>
-                            </template>
-                            <template v-if="road_distance_active">
-                                <view class="house_type" v-for="li in road_distance_active" :key="li.value">
-                                    <view class="btn active">{{ li.value }}</view>
-                                    <view class="del_btn" @tap="delParams(li)">
-                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
-                                    </view>
-                                </view>
-                            </template>
-                            <template v-if="config_base_active">
-                                <view class="house_type" v-for="li in config_base_active" :key="li.value">
-                                    <view class="btn active">{{ li.value }}</view>
-                                    <view class="del_btn" @tap="delParams(li)">
-                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
-                                    </view>
-                                </view>
-                            </template>
-                            <template v-if="config_lightspot_active">
-                                <view class="house_type" v-for="li in config_lightspot_active" :key="li.value">
-                                    <view class="btn active">{{ li.value }}</view>
-                                    <view class="del_btn" @tap="delParams(li)">
-                                        <image src="/static/image/index/del.png" mode="aspectFit"></image>
-                                    </view>
-                                </view>
-                            </template> -->
                         </view>
                     </scroll-view>
                 </view>
@@ -128,28 +76,25 @@
             <!-- #endif -->
         </view>
         <view class="fix_right_icon m_flex_center m_flex_middle" @tap="goPage('/pages/index/hot')">
-            <!-- <image src="/static/image/index/hot.png" mode="aspectFill"></image> -->
             <view>
                 <view>最热</view>
                 <view>房源</view>
             </view>
         </view>
-        <!-- <view class="fix_right_icon" @tap="goPage('/pages/index/require')">
-            <image src="/static/image/index/tie.png" mode="aspectFill"></image>
-        </view> -->
-        <!-- <v-auth ref="auth"></v-auth> -->
-        <v-modal ref="modal">
+        <v-modal ref="modal" class="modal">
             <view slot="content">
-                <view class="modal" v-if="modalList && modalList.length">
-                    <view class="m_flex_center" v-for="(lis, i) in modalList" :key="i">
+                <view v-if="modalList && modalList.length">
+                    <block v-for="(lis, i) in modalList" :key="i">
+                        <view class="modal_title m_flex_middle" v-if="lis.title">{{ lis.title }}</view>
                         <view class="modal_list m_flex_wrap">
-                            <view class="modal_item" v-for="(li, j) in lis" :key="j">
-                                <view :class="['m_button', 'main', { plain: !li.tmpActive }]" @tap="toggleList(i, j)">{{ li.value || li }}</view>
-                            </view>
+                            <block v-for="(li, j) in lis.list" :key="j">
+                                <view class="modal_item" :class="['m_button', 'grey', { main: li.tmpActive }]" @tap="toggleList(li, i, j)">{{ li.value || li }}</view>
+                            </block>
                         </view>
-                    </view>
+                    </block>
                 </view>
             </view>
+            <button slot="footer" class="m_button main modal_btn" @tap.stop="handleModalSuccess">完成</button>
         </v-modal>
     </view>
 </template>
@@ -157,94 +102,98 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import HouseList from '../components/house-list'
+
+const houseParammappings = new Map([
+    [1, { label: '户型', value: [{ key: 'house_type' }] }],
+    [2, { label: '价格', value: [{ key: 'price' }] }],
+    [3, { label: '路边距离', value: [{ key: 'road_distance' }] }],
+    [
+        4,
+        {
+            label: '个性筛选',
+            value: [
+                { key: 'config_base', title: '房源配置' },
+                { key: 'floor', title: '房源楼层' },
+                { key: 'config_lightspot', title: '其他' },
+            ],
+        },
+    ],
+])
 export default {
     components: {
         HouseList,
     },
     computed: {
         ...mapState(['homeReload']),
+        houseParam() {
+            return [...houseParammappings.entries()].map(([key, value]) => {
+                return {
+                    key,
+                    title: value.label,
+                }
+            })
+        },
         address_street() {
-            return (
-                this.config &&
-                this.config.address_street &&
-                this.config.address_street.map(lis => {
-                    return lis.map(li => li.name)
-                })
-            )
+            return (this.config.address_street || []).map(lis => {
+                return lis.map(li => li.name)
+            })
         },
         house_type() {
-            return this.config && this.config.house_type && this.config.house_type.map(li => li.value)
+            return (this.config.house_type || []).map(li => li.value)
         },
         price() {
-            return this.config && this.config.price && this.config.price.map(li => li.value)
+            return (this.config.price || []).map(li => li.value)
         },
         house_type_active() {
-            return (
-                (this.config &&
-                    this.config.house_type &&
-                    this.config.house_type.reduce((arr, li) => {
-                        if (li.active) {
-                            arr.push(li)
-                        }
-                        return arr
-                    }, [])) ||
-                []
-            )
+            return (this.config.house_type || []).reduce((arr, li) => {
+                if (li.active) {
+                    arr.push(li)
+                }
+                return arr
+            }, [])
         },
         price_active() {
-            return (
-                (this.config &&
-                    this.config.price &&
-                    this.config.price.reduce((arr, li) => {
-                        if (li.active) {
-                            arr.push(li)
-                        }
-                        return arr
-                    }, [])) ||
-                []
-            )
+            return (this.config.price || []).reduce((arr, li) => {
+                if (li.active) {
+                    arr.push(li)
+                }
+                return arr
+            }, [])
         },
         road_distance_active() {
-            return (
-                (this.config &&
-                    this.config.road_distance &&
-                    this.config.road_distance.reduce((arr, li) => {
-                        if (li.active) {
-                            arr.push(li)
-                        }
-                        return arr
-                    }, [])) ||
-                []
-            )
+            return (this.config.road_distance || []).reduce((arr, li) => {
+                if (li.active) {
+                    arr.push(li)
+                }
+                return arr
+            }, [])
         },
         config_base_active() {
-            return (
-                (this.config &&
-                    this.config.config_base &&
-                    this.config.config_base.reduce((arr, li) => {
-                        if (li.active) {
-                            arr.push(li)
-                        }
-                        return arr
-                    }, [])) ||
-                []
-            )
+            return (this.config.config_base || []).reduce((arr, li) => {
+                if (li.active) {
+                    arr.push(li)
+                }
+                return arr
+            }, [])
+        },
+        floor_active() {
+            return (this.config.floor || []).reduce((arr, li) => {
+                if (li.active) {
+                    arr.push(li)
+                }
+                return arr
+            }, [])
         },
         config_lightspot_active() {
-            return (
-                (this.config &&
-                    this.config.config_lightspot &&
-                    this.config.config_lightspot.reduce((arr, li) => {
-                        if (li.active) {
-                            arr.push(li)
-                        }
-                        return arr
-                    }, [])) ||
-                []
-            )
+            return (this.config.config_lightspot || []).reduce((arr, li) => {
+                if (li.active) {
+                    arr.push(li)
+                }
+                return arr
+            }, [])
         },
         activeItems() {
-            return [...this.house_type_active, ...this.price_active, ...this.road_distance_active, ...this.config_base_active, ...this.config_lightspot_active]
+            return [...this.house_type_active, ...this.price_active, ...this.road_distance_active, ...this.config_base_active, ...this.floor_active, ...this.config_lightspot_active]
         },
     },
     data() {
@@ -262,6 +211,7 @@ export default {
                 config_base_ids: '',
                 // config_base: "",
                 config_lightspot_ids: '',
+                floor_number: '',
                 // config_lightspot: ""
             },
             list: [],
@@ -322,6 +272,7 @@ export default {
         if (res.scene) {
             const scene = decodeURIComponent(res.scene)
             if (scene) {
+                console.log(scene)
                 res.p = scene.replace('page=', '')
             }
         } else if (res.p) {
@@ -348,10 +299,6 @@ export default {
         this.$refs.page.next()
     },
     onReady() {
-        // const tk = uni.getStorageSync("tk");
-        // if (tk) {
-        //     this.getInfo();
-        // }
         this.init()
         this.getData()
     },
@@ -419,7 +366,6 @@ export default {
                         ...this.config,
                         address_street,
                     }
-                    // this.params.address_street = address_street[2][0].name;
                 }
             })
         },
@@ -427,43 +373,31 @@ export default {
             this.hasFocus = true
         },
         filterParams() {
-            const house_type = this.config.house_type ? this.config.house_type.filter(item => item.active) : []
+            const house_type = (this.config.house_type || []).filter(item => item.active)
             const price = this.config.price.filter(item => item.active)[0]
-            const road_distance = this.config.road_distance ? this.config.road_distance.filter(item => item.active) : []
-            const config_base = this.config.config_base ? this.config.config_base.filter(item => item.active) : []
-            const config_lightspot = this.config.config_lightspot ? this.config.config_lightspot.filter(item => item.active) : []
-            // this.params.house_type = house_type
-            //     .map(item => item.value)
-            //     .join(",");
+            const road_distance = (this.config.road_distance || []).filter(item => item.active)
+            const config_base = (this.config.config_base || []).filter(item => item.active)
+            const config_lightspot = (this.config.config_lightspot || []).filter(item => item.active)
+            const floor = (this.config.floor || []).filter(item => item.active)
+            let { rental_begin = '', rental_end = '' } = price || {}
+            this.params.rental_begin = rental_begin
             this.params.house_type_id = house_type.map(item => item.id).join(',')
-            if (price) {
-                this.params.rental_begin = price.rental_begin || ''
-                this.params.rental_end = price.rental_end || ''
-            } else {
-                this.params.rental_begin = ''
-                this.params.rental_end = ''
-            }
+            this.params.rental_end = rental_end
             this.params.road_distance_ids = road_distance.map(item => item.id).join(',')
-            // this.params.config_base = config_base
-            //     .map(item => item.value)
-            //     .join(",");
             this.params.config_base_ids = config_base.map(item => item.id).join(',')
-            // this.params.config_lightspot = config_lightspot
-            //     .map(item => item.value)
-            //     .join(",");
+            this.params.floor_number = floor.map(item => item.key).join(',')
             this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
         },
         columnChange(e) {
-            const self = this
             let { column, value } = e.detail
-            function setColumn() {
-                let item = self.config.address_street[column][value]
+            const setColumn = () => {
+                let item = this.config.address_street[column][value]
                 if (!item) return
                 if (column++ < 2) {
-                    let p = self.config.address_street
-                    p[column] = self.addr[item.id] || []
-                    self.config = {
-                        ...self.config,
+                    let p = this.config.address_street
+                    p[column] = this.addr[item.id] || []
+                    this.config = {
+                        ...this.config,
                         address_street: p,
                     }
                     value = 0
@@ -498,7 +432,8 @@ export default {
                     } else {
                         // 选择了市
                         this.params.area_id = ''
-                        this.address_city = this.config.address_street[0][value[0]].name
+                        let city = this.config.address_street[0][value[0]]
+                        this.address_city = city ? city.name : ''
                     }
                 } else {
                     this.params.area_id = ''
@@ -507,68 +442,72 @@ export default {
             }
             this.init()
         },
+        filterTypeArray(type) {
+            let mappings = new Map()
+            ;[...houseParammappings.entries()].map(([key, value]) => {
+                mappings.set(key, value.value)
+            })
+            return mappings.get(type) || []
+        },
         filterType(type) {
-            switch (type) {
-                case 1:
-                    return ['house_type']
-                case 2:
-                    return ['price']
-                case 3:
-                    // return ["config_base", "config_lightspot"];
-                    return ['config_lightspot']
-                case 4:
-                    return ['road_distance']
-                default:
-                    return []
-            }
+            let t = this.filterTypeArray(type)
+            return t.map(li => li.key)
         },
         showModal(type, title) {
-            const self = this
-            const key = this.filterType(type)
+            let arr = this.filterTypeArray(type)
+            const key = arr.map(li => li.key)
+            const _title = arr.reduce((a, li) => {
+                if (li.title) {
+                    a.push(li.title)
+                }
+                return a
+            }, [])
             this.modalType = type
-            this.modalList = key.map(item => {
-                return this.config[item]
+            this.modalList = key.map((item, i) => {
+                return {
+                    list: this.config[item],
+                    title: _title[i],
+                }
             })
             if (key && key.length) {
                 this.$refs.modal.show({
                     title,
                     confirmText: '确定',
-                    success() {
+                    bodyCls: 'width-91',
+                    success: () => {
                         key.map(item => {
-                            self.config[item].map(it => {
+                            this.config[item].map(it => {
                                 it.active = it.tmpActive
                             })
                         })
-                        self.init()
+                        this.init()
                     },
                     fail() {},
                 })
             }
+        },
+        handleModalSuccess() {
+            this.$refs.modal.confirm()
         },
         delParams(li) {
             li.tmpActive = false
             li.active = false
             this.init()
         },
-        toggleList(i, j) {
+        toggleList(li, i, j) {
             const key = this.filterType(this.modalType)
             key.map(item => {
                 if (item === 'price') {
                     this.config[item].map((it, k) => {
                         if (j === k) {
-                            this.config[item][j].tmpActive = !this.config[item][j].tmpActive
+                            li.tmpActive = !li.tmpActive
                         } else {
                             this.config[item][k].tmpActive = false
                         }
                     })
                     return
                 }
-                //                 if (
-                //                     (item === "config_base" && i === 0) ||
-                //                     (item === "config_lightspot" && i === 1)
-                //                 )
-                //                     return;
-                this.config[item][j].tmpActive = !this.config[item][j].tmpActive
+                li.tmpActive = !li.tmpActive
             })
         },
     },
@@ -603,7 +542,7 @@ export default {
         color: $text-color-inverse;
         .title {
             font-size: 34upx;
-            color: #2cdbdb;
+            color: $main-color;
         }
         .addr {
             &_icon {
@@ -736,23 +675,50 @@ export default {
     color: #fff;
 }
 .modal {
-    &_list {
-        width: 380upx;
-        padding-left: 30upx;
+    font-size: 30upx;
+    .modal_title {
+        padding: 0 30upx 20upx;
+        line-height: 40upx;
+        font-weight: bold;
+        font-size: 32upx;
+        color: #333;
+
+        &::before {
+            content: ' ';
+            display: inline-block;
+            width: 8upx;
+            height: 30upx;
+            margin-right: 10upx;
+            background-color: $main-color;
+            border-radius: 4upx;
+        }
+
+        & ~ .modal_title {
+            padding-top: 20upx;
+        }
     }
-    &_item {
-        margin-top: 15upx;
-        margin-right: 30upx;
-        margin-bottom: 15upx;
+    .modal_list {
+        padding: 0 10upx 12upx 30upx;
+    }
+    .modal_item {
+        min-width: 140upx;
+        margin-top: 10upx;
+        margin-right: 20upx;
+        margin-bottom: 10upx;
         text-align: center;
-    }
-    .m_button {
-        width: 160upx;
-        height: 56upx;
-        line-height: 54upx;
-        padding: 0 14upx;
-        border-radius: 4upx;
+        line-height: 38upx;
+        padding: 10upx;
+        font-size: 30upx;
+        border-radius: 8upx;
         overflow: hidden;
+    }
+    .modal_btn {
+        display: block;
+        height: 88upx;
+        margin: 30upx 30upx 50upx;
+        padding: 0;
+        line-height: 86upx;
+        border-radius: 44upx;
     }
 }
 </style>

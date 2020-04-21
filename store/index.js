@@ -103,7 +103,7 @@ const store = new Vuex.Store({
                 return res
             })
         },
-        checkAuth(context, flag) {
+        checkAuth(context, flag = false) {
             const auth = uni.getStorageSync('auth')
             const exp = new Date(auth).valueOf()
             const now = new Date().valueOf()

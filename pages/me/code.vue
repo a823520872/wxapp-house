@@ -23,29 +23,89 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
     computed: {
         ...mapState(['userInfo', 'urlPrefix']),
-        qrcode() {
-            // return `${this.urlPrefix}/api/qrcode/build?text=/pages/me/publish`
-            return `${this.urlPrefix}/api/qrcode/build?text=${encodeURIComponent('/pages/me/publish')}`
-        },
+        // qrcode() {
+        //     // '/api/qrcode/build?text=/pages/index/index?p=%2Fpages%2Fme%2Fpublish%3Fid%3D435'
+        //     return `${this.urlPrefix}/api/qrcode/build?text=/pages/index/index?p=${encodeURIComponent('/pages/me/publish?id=' + this.userInfo.landlord_id)}`
+        // },
+    },
+    data() {
+        return {
+            qrcode: '',
+        }
+    },
+    onLoad(res) {
+        this.getData()
     },
     methods: {
+        getData() {
+            this.$request
+                .getPublishQRCode({
+                    page: `pages/index/index?page=${decodeURIComponent('/pages/me/publish?user_id=' + this.userInfo.user_id)}`,
+                    // page: `pages/me/publish?user_id=${this.userInfo.user_id}`,
+                })
+                .then(res => {
+                    let { data, errmsg } = res.data || {}
+                    if (errmsg) {
+                        uni.showToast({
+                            icon: 'none',
+                            title: errmsg,
+                        })
+                    } else if (data) {
+                        this.qrcode = data
+                    }
+                })
+        },
         saveImg() {
-            this.getImageInfo(this.qrcode).then(
-                path => {
+            uni.showLoading({
+                title: '正在下载中……',
+                mask: true,
+            })
+            this.downloadFile(this.qrcode).then(
+                filePath => {
                     uni.saveImageToPhotosAlbum({
-                        filePath: path,
-                        success: res => {
-                            console.log(res)
+                        filePath,
+                        success: res2 => {
+                            console.log(res2)
+                            uni.hideLoading()
+                            uni.showToast({
+                                icon: 'none',
+                                title: '图片保存成功',
+                            })
+                        },
+                        fail: e => {
+                            console.log(e)
+                            uni.hideLoading()
+                            uni.showToast({
+                                icon: 'none',
+                                title: '图片保存失败',
+                            })
                         },
                     })
                 },
                 e => {
+                    console.log(e)
+                    uni.hideLoading()
                     uni.showToast({
                         icon: 'none',
-                        title: '获取图片失败',
+                        title: '图片保存失败',
                     })
                 }
             )
+        },
+        downloadFile(url) {
+            return new Promise((resolve, reject) => {
+                uni.downloadFile({
+                    url: this.qrcode,
+                    success: res => {
+                        if (res.statusCode === 200) {
+                            resolve(res.tempFilePath)
+                        } else {
+                            reject(res)
+                        }
+                    },
+                    fail: e => reject(e),
+                })
+            })
         },
         getImageInfo(uri) {
             return new Promise((resolve, reject) => {

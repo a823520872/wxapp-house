@@ -3,13 +3,13 @@
         <view v-if="detail">
             <view class="hd">
                 <view class="m_flex_middle m_flex_justify">
-                    <view class="title m_textover m_flex_item">{{ detail.address_flag }}附近 丨 {{ detail.house_type }}</view>
+                    <view class="title m_textover m_flex_item">{{ detail.address_flag }}附近丨{{ detail.house_type }}</view>
                     <view class="read_number">{{ (detail && detail.read_number) | numberFilter }}人浏览过</view>
                 </view>
                 <view class="cells">
                     <view class="cell m_flex">
                         <view class="cell_item m_flex_item">
-                            <view class="value price">{{ detail.rental }}元</view>
+                            <view class="value price">{{ detail.rental }}</view>
                             <view class="label">租金/月</view>
                         </view>
                         <view class="cell_item m_flex_item" v-if="detail.deposit">
@@ -28,11 +28,11 @@
                     <view class="cell m_flex" v-if="detail.fee_wather || detail.fee_electric">
                         <view class="cell_item m_flex_middle m_flex_item line" v-if="detail.fee_wather">
                             <text class="label">水费</text>
-                            <text class="value">{{ detail.fee_wather }}元/吨</text>
+                            <text class="value">{{ detail.fee_wather }}/吨</text>
                         </view>
                         <view class="cell_item m_flex_middle m_flex_item line" v-if="detail.fee_electric">
                             <text class="label">电费</text>
-                            <text class="value">{{ detail.fee_electric }}元/度</text>
+                            <text class="value">{{ detail.fee_electric }}/度</text>
                         </view>
                     </view>
                     <view class="cell lightspot m_flex_middle m_flex_wrap" v-if="detail.config_lightspot && detail.config_lightspot.length">
@@ -62,7 +62,7 @@
                             <view class="user m_flex_item">
                                 <view class="name m_flex_middle">
                                     <text>{{ detail.landlord_info.nickname }}</text>
-                                    <view class="avatar_auth" v-if="detail.landlord_info.is_auth && detail.landlord_info.is_auth === 2">
+                                    <view class="avatar_auth" v-if="detail.landlord_info.is_auth && detail.landlord_info.is_auth === 1">
                                         <auth-img></auth-img>
                                     </view>
                                 </view>
@@ -75,7 +75,10 @@
                                 <text class="right_icon"></text>
                             </view>
                         </view>
-                        <view class="remark">{{ detail.remarks || '我的房性价比高，欢迎致电咨询。' }}</view>
+                        <view class="remark">
+                            <text v-if="detail.remarks">{{ detail.remarks }}</text>
+                            <text v-else>我的房性价比高，欢迎致电咨询。</text>
+                        </view>
                     </view>
                 </view>
                 <view class="cells">
@@ -85,9 +88,9 @@
                             <video class="vdo" :src="li" controls></video>
                         </block>
                         <block v-for="(li, j) in detail.image_urls" :key="li">
-                            <image v-if="showMoreImg || j < 3" class="img" :src="li" mode="widthFix" @tap="showImg(li)" lazy-load></image>
+                            <image v-if="showMoreImg || j < maxImg" class="img" :src="li" mode="widthFix" @tap="showImg(li)" lazy-load></image>
                         </block>
-                        <view class="more m_flex_middle m_flex_center" v-if="!showMoreImg && detail.image_urls.length > 3" @tap="showMore">
+                        <view class="more m_flex_middle m_flex_center" v-if="!showMoreImg && detail.image_urls.length > maxImg" @tap="showMore">
                             <text>更多图片</text>
                             <image class="img_more" src="/static/image/index/down@2x.png"></image>
                         </view>
@@ -102,14 +105,16 @@
                         </view>
                         <view class="addr_item">
                             <text>具体位置：</text>
-                            <text v-if="detail.address_detail">{{ detail.address_detail }}</text>
-                            <text v-else>{{ detail.address_flag }}附近</text>
+                            <text>
+                                <template v-if="detail.address_detail">{{ detail.address_detail }}</template>
+                                <template v-else>{{ detail.address_flag + '附近' }}</template>
+                            </text>
                         </view>
                         <!-- <view class="addr_item">
                             <text>路边距离：</text>
                             <text>{{ detail.road_distance }}</text>
                         </view> -->
-                        <map class="map" :longitude="detail.location.lng" :latitude="detail.location.lat" :scale="18" :markers="markers" @tap="showMap">
+                        <map class="map" :longitude="detail.location.lng" :latitude="detail.location.lat" :enable-scroll="false" :enable-zoom="false" :scale="18" :markers="markers" @tap="showMap">
                             <!-- <cover-image class="marker" src="/static/image/index/marker.png"></cover-image> -->
                         </map>
                     </view>
@@ -141,7 +146,9 @@
             </view>
             <v-modal ref="modal">
                 <view slot="content">
-                    <link-modal :temp="detail"></link-modal>
+                    <view class="modal">
+                        <link-modal :temp="detail"></link-modal>
+                    </view>
                 </view>
             </v-modal>
         </view>
@@ -158,6 +165,10 @@ import poster from '../components/poster.vue'
 export default {
     computed: {
         ...mapState(['userInfo']),
+        maxImg() {
+            let videolen = this.detail && this.detail.video_urls ? this.detail.video_urls.length : 0
+            return 2 - videolen
+        },
     },
     components: {
         authImg,
@@ -223,7 +234,7 @@ export default {
                     // 数据库数据经纬度传反了
                     // 这里对调一下
                     if (+data.location.lat > +data.location.lng) {
-                        ;[data.location.lng, data.location.lat] = [data.location.lat, data.location.lng]
+                        ;[data.location.lng, data.location.lat] = [+data.location.lat, +data.location.lng]
                     }
                     data.config_base = (data.config_base || []).map(li => ({
                         img: this.getBaseImg(li),
@@ -431,7 +442,10 @@ export default {
                 margin-left: 10upx;
                 margin-bottom: 0;
                 line-height: 36upx;
+                font-weight: normal;
                 font-size: 28upx;
+                font-size: 24upx;
+                color: #333;
             }
         }
     }
@@ -601,17 +615,17 @@ export default {
         margin-top: 20upx;
     }
 }
-.empty {
-    height: 150upx;
+// .empty {
+//     height: 150upx;
 
-    &.ipx {
-        height: 218upx;
+//     &.ipx {
+//         height: 218upx;
 
-        + .fd {
-            padding-bottom: 68upx;
-        }
-    }
-}
+//         + .fd {
+//             padding-bottom: 68upx;
+//         }
+//     }
+// }
 .fd {
     position: fixed;
     right: 0;
@@ -645,7 +659,7 @@ export default {
     .link {
         width: 426upx;
         padding: 25upx 0;
-        background-color: #2cdbdb;
+        background-color: $main-color;
         border-radius: 45upx;
         line-height: 40upx;
         font-weight: bold;
@@ -660,5 +674,9 @@ export default {
 }
 official-account {
     bottom: 100upx;
+}
+.modal {
+    padding: 0 1.6em 0.8em;
+    font-size: 30upx;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
     <view class="content">
         <view class="tips" v-if="!landlord_id">
-            <template v-if="tab === 2">
+            <template v-if="tab === 1">
                 <view>温馨提示：已经租掉的房源请及时下架，以免住户看到房源后来电骚扰</view>
             </template>
-            <template v-else-if="tab === 1">
+            <template v-else-if="tab === 2">
                 <view>编辑：点击编辑可重新修改房源信息；</view>
                 <view>发布：点击发布，房源再次发布；</view>
             </template>
@@ -12,8 +12,8 @@
         <view class="hd" v-if="user_info">
             <view class="avatar">
                 <image class="img_avatar" :src="user_info.avatar" mode="aspectFit"></image>
-                <view class="avatar_auth" v-if="user_info.is_auth && user_info.is_auth === 2">
-                    <auth-img></auth-img>
+                <view class="avatar_auth" v-if="user_info.is_auth && user_info.is_auth === 1">
+                    <image class="img_auth" src="/static/image/index/auth.png"></image>
                 </view>
             </view>
             <view class="name">{{ user_info.nickname }}</view>
@@ -23,14 +23,15 @@
         </view>
         <view class="tabs m_flex" v-if="!landlord_id">
             <view class="m_flex_item">
-                <view :class="{ tab: true, active: tab === 2 }" @tap="chooseTab(2)">发布中{{ user_info && user_info.public_num ? `(${user_info.public_num})` : '(0)' }}</view>
+                <view :class="{ tab: true, active: tab === 1 }" @tap="chooseTab(1)">发布中{{ user_info && user_info.public_num ? `(${user_info.public_num})` : '(0)' }}</view>
             </view>
             <view class="m_flex_item">
-                <view :class="{ tab: true, active: tab === 1 }" @tap="chooseTab(1)">未发布{{ user_info && user_info.rented_num ? `(${user_info.rented_num})` : '(0)' }}</view>
+                <view :class="{ tab: true, active: tab === 2 }" @tap="chooseTab(2)">未发布{{ user_info && user_info.rented_num ? `(${user_info.rented_num})` : '(0)' }}</view>
             </view>
         </view>
         <publish-list :list.sync="list" @reload="getData"></publish-list>
         <v-page ref="page" :list.sync="list"></v-page>
+        <v-auth ref="auth"></v-auth>
     </view>
 </template>
 
@@ -48,7 +49,7 @@ export default {
     },
     data() {
         return {
-            tab: 2,
+            tab: 1,
             list: [],
             user_id: '',
             user_info: null,
@@ -56,7 +57,17 @@ export default {
         }
     },
     onLoad(res) {
-        if (res.user_id) {
+        console.log(res)
+        if (res.scene) {
+            const scene = decodeURIComponent(res.scene)
+            if (scene && scene.indexOf('user_id=') > -1) {
+                this.landlord_id = scene.replace('user_id=', '')
+                console.log(this.landlord_id)
+                uni.setNavigationBarTitle({
+                    title: '房源列表',
+                })
+            }
+        } else if (res.user_id) {
             this.landlord_id = res.user_id
             uni.setNavigationBarTitle({
                 title: '房源列表',
@@ -92,9 +103,9 @@ export default {
             const params = {
                 user_id: this.landlord_id || this.user_id,
             }
-            if (this.tab === 2) {
+            if (this.tab === 1) {
                 params.is_public = 1
-            } else if (this.tab === 1) {
+            } else if (this.tab === 2) {
                 params.is_rented = 1
             }
             this.$refs.page &&
@@ -152,10 +163,19 @@ export default {
     .avatar_auth {
         position: absolute;
         bottom: 0;
-        left: 50%;
-        margin-bottom: -18upx;
-        transform: translateX(-50%);
+        right: 0;
+        padding: 3upx;
+        background-color: $primary-color;
+        line-height: 1;
+        border-radius: 50%;
+        overflow: hidden;
     }
+
+    .img_auth {
+        width: 26upx;
+        height: 26upx;
+    }
+
     .name {
         margin-top: 38upx;
         font-size: 34upx;

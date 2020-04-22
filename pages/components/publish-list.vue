@@ -38,6 +38,7 @@
                     <button class="m_button plain btn" @tap.stop="edit(li)">编辑</button>
                     <block v-if="li.is_rented === 2">
                         <button class="m_button plain btn" @tap.stop="rented(li)">下架</button>
+                        <button class="m_button primary" @tap.stop="getQRCode(li)">生产海报</button>
                     </block>
                     <block v-if="li.is_public === 2">
                         <button class="m_button main btn" @tap.stop="pblc(li)">发布</button>

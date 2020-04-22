@@ -40,8 +40,8 @@ export default {
         getData() {
             this.$request
                 .getPublishQRCode({
-                    page: `pages/index/index?page=${decodeURIComponent('/pages/me/publish?user_id=' + this.userInfo.user_id)}`,
-                    // page: `pages/me/publish?user_id=${this.userInfo.user_id}`,
+                    // page: `pages/index/index?page=${encodeURIComponent('/pages/me/publish?user_id=' + this.userInfo.user_id)}`,
+                    page: `pages/me/publish?user_id=${this.userInfo.user_id}`,
                 })
                 .then(res => {
                     let { data, errmsg } = res.data || {}

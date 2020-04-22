@@ -59,7 +59,7 @@
                         <picker class="picker_box cell_box m_flex_item" :range="floor" mode="selector" @change="pickerChange('floor', $event)">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">楼层</view>
-                            <view class="cell_bd">{{ form.floor ? form.floor : '请选择' }}</view>
+                            <view class="cell_bd">{{ form.floor || '请选择' }}</view>
                             <!-- <input class="cell_bd" type="number" v-model="form.floor" placeholder="请输入楼层" />
                         </view> -->
                         </picker>
@@ -70,11 +70,11 @@
                             <input class="cell_bd" type="digit" v-model="form.rental" placeholder="请输入" />
                         </view>
                         <view class="cell_box m_flex_item">
-                            <view class="cell_hd">水费/度</view>
+                            <view class="cell_hd">水费/吨</view>
                             <input class="cell_bd" type="digit" v-model.number="form.fee_wather" placeholder="请输入" />
                         </view>
                         <view class="cell_box m_flex_item">
-                            <view class="cell_hd">电费/吨</view>
+                            <view class="cell_hd">电费/度</view>
                             <input class="cell_bd" type="digit" v-model.number="form.fee_electric" placeholder="请输入" />
                         </view>
                     </view>
@@ -617,7 +617,7 @@ export default {
                 }).then(
                     () => {
                         const api = this.form.id ? ((this.form.hr_id = this.form.id), 'editHouse') : 'addHouse'
-                        const { landlord_info, image_urls, video_urls, ...params } = this.form
+                        const { landlord_info, image_urls, video_urls, floor, ...params } = this.form
                         params.images = params.images.map(item => {
                             if (typeof item === 'string') {
                                 item = {

@@ -60,8 +60,8 @@
                                 <image :src="detail.landlord_info.avatar" mode="aspectFit"></image>
                             </view>
                             <view class="user m_flex_item">
-                                <view class="name m_flex_middle">
-                                    <text>{{ detail.landlord_info.nickname }}</text>
+                                <view class="m_flex_middle">
+                                    <text class="name m_textover">{{ detail.landlord_info.nickname }}</text>
                                     <view class="avatar_auth" v-if="detail.landlord_info.is_auth && detail.landlord_info.is_auth === 1">
                                         <auth-img></auth-img>
                                     </view>
@@ -548,6 +548,7 @@ export default {
         overflow: hidden;
     }
     .name {
+        max-width: 180upx;
         line-height: 38upx;
         font-size: 30upx;
         color: $text-color;

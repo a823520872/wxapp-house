@@ -40,7 +40,7 @@ const ajax = (path, params, options = {}) => {
             // #endif
         }
         let data = res.data
-        if (typeof data === 'string') {
+        if (data && typeof data === 'string') {
             data = JSON.parse(data)
         }
         utils.log({ url: path, data: params, response: data })

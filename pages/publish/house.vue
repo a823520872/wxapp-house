@@ -85,7 +85,7 @@
                         </picker>
                     </view>
                     <view class="cell m_flex_center m_flex_middle" v-if="config">
-                        <picker class="picker_box cell_box m_flex_item" :range="address_street" mode="multiSelector" @change="pickerChange('address_street', $event)" @columnchange="columnChange">
+                        <picker class="picker_box cell_box m_flex_item" :range="address_street" @change="pickerChange('address_street', $event)" @columnchange="columnChange" :value="addrVal" mode="multiSelector">
                             <!-- <view class="cell_box m_flex_item"> -->
                             <view class="cell_hd">地址</view>
                             <view class="cell_bd">{{ form.address_street ? form.address_street : '请选择' }}</view>
@@ -214,6 +214,7 @@ export default {
     data() {
         return {
             step: 0,
+            addrVal: [],
             form: {
                 images: [],
                 videos: [],
@@ -368,7 +369,8 @@ export default {
                             url: item,
                         }))
                         data.videos = data.video_urls ? data.video_urls.split(',') : []
-                        this.form = { ...data, address_detail: data.address_detail || '', remarks: data.remarks || '' }
+                        this.form = { ...data, floor: data.floor_number + '楼', address_detail: data.address_detail || '', remarks: data.remarks || '' }
+                        this.getAreaFlag(data.address_street_id)
                     }
                 })
             } else {
@@ -491,6 +493,7 @@ export default {
                 [
                     'address_street',
                     () => {
+                        this.addrVal = value
                         const item = this.config.address_street[2][value[2]]
                         this.form.address_street = item ? item.name : ''
                         this.form.address_street_id = item ? item.id : ''

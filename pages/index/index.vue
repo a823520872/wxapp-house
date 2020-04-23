@@ -476,7 +476,7 @@ export default {
                     bodyCls: 'width-91',
                     success: () => {
                         key.map(item => {
-                            this.config[item].map(it => {
+                            (this.config[item] || []).map(it => {
                                 it.active = it.tmpActive
                             })
                         })

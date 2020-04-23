@@ -15,7 +15,7 @@
                         <view v-if="userInfo" class="name m_flex m_flex_column m_textover">
                             <view>{{ userInfo.nickname }}</view>
                             <view v-if="userInfo.is_landlord === 1">
-                                <view v-if="service" class="service">{{ serviceEnd }} 服务结束</view>
+                                <view v-if="service" class="service">{{ serviceEnd }}到期</view>
                                 <view v-else>服务结束</view>
                             </view>
                         </view>
@@ -345,10 +345,12 @@ export default {
     // }
     .avatar {
         position: relative;
-        width: 130upx;
-        height: 130upx;
+        width: 126upx;
+        height: 126upx;
         margin: 60upx auto 30upx;
         border: none;
+        border-radius: 50%;
+        border: 2upx solid #fff;
     }
     .img_avatar {
         position: relative;
@@ -357,7 +359,6 @@ export default {
         border-radius: 50%;
         // background-color: $uni-bg-color;
         overflow: hidden;
-        border: 2upx solid #fff;
     }
     .avatar_auth {
         position: absolute;

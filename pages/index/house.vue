@@ -676,8 +676,4 @@ export default {
 official-account {
     bottom: 100upx;
 }
-.modal {
-    padding: 0 1.6em 0.8em;
-    font-size: 30upx;
-}
 </style>

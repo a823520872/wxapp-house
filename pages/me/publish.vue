@@ -40,6 +40,12 @@ import { mapState, mapMutations } from 'vuex'
 import authImg from '../components/auth-img'
 import publishList from '../components/publish-list.vue'
 export default {
+    onShareAppMessage() {
+        return {
+            title: '房源列表',
+            path: `/pages/index/index?p=` + encodeURIComponent(`/pages/me/publish/?user_id=${this.landlord_id}`),
+        }
+    },
     components: {
         authImg,
         publishList,

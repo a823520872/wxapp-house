@@ -1,11 +1,11 @@
 <template>
     <view>
-        <v-modal ref="user_modal">
+        <v-modal class="modal" ref="user_modal">
             <block slot="footer">
                 <button class="m_button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="getUserInfoByBtn">登录</button>
             </block>
         </v-modal>
-        <v-modal ref="phone_modal">
+        <v-modal class="modal" ref="phone_modal">
             <block slot="footer">
                 <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">授权</button>
             </block>
@@ -174,12 +174,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.m_button {
-    width: 100%;
-    font-size: 36upx;
-    line-height: 96upx;
-    font-size: 36upx;
-    padding: 0;
-    color: $main-color;
+.modal {
+    .m_button {
+        display: block;
+        width: 100%;
+        font-size: 36upx;
+        line-height: 96upx;
+        font-size: 36upx;
+        padding: 0;
+        color: $main-color;
+    }
 }
 </style>

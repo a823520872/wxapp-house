@@ -145,9 +145,11 @@ export default {
     }
 
     &__bd {
+        width: 100%;
         min-height: 80upx;
         max-height: 700upx;
         overflow: auto;
+        box-sizing: border-box;
         font-size: 30upx;
         line-height: 1.3;
         word-wrap: break-word;

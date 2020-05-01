@@ -103,4 +103,7 @@ export default {
     getPublishQRCode(data = {}) {
         return ajax('/api/qrcode/createWxappQrcode', data, { loading: true })
     },
+    getHouseResourceInfo(data = {}) {
+        return ajax('/api/landlord/getHouseResourceInfo', data, { loading: true })
+    },
 }

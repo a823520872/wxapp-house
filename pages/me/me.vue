@@ -176,7 +176,7 @@ export default {
                 )
                 .then(userInfo => {
                     if (this.userInfo && this.userInfo.is_landlord === 1) {
-                        this.checkAuth().then(res => {
+                        this.checkAuth(true).then(res => {
                             this.service = res
                         })
                     }

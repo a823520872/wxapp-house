@@ -116,7 +116,7 @@ export default {
             // #ifdef MP-WEIXIN
             this.login()
                 .then(code => {
-                    return this.getInfo()
+                    return this.getInfo(true)
                 })
                 .then(
                     userInfo => {

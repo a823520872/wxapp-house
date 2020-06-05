@@ -168,7 +168,7 @@ export default {
             this.login()
                 .then(
                     code => {
-                        return this.getInfo()
+                        return this.getInfo(true)
                     },
                     e => {
                         console.log(e)

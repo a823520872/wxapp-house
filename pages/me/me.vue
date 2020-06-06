@@ -146,6 +146,9 @@ export default {
             time: -1,
         }
     },
+    onPullDownRefresh() {
+        this.init(true)
+    },
     onShow() {
         this.init()
     },
@@ -162,32 +165,38 @@ export default {
     methods: {
         ...mapMutations(['setUserInfo']),
         ...mapActions(['login', 'getInfo', 'checkAuth']),
-        init() {
+        init(flag) {
             // this.service = false
             // #ifdef MP-WEIXIN
-            this.login()
+            this.login(flag)
                 .then(
                     code => {
-                        return this.getInfo(true)
-                    },
-                    e => {
-                        console.log(e)
+                        return this.getInfo(flag)
                     }
                 )
                 .then(userInfo => {
+                    uni.stopPullDownRefresh()
                     if (this.userInfo && this.userInfo.is_landlord === 1) {
-                        this.checkAuth(true).then(res => {
+                        this.checkAuth(flag).then(res => {
                             this.service = res
                         }, () => {
                             this.service = false
                         })
                     }
                 })
+                .catch((e) => {
+                    uni.stopPullDownRefresh()
+                    console.log(e);
+                    if (flag && (e.msg === '未登录' || e.msg === '当前用户校验失败')) {
+                        this.getUserInfo()
+                    }
+                })
             // #endif
             // #ifdef H5
-            this.getInfo().then(userInfo => {
+            this.getInfo(flag).then(userInfo => {
+                uni.stopPullDownRefresh()
                 if (this.userInfo && this.userInfo.is_landlord === 1) {
-                    this.checkAuth().then(res => {
+                    this.checkAuth(flag).then(res => {
                         this.service = res
                     }, () => {
                         this.service = false

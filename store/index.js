@@ -12,6 +12,7 @@ const store = new Vuex.Store({
         userInfo: null,
         houseTempImg: [],
         houseImg: [],
+        auth: uni.getStorageSync('auth') || false,
         // homeReload: false,
         // collectReload: false,
         // #ifdef MP-WEIXIN
@@ -96,15 +97,17 @@ const store = new Vuex.Store({
                 })
             }
             return api.getInfo().then(res => {
-                if (res && res.data) {
+                if (res.data &&　res.data.token) {
                     uni.setStorageSync('tk', res.data.token)
-                    context.commit('setUserInfo', res.data)
                 }
                 return res
+            }, (res) => {
+                context.commit('setUserInfo', null)
+                return Promise.reject(res)
             })
         },
         checkAuth(context, flag = false) {
-            const auth = uni.getStorageSync('auth')
+            const auth = context.state.auth
             const exp = new Date(auth).valueOf()
             const now = new Date().valueOf()
             const hasAuth = now < exp
@@ -112,8 +115,10 @@ const store = new Vuex.Store({
                 return Promise.resolve(auth)
             }
             return api.checkAuth().then(res => {
-                uni.setStorageSync('auth', res.data)
-                return res.data
+                let service = res.data || false
+                uni.setStorageSync('auth', service)
+                context.commit('setVal', { key: 'auth', val: service })
+                return service
             })
         },
     },

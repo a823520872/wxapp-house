@@ -43,7 +43,8 @@ const ajax = (path, params, options = {}) => {
         if (data && typeof data === 'string') {
             data = JSON.parse(data)
         }
-        utils.log({ url: path, data: params, response: data })
+        utils.log(path)
+        utils.log({ data: params, response: data })
 
         if (res && res.statusCode == 200) {
             if (data.code && data.code === 1) {

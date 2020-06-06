@@ -88,7 +88,7 @@ export default {
         linkModal,
     },
     computed: {
-        ...mapState(['userInfo']),
+        ...mapState(['userInfo', 'auth']),
         state() {
             switch (this.step) {
                 case 2:

@@ -12,8 +12,8 @@ const store = new Vuex.Store({
         userInfo: null,
         houseTempImg: [],
         houseImg: [],
-        homeReload: false,
-        collectReload: false,
+        // homeReload: false,
+        // collectReload: false,
         // #ifdef MP-WEIXIN
         urlPrefix: 'https://house.zhiqiang.ink',
         // #endif
@@ -43,12 +43,12 @@ const store = new Vuex.Store({
         setHouseImg(state, arr) {
             state.houseImg = arr
         },
-        setHomeReload(state, bl) {
-            state.homeReload = bl
-        },
-        setCollectReload(state, bl) {
-            state.collectReload = bl
-        },
+        // setHomeReload(state, bl) {
+        //     state.homeReload = bl
+        // },
+        // setCollectReload(state, bl) {
+        //     state.collectReload = bl
+        // },
         setUrlPrefix(state) {
             state.urlPrefix = state.urlPrefix === 'https://house.zhiqiang.ink' ? 'https://house.ioupian.com' : 'https://house.zhiqiang.ink'
         },

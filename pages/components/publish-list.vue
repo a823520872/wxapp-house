@@ -89,7 +89,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setHomeReload']),
+        // ...mapMutations(['setHomeReload']),
         edit(li) {
             this.goPage(`/pages/publish/house?id=${li.id}`)
         },
@@ -128,7 +128,7 @@ export default {
                             .then(res => {
                                 // if (res && res.data) {
                                 self.$emit('reload')
-                                self.setHomeReload(true)
+                                // self.setHomeReload(true)
                                 uni.showToast({
                                     title: '操作成功',
                                     icon: 'success',
@@ -150,7 +150,7 @@ export default {
                 .then(res => {
                     // if (res && res.data) {
                     this.$emit('reload')
-                    this.setHomeReload(true)
+                    // this.setHomeReload(true)
                     uni.showToast({
                         title: '操作成功',
                         icon: 'success',
@@ -168,7 +168,7 @@ export default {
                 .then(res => {
                     // if (res && res.data) {
                     this.$emit('reload')
-                    this.setHomeReload(true)
+                    // this.setHomeReload(true)
                     uni.showToast({
                         title: '操作成功',
                         icon: 'success',
@@ -183,7 +183,7 @@ export default {
                 })
                 .then(res => {
                     this.$emit('reload')
-                    this.setHomeReload(true)
+                    // this.setHomeReload(true)
                     uni.showToast({
                         title: '操作成功',
                         icon: 'success',

@@ -8,6 +8,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import HouseList from '../components/house-list'
+import Defer from '../../common/defer.js'
 export default {
     computed: {
         ...mapState(['userInfo', 'collectReload']),
@@ -18,17 +19,17 @@ export default {
     data() {
         return {
             list: [],
+            defer: new Defer(),
         }
     },
     onLoad(res) {},
     onShow() {
-        if (this.collectReload) {
-            this.setCollectReload(false)
-            this.getData()
-        }
+        this.defer.done(() => {
+            this.getData(-1)
+        })
     },
     onReady() {
-        this.getData()
+        this.defer.resolve()
     },
     onPullDownRefresh() {
         this.$refs.page.getData(1)
@@ -37,12 +38,13 @@ export default {
         this.$refs.page.next()
     },
     methods: {
-        ...mapMutations(['setCollectReload']),
-        getData() {
+        // ...mapMutations(['setCollectReload']),
+        getData(n) {
             const self = this
             this.$refs.page.init({
                 url: 'getMyCollection',
                 params: {},
+                n,
                 fn: null,
             })
         },

@@ -102,6 +102,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import HouseList from '../components/house-list'
+import Defer from '../../common/defer.js'
 
 const houseParammappings = new Map([
     [1, { label: '户型', value: [{ key: 'house_type' }] }],
@@ -124,7 +125,7 @@ export default {
         HouseList,
     },
     computed: {
-        ...mapState(['homeReload']),
+        // ...mapState(['homeReload']),
         houseParam() {
             return [...houseParammappings.entries()].map(([key, value]) => {
                 return {
@@ -266,6 +267,8 @@ export default {
             modalList: null,
             hasFocus: false,
             address_city: '',
+            defer: new Defer(),
+            getDataDefer: new Defer(),
         }
     },
     onLoad(res) {
@@ -283,14 +286,9 @@ export default {
         }
     },
     onShow() {
-        this.login().then(code => {
-            this.getInfo()
+        this.defer.done(() => {
+            this.init(-1)
         })
-        if (this.homeReload) {
-            this.setHomeReload(false)
-            this.init()
-            this.getData()
-        }
     },
     onPullDownRefresh() {
         this.$refs.page.getData(1)
@@ -299,8 +297,10 @@ export default {
         this.$refs.page.next()
     },
     onReady() {
-        this.init()
-        this.getData()
+        this.defer.resolve()
+        this.getDataDefer.done(() => {
+            this.getData()
+        })
     },
     onShareAppMessage() {
         return {
@@ -310,16 +310,19 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setHomeReload']),
+        // ...mapMutations(['setHomeReload']),
         ...mapActions(['login', 'getInfo']),
-        init() {
+        init(n) {
             const self = this
             this.filterParams()
             this.$refs.page &&
                 this.$refs.page.init({
                     url: 'getHouseList',
                     params: self.params,
+                    n,
                     fn: null,
+                }).then(() => {
+                    this.getDataDefer.resolve()
                 })
         },
         getData() {

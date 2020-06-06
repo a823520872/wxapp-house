@@ -163,7 +163,7 @@ export default {
         ...mapMutations(['setUserInfo']),
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         init() {
-            this.service = false
+            // this.service = false
             // #ifdef MP-WEIXIN
             this.login()
                 .then(
@@ -178,6 +178,8 @@ export default {
                     if (this.userInfo && this.userInfo.is_landlord === 1) {
                         this.checkAuth(true).then(res => {
                             this.service = res
+                        }, () => {
+                            this.service = false
                         })
                     }
                 })
@@ -187,6 +189,8 @@ export default {
                 if (this.userInfo && this.userInfo.is_landlord === 1) {
                     this.checkAuth().then(res => {
                         this.service = res
+                    }, () => {
+                        this.service = false
                     })
                 }
             })

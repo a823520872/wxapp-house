@@ -219,7 +219,7 @@ export default {
         this.addReader()
     },
     methods: {
-        ...mapMutations(['setCollectReload']),
+        // ...mapMutations(['setCollectReload']),
         ...mapActions(['login', 'getInfo']),
         getData() {
             const params = {
@@ -343,7 +343,7 @@ export default {
                             })
                         })
                 }
-                this.setCollectReload(true)
+                // this.setCollectReload(true)
             } else {
                 this.getUserInfo()
             }

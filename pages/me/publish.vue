@@ -39,6 +39,7 @@
 import { mapState, mapMutations } from 'vuex'
 import authImg from '../components/auth-img'
 import publishList from '../components/publish-list.vue'
+import Defer from '../../common/defer.js'
 export default {
     onShareAppMessage() {
         return {
@@ -60,6 +61,7 @@ export default {
             user_id: '',
             user_info: null,
             landlord_id: '',
+            defer: new Defer(),
         }
     },
     onLoad(res) {
@@ -88,13 +90,17 @@ export default {
         }
     },
     onShow() {
-        if (this.collectReload) {
-            this.setCollectReload(false)
-            this.getData()
-        }
+        // if (this.collectReload) {
+        //     this.setCollectReload(false)
+        //     this.getData()
+        // }
+        this.defer.done(() => {
+            this.getData(-1)
+        })
     },
     onReady() {
-        this.getData()
+        // this.getData()
+        this.defer.resolve()
     },
     onPullDownRefresh() {
         this.$refs.page.getData(1)
@@ -103,8 +109,8 @@ export default {
         this.$refs.page.next()
     },
     methods: {
-        ...mapMutations(['setCollectReload']),
-        getData() {
+        // ...mapMutations(['setCollectReload']),
+        getData(n) {
             const self = this
             const params = {
                 user_id: this.landlord_id || this.user_id,
@@ -119,6 +125,7 @@ export default {
                     .init({
                         url: 'getUserHouse',
                         params,
+                        n,
                         fn(data) {
                             return (data || []).map(item => ((item.images = item.image_urls && item.image_urls.split(',')), item))
                         },

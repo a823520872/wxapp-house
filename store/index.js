@@ -100,6 +100,7 @@ const store = new Vuex.Store({
                 if (res.data &&　res.data.token) {
                     uni.setStorageSync('tk', res.data.token)
                 }
+                context.commit('setUserInfo', res.data)
                 return res
             }, (res) => {
                 context.commit('setUserInfo', null)

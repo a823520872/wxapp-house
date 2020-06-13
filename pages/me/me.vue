@@ -86,9 +86,9 @@
                 <view class="cell_hd">授权登录</view>
                 <view class="cell_fd">登录后才能发布房源</view>
             </view> -->
-            <!-- <view class="cell m_flex_justify m_flex_middle" @tap="clear">
-                <view class="cell_hd">清楚授权</view>
-            </view> -->
+            <view class="cell m_flex_justify m_flex_middle" @tap="init(true)">
+                <view class="cell_hd">清除缓存</view>
+            </view>
         </view>
         <v-auth ref="auth"></v-auth>
         <v-modal ref="modal">
@@ -121,9 +121,10 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import authImg from '../components/auth-img'
 import linkModal from '../components/link-modal'
+import Defer from '../../common/defer.js'
 export default {
     computed: {
-        ...mapState(['userInfo']),
+        ...mapState(['userInfo', 'auth']),
         serviceEnd() {
             if (this.service) {
                 let [serviceEnd] = this.service.split(' ')
@@ -144,13 +145,19 @@ export default {
                 captcha: '',
             },
             time: -1,
+            defer: new Defer(),
         }
     },
     onPullDownRefresh() {
         this.init(true)
     },
     onShow() {
-        this.init()
+        this.defer.done(() => {
+            this.init()
+        })
+    },
+    onReady() {
+        this.defer.resolve()
     },
     onShareAppMessage() {
         return {
@@ -207,7 +214,7 @@ export default {
         },
         getUserInfo(e) {
             this.$refs.auth.getUserInfo(e).done(() => {
-                this.init()
+                this.init(true)
             })
         },
         linkAdmin() {
@@ -233,9 +240,7 @@ export default {
                               icon: 'none',
                           })
                     : this.goPage(url)
-                : this.getUserInfo().done(() => {
-                      this.init()
-                  })
+                : this.getUserInfo()
         },
         showLogin() {
             this.$refs.loginModal.show({

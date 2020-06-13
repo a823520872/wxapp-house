@@ -12,7 +12,7 @@ const store = new Vuex.Store({
         userInfo: null,
         houseTempImg: [],
         houseImg: [],
-        auth: uni.getStorageSync('auth') || false,
+        auth: false,
         // homeReload: false,
         // collectReload: false,
         // #ifdef MP-WEIXIN
@@ -102,24 +102,33 @@ const store = new Vuex.Store({
                 }
                 context.commit('setUserInfo', res.data)
                 return res
-            }, (res) => {
+            }, e => {
                 context.commit('setUserInfo', null)
-                return Promise.reject(res)
+                return Promise.reject(e)
             })
         },
         checkAuth(context, flag = false) {
+            const handleAuth = (auth) => {
+                if (!auth) return false
+                const exp = new Date(auth).valueOf()
+                const now = new Date().valueOf()
+                const hasAuth = now < exp
+                return hasAuth
+            }
             const auth = context.state.auth
-            const exp = new Date(auth).valueOf()
-            const now = new Date().valueOf()
-            const hasAuth = now < exp
+            let hasAuth = handleAuth(auth)
             if (!flag && hasAuth) {
                 return Promise.resolve(auth)
             }
             return api.checkAuth().then(res => {
                 let service = res.data || false
-                uni.setStorageSync('auth', service)
                 context.commit('setVal', { key: 'auth', val: service })
-                return service
+                let hasAuth = handleAuth(service)
+                if (hasAuth) return service
+                return Promise.reject(false)
+            }, e => {
+                context.commit('setVal', { key: 'auth', val: false })
+                return Promise.reject(false)
             })
         },
     },

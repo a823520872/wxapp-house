@@ -554,7 +554,7 @@ export default {
             fn && fn()
         },
         next() {
-            this.checkAuth().then(res => {
+            this.checkAuth(true).then(res => {
                 if (!res) return
 
                 this.$validate(this.form, {
@@ -592,6 +592,11 @@ export default {
                         })
                     }
                 )
+            }, e => {
+                uni.showToast({
+                    title: '服务结束，请联系客服续约',
+                    icon: 'none',
+                })
             })
         },
         filterForm() {
@@ -604,7 +609,7 @@ export default {
             this.form.config_lightspot = config_lightspot.map(item => item.value).join(',')
         },
         confirm() {
-            this.checkAuth().then(res => {
+            this.checkAuth(true).then(res => {
                 if (!res) return
                 this.filterForm()
                 this.$validate(this.form, {
@@ -658,6 +663,11 @@ export default {
                         })
                     }
                 )
+            }, e => {
+                uni.showToast({
+                    title: '服务结束，请联系客服续约',
+                    icon: 'none',
+                })
             })
         },
         chooseCfgBase(li) {

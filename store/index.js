@@ -108,9 +108,9 @@ const store = new Vuex.Store({
             })
         },
         checkAuth(context, flag = false) {
-            const handleAuth = (auth) => {
-                if (!auth) return false
-                const exp = new Date(auth).valueOf()
+            const handleAuth = (t) => {
+                if (!t) return false
+                const exp = new Date(t.replace(/-/g, '/')).valueOf()
                 const now = new Date().valueOf()
                 const hasAuth = now < exp
                 return hasAuth

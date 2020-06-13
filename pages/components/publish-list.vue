@@ -142,23 +142,31 @@ export default {
         },
         refrs(li) {
             if (!li.id) return
-            this.$request
-                .public({
-                    id: li.id,
-                    is_public: 1,
-                    is_rented: 2,
-                    type: 'refresh',
-                })
-                .then(res => {
-                    // if (res && res.data) {
-                    this.$emit('reload')
-                    // this.setHomeReload(true)
-                    uni.showToast({
-                        title: '操作成功',
-                        icon: 'success',
+            this.checkAuth(true).then(res => {
+                if (!res) return 
+                this.$request
+                    .public({
+                        id: li.id,
+                        is_public: 1,
+                        is_rented: 2,
+                        type: 'refresh',
                     })
-                    // }
+                    .then(res => {
+                        // if (res && res.data) {
+                        this.$emit('reload')
+                        // this.setHomeReload(true)
+                        uni.showToast({
+                            title: '操作成功',
+                            icon: 'success',
+                        })
+                        // }
+                    })
+            }, e => {
+                uni.showToast({
+                    title: '服务结束，请联系客服续约',
+                    icon: 'none',
                 })
+            })
         },
         pblc(li) {
             this.checkAuth(true).then(res => {

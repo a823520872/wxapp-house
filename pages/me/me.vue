@@ -87,7 +87,7 @@
                 <view class="cell_fd">登录后才能发布房源</view>
             </view> -->
             <view class="cell m_flex_justify m_flex_middle" @tap="init(true)">
-                <view class="cell_hd">清除缓存</view>
+                <view class="cell_hd">更新状态</view>
             </view>
         </view>
         <v-auth ref="auth"></v-auth>

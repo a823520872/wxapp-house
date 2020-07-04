@@ -89,7 +89,6 @@ export default {
         }
     },
     methods: {
-        // ...mapMutations(['setHomeReload']),
         ...mapActions(['checkAuth']),
         edit(li) {
             this.goPage(`/pages/publish/house?id=${li.id}`)
@@ -115,26 +114,28 @@ export default {
                     uni.hideLoading()
                 })
         },
+        handleReload() {
+            this.$emit('reload')
+            uni.showToast({
+                title: '操作成功',
+                icon: 'success',
+            })
+            let reloadPage = [...this.$store.state.reloadPage]
+            reloadPage.push(...['/pages/index/index', '/pages/me/publish'])
+            this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
+        },
         rented(li) {
-            const self = this
             this.$refs.modal.show({
                 confirmText: '确定',
-                success() {
-                    if (self.rent_type) {
-                        self.$request
+                success: () => {
+                    if (this.rent_type) {
+                        this.$request
                             .rent({
                                 id: li.id,
-                                rent_type: self.rent_type,
+                                rent_type: this.rent_type,
                             })
                             .then(res => {
-                                // if (res && res.data) {
-                                self.$emit('reload')
-                                // self.setHomeReload(true)
-                                uni.showToast({
-                                    title: '操作成功',
-                                    icon: 'success',
-                                })
-                                // }
+                                this.handleReload()
                             })
                     }
                 },
@@ -152,14 +153,7 @@ export default {
                         type: 'refresh',
                     })
                     .then(res => {
-                        // if (res && res.data) {
-                        this.$emit('reload')
-                        // this.setHomeReload(true)
-                        uni.showToast({
-                            title: '操作成功',
-                            icon: 'success',
-                        })
-                        // }
+                        this.handleReload()
                     })
             }, e => {
                 uni.showToast({
@@ -178,14 +172,7 @@ export default {
                         is_rented: 2,
                     })
                     .then(res => {
-                        // if (res && res.data) {
-                        this.$emit('reload')
-                        // this.setHomeReload(true)
-                        uni.showToast({
-                            title: '操作成功',
-                            icon: 'success',
-                        })
-                        // }
+                        this.handleReload()
                     })
             }, e => {
                 uni.showToast({
@@ -200,12 +187,7 @@ export default {
                     id: li.id,
                 })
                 .then(res => {
-                    this.$emit('reload')
-                    // this.setHomeReload(true)
-                    uni.showToast({
-                        title: '操作成功',
-                        icon: 'success',
-                    })
+                    this.handleReload()
                 })
         },
     },

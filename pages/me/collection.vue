@@ -11,7 +11,7 @@ import HouseList from '../components/house-list'
 import Defer from '../../common/defer.js'
 export default {
     computed: {
-        ...mapState(['userInfo', 'collectReload']),
+        ...mapState(['userInfo']),
     },
     components: {
         HouseList,
@@ -24,12 +24,17 @@ export default {
     },
     onLoad(res) {},
     onShow() {
-        this.defer.done(() => {
-            this.getData(-1)
-        })
+        let reloadPage = [...this.$store.state.reloadPage]
+        if (reloadPage.length) {
+            let i = reloadPage.findIndex(v => v === '/pages/me/collection')
+            if (i === -1) return
+            reloadPage.splice(i, 1)
+            this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
+            this.getData()
+        }
     },
     onReady() {
-        this.defer.resolve()
+        this.getData()
     },
     onPullDownRefresh() {
         this.$refs.page.getData(1)
@@ -38,7 +43,6 @@ export default {
         this.$refs.page.next()
     },
     methods: {
-        // ...mapMutations(['setCollectReload']),
         getData(n) {
             const self = this
             this.$refs.page.init({

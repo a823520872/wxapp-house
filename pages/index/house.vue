@@ -219,7 +219,6 @@ export default {
         this.addReader()
     },
     methods: {
-        // ...mapMutations(['setCollectReload']),
         ...mapActions(['login', 'getInfo']),
         getData() {
             const params = {
@@ -235,6 +234,9 @@ export default {
                     // 这里对调一下
                     if (+data.location.lat > +data.location.lng) {
                         ;[data.location.lng, data.location.lat] = [+data.location.lat, +data.location.lng]
+                    } else {
+                        data.location.lng = +data.location.lng
+                        data.location.lat = +data.location.lat
                     }
                     data.config_base = (data.config_base || []).map(li => ({
                         img: this.getBaseImg(li),
@@ -329,6 +331,9 @@ export default {
                                 title: '收藏成功',
                                 icon: 'success',
                             })
+                            let reloadPage = [...this.$store.state.reloadPage]
+                            reloadPage.push('/pages/me/collection')
+                            this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
                         })
                 } else if (this.detail.collection_status === 1) {
                     this.$request
@@ -341,9 +346,11 @@ export default {
                                 title: '取消成功',
                                 icon: 'success',
                             })
+                            let reloadPage = [...this.$store.state.reloadPage]
+                            reloadPage.push('/pages/me/collection')
+                            this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
                         })
                 }
-                // this.setCollectReload(true)
             } else {
                 this.getUserInfo()
             }

@@ -13,6 +13,7 @@ const store = new Vuex.Store({
         houseTempImg: [],
         houseImg: [],
         auth: false,
+        reloadPage: [],
         // homeReload: false,
         // collectReload: false,
         // #ifdef MP-WEIXIN
@@ -24,6 +25,7 @@ const store = new Vuex.Store({
     },
     mutations: {
         setVal(state, obj) {
+            console.log(obj);
             state[obj.key] = obj.val
         },
         setCode(state, code) {

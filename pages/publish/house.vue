@@ -280,7 +280,6 @@ export default {
         // #endif
     },
     methods: {
-        // , 'setHomeReload', 'setCollectReload'
         ...mapMutations(['setHouseTempImg', 'setHouseImg']),
         ...mapActions(['login', 'getInfo', 'checkAuth']),
         getData() {
@@ -647,8 +646,9 @@ export default {
                             if (res && res.data) {
                                 this.setHouseTempImg([])
                                 this.setHouseImg([])
-                                // this.setHomeReload(true)
-                                // this.setCollectReload(true)
+                                let reloadPage = [...this.$store.state.reloadPage]
+                                reloadPage.push(...['/pages/index/index', '/pages/me/publish'])
+                                this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
                                 this.goPage({
                                     path: `/pages/publish/publish_succ?id=${this.form.id || res.data}`,
                                     replace: true,

@@ -9,6 +9,7 @@
         </swiper>
         <view class="m_sticky">
             <view class="cells">
+                <!-- <index-select></index-select> -->
                 <view class="cells_hd m_flex_middle m_flex_justify">
                     <view class="title">房东直租</view>
                     <view class="m_flex_middle">
@@ -101,6 +102,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+// import indexSelect from '../components/index-select'
 import HouseList from '../components/house-list'
 import Defer from '../../common/defer.js'
 
@@ -122,10 +124,10 @@ const houseParammappings = new Map([
 ])
 export default {
     components: {
+        // indexSelect,
         HouseList,
     },
     computed: {
-        // ...mapState(['homeReload']),
         houseParam() {
             return [...houseParammappings.entries()].map(([key, value]) => {
                 return {
@@ -267,9 +269,14 @@ export default {
             modalList: null,
             hasFocus: false,
             address_city: '',
-            defer: new Defer(),
             getDataDefer: new Defer(),
         }
+    },
+    onPullDownRefresh() {
+        this.$refs.page.getData(1)
+    },
+    onReachBottom() {
+        this.$refs.page.next()
     },
     onLoad(res) {
         if (res.scene) {
@@ -286,18 +293,20 @@ export default {
         }
     },
     onShow() {
-        this.defer.done(() => {
-            this.init(-1)
-        })
-    },
-    onPullDownRefresh() {
-        this.$refs.page.getData(1)
-    },
-    onReachBottom() {
-        this.$refs.page.next()
+        let reloadPage = [...this.$store.state.reloadPage]
+        if (reloadPage.length) {
+            let i = reloadPage.findIndex(v => v === '/pages/index/index')
+            if (i === -1) return
+            reloadPage.splice(i, 1)
+            this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
+            this.init()
+            this.getDataDefer.done(() => {
+                this.getData()
+            })
+        }
     },
     onReady() {
-        this.defer.resolve()
+        this.init()
         this.getDataDefer.done(() => {
             this.getData()
         })
@@ -310,7 +319,6 @@ export default {
         }
     },
     methods: {
-        // ...mapMutations(['setHomeReload']),
         ...mapActions(['login', 'getInfo']),
         init(n) {
             const self = this
@@ -426,6 +434,7 @@ export default {
                 this.params.address_street = ''
                 this.params.address_street_id = ''
                 if (item) {
+                    if (!(this.config.address_street[1] && this.config.address_street[1].length)) return
                     let area = this.config.address_street[1][value[1]]
                     this.params.area_id = area && area.id ? area.id : ''
                     if (area && area.id) {
@@ -480,7 +489,7 @@ export default {
                     success: () => {
                         key.map(item => {
                             (this.config[item] || []).map(it => {
-                                it.active = it.tmpActive
+                                it.active = it.tmpActive || false
                             })
                         })
                         this.init()
@@ -503,14 +512,14 @@ export default {
                 if (item === 'price') {
                     this.config[item].map((it, k) => {
                         if (j === k) {
-                            li.tmpActive = !li.tmpActive
+                            li.tmpActive = !(li.tmpActive || false)
                         } else {
                             this.config[item][k].tmpActive = false
                         }
                     })
                     return
                 }
-                li.tmpActive = !li.tmpActive
+                li.tmpActive = !(li.tmpActive || false)
             })
         },
     },

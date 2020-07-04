@@ -10,6 +10,11 @@
                 <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">授权</button>
             </block>
         </v-modal>
+        <v-modal ref="modal_local">
+            <block slot="footer">
+                <button class="m_button" plain open-type="openSetting" @opensetting="getLocalOptSet">去设置</button>
+            </block>
+        </v-modal>
     </view>
 </template>
 
@@ -28,7 +33,8 @@ export default {
     },
     data() {
         return {
-            defer: null
+            defer: null,
+            localType: '',
         }
     },
     methods: {
@@ -107,68 +113,219 @@ export default {
             })
         },
         getLocation(e) {
-            const self = this
-            return new Promise((resolve, reject) => {
-                uni.getLocation({
-                    type: 'gcj02',
-                    success(res) {
-                        self.transformAddr(res.longitude, res.latitude).then(
-                            r => {
-                                resolve(r)
-                            },
-                            e => {
-                                reject(e)
+            this.defer = new Defer()
+            uni.getLocation({
+                type: 'gcj02',
+                success: (res) => {
+                    this.defer.resolve({
+                        longitude: res.longitude.toFixed(6),
+                        latitude: res.latitude.toFixed(6),
+                    })
+                },
+                fail: e => {
+                    if (e.errMsg == 'getLocation:fail 1') {
+                        uni.showToast({
+                            title: '请在“设置”里允许“微信”使用地理位置',
+                            icon: 'none'
+                        })
+                        this.defer.reject(e)
+                        return
+                    }
+                    this.localType = 1
+                    this.$refs.modal_local
+                        .show({
+                            content: '为了更好的用户体验，需要获取您的定位信息',
+                            cancelText: '取消'
+                        })
+                        .fail(flag => {
+                            if (flag) {
+                                this.defer.reject()
                             }
-                        )
-                    },
-                    fail: reject
-                })
+                        })
+                }
             })
+            return this.defer
         },
         chooseLocation(obj) {
-            const self = this
-            return new Promise((resolve, reject) => {
-                uni.chooseLocation({
-                    success(res) {
-                        const { errMsg, name, address, latitude, longitude } = res
-                        if (errMsg === 'chooseLocation:ok') {
-                            self.transformAddr(res.longitude, res.latitude).then(
-                                r => {
-                                    resolve(r)
-                                },
-                                e => {
-                                    reject(e)
+            this.defer = new Defer()
+            uni.chooseLocation({
+                success: (res) => {
+                    const { errMsg, name, address, latitude, longitude } = res
+                    if (errMsg === 'chooseLocation:ok') {
+                        this.defer.resolve({
+                            longitude: +res.longitude.toFixed(6),
+                            latitude: +res.latitude.toFixed(6),
+                        })
+                    } else {
+                        this.defer.reject()
+                    }
+                },
+                fail: e => {
+                    if (e.errMsg.indexOf('cancel') === -1) {
+                        this.localType = 2
+                        this.$refs.modal_local
+                            .show({
+                                content:
+                                    '为了更好的用户体验，需要获取您的定位信息',
+                                cancelText: '取消'
+                            })
+                            .fail(flag => {
+                                if (flag) {
+                                    this.defer.reject()
                                 }
-                            )
-                        }
-                    },
-                    fail: reject
-                })
+                            })
+                    }
+                }
+            })
+            return this.defer
+        },
+        // transformAddr(longitude, latitude) {
+        //     return new Promise((resolve, reject) => {
+        //         myAmapFun.getPoiAround({
+        //             location: longitude + ',' + latitude,
+        //             success: function(data) {
+        //                 if (data && data.poisData && data.poisData[0]) {
+        //                     resolve({
+        //                         longitude: longitude,
+        //                         latitude: latitude,
+        //                         // landmark: name,
+        //                         province: data.poisData[0].pname,
+        //                         city: data.poisData[0].cityname,
+        //                         county: data.poisData[0].adname,
+        //                         address: data.poisData[0].address
+        //                     })
+        //                 }
+        //             },
+        //             fail(e) {
+        //                 reject(e)
+        //             }
+        //         })
+        //     })
+        // },
+        savePhoto(url) {
+            uni.getSetting({
+                success: () => {
+                    if (!res.authSetting['scope.writePhotosAlbum']) {
+                        uni.authorize({
+                            scope: 'scope.writePhotosAlbum',
+                            success: () => {
+                                this.savePhoto_ING(url);
+                            },
+                            fail: () => {
+                                this.localType = 3;
+                                this.$refs.modal_local.show({
+                                    content: '不允许获取相册权限，将无法保存图片到手机相册，是否打开相册权限？',
+                                    cancelText: '取消'
+                                }).fail(() => {
+                                    this.defer.reject()
+                                })
+                            }
+                        });
+                    } else {
+                        this.savePhoto_ING(url);
+                    }
+                },
+                fail: () => {
+                    this.localType = 3;
+                    this.$refs.modal_local.show({
+                        content: '不允许获取相册权限，将无法保存图片到手机相册，是否打开相册权限？',
+                        cancelText: '取消',
+                    }).fail(() => {
+                        this.defer.reject()
+                    })
+                }
+            });
+        },
+        savePhoto_ING(url) {
+            uni.saveImageToPhotosAlbum({
+                filePath: uri,
+                success: res => {
+                    this.defer.resolve()
+                },
+                fail: e => {
+                    this.defer.reject(e)
+                },
             })
         },
-        transformAddr(longitude, latitude) {
-            return new Promise((resolve, reject) => {
-                myAmapFun.getPoiAround({
-                    location: longitude + ',' + latitude,
-                    success: function(data) {
-                        if (data && data.poisData && data.poisData[0]) {
-                            resolve({
-                                longitude: longitude,
-                                latitude: latitude,
-                                // landmark: name,
-                                province: data.poisData[0].pname,
-                                city: data.poisData[0].cityname,
-                                county: data.poisData[0].adname,
-                                address: data.poisData[0].address
-                            })
-                        }
-                    },
-                    fail(e) {
-                        reject(e)
+        getLocalOptSet(e) {
+            this.$refs.modal_local.hide()
+            switch (this.localType) {
+                case 1:
+                    if (e.detail.authSetting['scope.userLocation']) {
+                        uni.getLocation({
+                            type: 'gcj02',
+                            success: res => {
+                                this.defer.resolve({
+                                    longitude: +res.longitude.toFixed(6),
+                                    latitude: +res.latitude.toFixed(6),
+                                })
+                            },
+                            fail: () => {
+                                this.defer.reject()
+                            }
+                        })
+                    } else {
+                        this.defer.reject()
                     }
-                })
-            })
-        }
+                    break
+                case 2:
+                    if (e.detail.authSetting['scope.userLocation']) {
+                        uni.chooseLocation({
+                            success: res => {
+                                this.defer.resolve({
+                                    longitude: +res.longitude.toFixed(6),
+                                    latitude: +res.latitude.toFixed(6),
+                                })
+                            },
+                            fail: () => {
+                                this.defer.reject()
+                            }
+                        })
+                    } else {
+                        this.defer.reject()
+                    }
+                    break
+                case 3:
+                    if (e.detail.authSetting['scope.writePhotosAlbum']) {
+                        this.savePhoto_ING()
+                    } else {
+                        this.defer.reject()
+                    }
+                    break
+                case 4:
+                    if (e.detail.authSetting['scope.address']) {
+                        uni.chooseAddress({
+                            success: res => {
+                                if (res.errMsg === 'chooseAddress:ok') {
+                                    this.defer.resolve({
+                                        name: res.userName,
+                                        phone: res.telNumber,
+                                        province: res.provinceName,
+                                        city: res.cityName,
+                                        county: res.countyName,
+                                        detail: res.detailInfo,
+                                    })
+                                } else {
+                                    this.defer.reject()
+                                }
+                            },
+                            fail: e => {
+                                this.defer.reject()
+                            }
+                        });
+                    }
+                case 5:
+                    if (e.detail.authSetting['scope.writePhotosAlbum']) {
+                        this.saveVideo_ING()
+                    } else {
+                        this.defer.reject()
+                    }
+                    break
+                default:
+                    this.defer.reject()
+                    break
+            }
+        },
     }
 }
 </script>

@@ -21,8 +21,8 @@
                 <view class="main">
                     <view class="info">
                         <image class="avatar" :src="userInfo.avatar" mode="aspectFit"></image>
-                        <view class="name">{{ userInfo.nickname }}</view>
-                        <view class="addr">{{ houseInfo.postion_district }} {{ houseInfo.postion_street }} 房东</view>
+                        <view class="name">{{ userInfo.nickname || '' }}</view>
+                        <view class="addr">{{ houseInfo.postion_district || '' }} {{ houseInfo.postion_street || '' }} 房东</view>
                         <view class="num" v-if="houseInfo.house_data">我有{{ houseInfo.house_data.house_count }}套现房出租</view>
                     </view>
                     <view class="house">

@@ -115,7 +115,7 @@ export default {
         getId() {
             return new Promise((resolve, reject) => {
                 if (this.l_user_id) return resolve()
-                this.$store.dispatch('getInfo').finally(() => {
+                this.$store.dispatch('getInfo', true).finally(() => {
                     if (this.userInfo && this.userInfo.is_landlord && this.userInfo.is_landlord === 1) {
                         this.user_id = this.userInfo.user_id
                         resolve()

@@ -10,7 +10,7 @@
                 <button class="m_button" open-type="getPhoneNumber" @getphonenumber="getPhoneByBtn">授权</button>
             </block>
         </v-modal>
-        <v-modal ref="modal_local">
+        <v-modal class="modal" ref="modal_local">
             <block slot="footer">
                 <button class="m_button" plain open-type="openSetting" @opensetting="getLocalOptSet">去设置</button>
             </block>
@@ -118,8 +118,8 @@ export default {
                 type: 'gcj02',
                 success: (res) => {
                     this.defer.resolve({
-                        longitude: res.longitude.toFixed(6),
-                        latitude: res.latitude.toFixed(6),
+                        longitude: +res.longitude.toFixed(6),
+                        latitude: +res.latitude.toFixed(6),
                     })
                 },
                 fail: e => {
@@ -151,10 +151,16 @@ export default {
             uni.chooseLocation({
                 success: (res) => {
                     const { errMsg, name, address, latitude, longitude } = res
+                    console.log(res);
                     if (errMsg === 'chooseLocation:ok') {
-                        this.defer.resolve({
-                            longitude: +res.longitude.toFixed(6),
-                            latitude: +res.latitude.toFixed(6),
+                        this.transformAddr(+res.longitude.toFixed(6), +res.latitude.toFixed(6)).then(data => {
+                            this.defer.resolve(data)
+                        }, () => {
+                            this.defer.resolve({
+                                longitude: +res.longitude.toFixed(6),
+                                latitude: +res.latitude.toFixed(6),
+                                address,
+                            })
                         })
                     } else {
                         this.defer.reject()
@@ -179,29 +185,31 @@ export default {
             })
             return this.defer
         },
-        // transformAddr(longitude, latitude) {
-        //     return new Promise((resolve, reject) => {
-        //         myAmapFun.getPoiAround({
-        //             location: longitude + ',' + latitude,
-        //             success: function(data) {
-        //                 if (data && data.poisData && data.poisData[0]) {
-        //                     resolve({
-        //                         longitude: longitude,
-        //                         latitude: latitude,
-        //                         // landmark: name,
-        //                         province: data.poisData[0].pname,
-        //                         city: data.poisData[0].cityname,
-        //                         county: data.poisData[0].adname,
-        //                         address: data.poisData[0].address
-        //                     })
-        //                 }
-        //             },
-        //             fail(e) {
-        //                 reject(e)
-        //             }
-        //         })
-        //     })
-        // },
+        transformAddr(longitude, latitude) {
+            return new Promise((resolve, reject) => {
+                myAmapFun.getPoiAround({
+                    location: longitude + ',' + latitude,
+                    success: function(data) {
+                        if (data && data.poisData && data.poisData[0]) {
+                            resolve({
+                                longitude: longitude,
+                                latitude: latitude,
+                                // landmark: name,
+                                province: data.poisData[0].pname,
+                                city: data.poisData[0].cityname,
+                                county: data.poisData[0].adname,
+                                address: data.poisData[0].address
+                            })
+                        } else {
+                            reject()
+                        }
+                    },
+                    fail(e) {
+                        reject(e)
+                    }
+                })
+            })
+        },
         savePhoto(url) {
             uni.getSetting({
                 success: () => {
@@ -272,9 +280,14 @@ export default {
                     if (e.detail.authSetting['scope.userLocation']) {
                         uni.chooseLocation({
                             success: res => {
-                                this.defer.resolve({
-                                    longitude: +res.longitude.toFixed(6),
-                                    latitude: +res.latitude.toFixed(6),
+                                this.transformAddr(+res.longitude.toFixed(6), +res.latitude.toFixed(6)).then(data => {
+                                    this.defer.resolve(data)
+                                }, () => {
+                                    this.defer.resolve({
+                                        longitude: +res.longitude.toFixed(6), 
+                                        latitude: +res.latitude.toFixed(6),
+                                        address: res.address,
+                                    })
                                 })
                             },
                             fail: () => {

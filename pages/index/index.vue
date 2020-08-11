@@ -1,5 +1,5 @@
 <template>
-    <view class="content">
+    <view class="content min_height">
         <swiper class="swiper" indicator-dots circular indicator-color="#6d7271" indicator-active-color="#4ce6e8" autoplay :interval="2000" :duration="1000">
             <swiper-item>
                 <view class="swiper-item">
@@ -9,8 +9,8 @@
         </swiper>
         <view class="m_sticky">
             <view class="cells">
-                <!-- <index-select></index-select> -->
-                <view class="cells_hd m_flex_middle m_flex_justify">
+                <index-select @change="selectChange" :selectType="selectType" :params="params"></index-select>
+                <!-- <view class="cells_hd m_flex_middle m_flex_justify">
                     <view class="title">房东直租</view>
                     <view class="m_flex_middle">
                         <view class="addr_icon">
@@ -47,7 +47,7 @@
                             </picker>
                         </view>
                     </view>
-                </view>
+                </view> -->
                 <view class="cells_bd m_flex_justify">
                     <view class="filter_title" v-for="(li, i) in houseParam" :key="i" @tap="showModal(li.key, li.title)">
                         <text class="title">{{ li.title }}</text>
@@ -58,7 +58,7 @@
                     <scroll-view class="scroll_view" :scroll-x="true" v-if="activeItems && activeItems.length">
                         <view class="m_flex_middle">
                             <view class="house_type" v-for="li in activeItems" :key="li.value">
-                                <view class="btn active">{{ li.value }}</view>
+                                <view class="btn active">{{ li.label || li.value }}</view>
                                 <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/close.png" mode="aspectFit"></image>
                                 </view>
@@ -89,7 +89,7 @@
                         <view class="modal_title m_flex_middle" v-if="lis.title">{{ lis.title }}</view>
                         <view class="modal_list m_flex_wrap">
                             <block v-for="(li, j) in lis.list" :key="j">
-                                <view class="modal_item" :class="['m_button', 'grey', { main: li.tmpActive }]" @tap="toggleList(li, i, j)">{{ li.value || li }}</view>
+                                <view class="modal_item" :class="['m_button', 'grey', { main: li.tmpActive }]" @tap="toggleList(li, i, j)">{{ li.label || li.value || li }}</view>
                             </block>
                         </view>
                     </block>
@@ -102,7 +102,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-// import indexSelect from '../components/index-select'
+import indexSelect from '../components/index-select'
 import HouseList from '../components/house-list'
 import Defer from '../../common/defer.js'
 
@@ -113,7 +113,7 @@ const houseParammappings = new Map([
     [
         4,
         {
-            label: '个性筛选',
+            label: '更多',
             value: [
                 { key: 'config_base', title: '房源配置' },
                 { key: 'floor', title: '房源楼层' },
@@ -121,10 +121,11 @@ const houseParammappings = new Map([
             ],
         },
     ],
+    [5, { label: '排序', value: [{ key: 'sort' }] }],
 ])
 export default {
     components: {
-        // indexSelect,
+        indexSelect,
         HouseList,
     },
     computed: {
@@ -148,60 +149,34 @@ export default {
             return (this.config.price || []).map(li => li.value)
         },
         house_type_active() {
-            return (this.config.house_type || []).reduce((arr, li) => {
-                if (li.active) {
-                    arr.push(li)
-                }
-                return arr
-            }, [])
+            return (this.config.house_type || []).filter(v => v.active)
         },
         price_active() {
-            return (this.config.price || []).reduce((arr, li) => {
-                if (li.active) {
-                    arr.push(li)
-                }
-                return arr
-            }, [])
+            return (this.config.price || []).filter(v => v.active)
         },
         road_distance_active() {
-            return (this.config.road_distance || []).reduce((arr, li) => {
-                if (li.active) {
-                    arr.push(li)
-                }
-                return arr
-            }, [])
+            return (this.config.road_distance || []).filter(v => v.active)
         },
         config_base_active() {
-            return (this.config.config_base || []).reduce((arr, li) => {
-                if (li.active) {
-                    arr.push(li)
-                }
-                return arr
-            }, [])
+            return (this.config.config_base || []).filter(v => v.active)
         },
         floor_active() {
-            return (this.config.floor || []).reduce((arr, li) => {
-                if (li.active) {
-                    arr.push(li)
-                }
-                return arr
-            }, [])
+            return (this.config.floor || []).filter(v => v.active)
         },
         config_lightspot_active() {
-            return (this.config.config_lightspot || []).reduce((arr, li) => {
-                if (li.active) {
-                    arr.push(li)
-                }
-                return arr
-            }, [])
+            return (this.config.config_lightspot || []).filter(v => v.active)
+        },
+        sort_active() {
+            return (this.config.sort || []).filter(v => v.active)
         },
         activeItems() {
-            return [...this.house_type_active, ...this.price_active, ...this.road_distance_active, ...this.config_base_active, ...this.floor_active, ...this.config_lightspot_active]
+            return [...this.house_type_active, ...this.price_active, ...this.road_distance_active, ...this.config_base_active, ...this.floor_active, ...this.config_lightspot_active, ...this.sort_active]
         },
     },
     data() {
         return {
             addrVal: [],
+            selectType: '',
             params: {
                 area_id: '',
                 address_street_id: '',
@@ -215,7 +190,13 @@ export default {
                 // config_base: "",
                 config_lightspot_ids: '',
                 floor_number: '',
-                // config_lightspot: ""
+                // config_lightspot: "",
+                lat: '',
+                lng: '',
+                map_distance: '',
+                metro_id: '',
+                metro: '',
+                sort: '',
             },
             list: [],
             config: {
@@ -263,12 +244,38 @@ export default {
                 address_flag: null,
                 config_base: null,
                 config_lightspot: null,
+                sort: [
+                    {
+                        label: '发布从新到旧',
+                        value: 'public_new',
+                        active: false,
+                        tmpActive: false,
+                    },
+                    {
+                        label: '距离从近到远',
+                        value: 'distance_near',
+                        active: false,
+                        tmpActive: false,
+                    },
+                    {
+                        label: '价格从低到高',
+                        value: 'price_low',
+                        active: false,
+                        tmpActive: false,
+                    },
+                    {
+                        label: '价格从高到低',
+                        value: 'price_high',
+                        active: false,
+                        tmpActive: false,
+                    },
+                ],
             },
-            addr: null,
+            // addr: null,
             modalType: null,
             modalList: null,
             hasFocus: false,
-            address_city: '',
+            // address_city: '',
             getDataDefer: new Defer(),
         }
     },
@@ -348,48 +355,18 @@ export default {
                     this.config = { ...this.config, ...config }
                 }
             })
-            this.$request.getAddrList().then(res => {
-                if (res.data) {
-                    const city = res.data.filter(item => item.level === 2)
-                    const addr = res.data.reduce((obj, item) => {
-                        if (!item.pid) return obj
-                        if (!obj[item.pid]) {
-                            obj[item.pid] = item.level === 4 || item.level === 3 ? [{ name: '不限' }] : []
-                        }
-                        obj[item.pid].push(item)
-                        return obj
-                    }, {})
-                    const address_street = [[...city]]
-                    const district = addr[city[0].id]
-                    if (district && district.length) {
-                        address_street.push([...district])
-                        if (district[0] && district[0].id) {
-                            const county = addr[district[0].id]
-                            if (county && county.length) {
-                                address_street.push([...county])
-                            }
-                        } else {
-                            address_street.push([{ name: '不限' }])
-                        }
-                    }
-                    this.addr = addr
-                    this.config = {
-                        ...this.config,
-                        address_street,
-                    }
-                }
-            })
         },
         viewSucc(e) {
             this.hasFocus = true
         },
         filterParams() {
             const house_type = (this.config.house_type || []).filter(item => item.active)
-            const price = this.config.price.filter(item => item.active)[0]
+            const price = this.config.price.find(item => item.active)
             const road_distance = (this.config.road_distance || []).filter(item => item.active)
             const config_base = (this.config.config_base || []).filter(item => item.active)
             const config_lightspot = (this.config.config_lightspot || []).filter(item => item.active)
             const floor = (this.config.floor || []).filter(item => item.active)
+            const sort = (this.config.sort || []).find(item => item.active)
             let { rental_begin = '', rental_end = '' } = price || {}
             this.params.rental_begin = rental_begin
             this.params.house_type_id = house_type.map(item => item.id).join(',')
@@ -398,61 +375,17 @@ export default {
             this.params.config_base_ids = config_base.map(item => item.id).join(',')
             this.params.floor_number = floor.map(item => item.key).join(',')
             this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
+            this.params.sort = sort ? sort.value : ''
         },
-        columnChange(e) {
-            let { column, value } = e.detail
-            const setColumn = () => {
-                let item = this.config.address_street[column][value]
-                if (!item) return
-                if (column++ < 2) {
-                    let p = this.config.address_street
-                    p[column] = this.addr[item.id] || []
-                    this.config = {
-                        ...this.config,
-                        address_street: p,
-                    }
-                    value = 0
-                    setColumn()
-                }
+        selectChange(obj) {
+            if (obj) {
+                console.log(JSON.stringify(obj));
+                this.selectType = obj.type || 0
+                Object.keys(obj.params).map(key => {
+                    this.params[key] = obj.params[key]
+                })
+                this.init()
             }
-            setColumn()
-        },
-        pickerChange(e) {
-            const value = e.detail.value
-            let item = {}
-            if (value.length === 3) {
-                item = this.config.address_street[2][value[2]]
-            }
-            this.addrVal = value
-            if (item && item.id) {
-                // 选择了市区村
-                this.params.address_street = item.name
-                this.params.address_street_id = item.id
-                this.params.area_id = ''
-                this.address_city = ''
-            } else {
-                this.params.address_street = ''
-                this.params.address_street_id = ''
-                if (item) {
-                    if (!(this.config.address_street[1] && this.config.address_street[1].length)) return
-                    let area = this.config.address_street[1][value[1]]
-                    this.params.area_id = area && area.id ? area.id : ''
-                    if (area && area.id) {
-                        // 选择了市区
-                        this.params.area_id = area.id
-                        this.address_city = ''
-                    } else {
-                        // 选择了市
-                        this.params.area_id = ''
-                        let city = this.config.address_street[0][value[0]]
-                        this.address_city = city ? city.name : ''
-                    }
-                } else {
-                    this.params.area_id = ''
-                    this.address_city = ''
-                }
-            }
-            this.init()
         },
         filterTypeArray(type) {
             let mappings = new Map()
@@ -509,7 +442,7 @@ export default {
         toggleList(li, i, j) {
             const key = this.filterType(this.modalType)
             key.map(item => {
-                if (item === 'price') {
+                if (item === 'price' || item === 'sort') {
                     this.config[item].map((it, k) => {
                         if (j === k) {
                             li.tmpActive = !(li.tmpActive || false)
@@ -527,6 +460,9 @@ export default {
 </script>
 
 <style lang="scss">
+.content.min_height {
+    min-height: calc(100vh + 360upx);
+}
 .swiper {
     height: 330upx;
     padding: 30upx 30upx 0;

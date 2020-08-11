@@ -31,6 +31,12 @@ export default {
     getAreaFlag(data = {}) {
         return ajax('/api/area_flag/getAllList', data)
     },
+    getStreet(data = {}) {
+        return ajax('/api/area_jiedao/getlist', data, { noToken: true, noAlert: true })
+    },
+    getSubway(data = {}) {
+        return ajax('/api/metro/getlist', data, { noToken: true, noAlert: true })
+    },
     getHouseList(data = {}) {
         return ajax('/api/house_resource/getList', data, { noToken: true })
     },

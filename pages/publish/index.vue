@@ -51,6 +51,7 @@
         <view class="not_landlord" v-else>
             <view class="bd">
                 <view>{{ state }}</view>
+                <view v-if="step === 3" @tap="copy(CONFIG.wechat_number)">客服微信：{{  CONFIG.wechat_number }}（点击复制）</view>
                 <image src="/static/image/publish/intro.png" mode="widthFix"></image>
             </view>
             <view class="fd">

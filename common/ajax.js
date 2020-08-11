@@ -26,16 +26,29 @@ const ajax = (path, params, options = {}) => {
     if (token) {
         header['token'] = token
     }
+    const fail = (e) => {
+        utils.log({ url: path, data, response: e })
+        options.loading && uni.hideLoading()
+        !options.noAlert &&
+            uni.showToast({
+                title: '网络异常',
+                icon: 'none',
+            })
+        if (e && e.errMsg === 'request:fail abort') return
+        return Promise.reject(e)
+    }
     const success = (res) => {
         options.loading && uni.hideLoading()
         // console.log(res)
+        utils.log({ url, res })
         if (res.length && res.length === 2) {
             res = res[1]
             // #ifdef MP-WEIXIN
         } else {
             if (res[0] && ~res[0].errMsg.indexOf('fail')) {
-                store.commit('setUrlPrefix')
-                return ajax(path, params, options)
+                return fail(res[0])
+                // store.commit('setUrlPrefix')
+                // return ajax(path, params, options)
             }
             // #endif
         }
@@ -73,17 +86,6 @@ const ajax = (path, params, options = {}) => {
             !options.noAlert && uni.showToast({ title: res.statusCode, icon: 'none' })
             return Promise.reject({ code: res.statusCode, msg: res.errMsg })
         }
-    }
-    const fail = (e) => {
-        utils.log({ url: path, data, response: e })
-        options.loading && uni.hideLoading()
-        !options.noAlert &&
-            uni.showToast({
-                title: '网络异常',
-                icon: 'none',
-            })
-        if (e && e.errMsg === 'request:fail abort') return
-        return Promise.reject(e)
     }
 
     const obj = {

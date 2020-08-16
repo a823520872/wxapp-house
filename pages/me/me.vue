@@ -347,33 +347,33 @@ export default {
 <style lang="scss" scoped>
 .hd {
     background-color: $main-color;
-    font-size: 28upx;
+    font-size: 28rpx;
     color: $uni-text-color-inverse;
     overflow: hidden;
 
     // .avatar {
     //     position: relative;
-    //     width: 131upx;
-    //     height: 131upx;
-    //     margin: 87upx auto 35upx;
+    //     width: 131rpx;
+    //     height: 131rpx;
+    //     margin: 87rpx auto 35rpx;
     //     border-radius: 50%;
     //     background-color: $uni-bg-color;
     //     overflow: hidden;
-    //     border: 2upx solid #fff;
+    //     border: 2rpx solid #fff;
     // }
     .avatar {
         position: relative;
-        width: 126upx;
-        height: 126upx;
-        margin: 60upx auto 30upx;
+        width: 126rpx;
+        height: 126rpx;
+        margin: 60rpx auto 30rpx;
         border: none;
         border-radius: 50%;
-        border: 2upx solid #fff;
+        border: 2rpx solid #fff;
     }
     .img_avatar {
         position: relative;
-        width: 126upx;
-        height: 126upx;
+        width: 126rpx;
+        height: 126rpx;
         border-radius: 50%;
         // background-color: $uni-bg-color;
         overflow: hidden;
@@ -382,23 +382,23 @@ export default {
         position: absolute;
         bottom: 0;
         left: 50%;
-        margin-bottom: -18upx;
+        margin-bottom: -18rpx;
         transform: translateX(-50%);
     }
 
     .main {
         position: relative;
-        width: 750upx;
-        // height: 250upx;
+        width: 750rpx;
+        // height: 250rpx;
         overflow: hidden;
     }
     .box {
         position: absolute;
         top: 0;
         left: 50%;
-        width: 750upx;
-        height: 330upx;
-        padding: 0 202upx;
+        width: 750rpx;
+        height: 330rpx;
+        padding: 0 202rpx;
         border-radius: 50%;
         background-color: #fff;
         transform: translate3d(-50%, 0, 0);
@@ -409,65 +409,65 @@ export default {
     }
 
     .name {
-        // height: 95upx;
-        padding-top: 30upx;
-        line-height: 42upx;
+        // height: 95rpx;
+        padding-top: 30rpx;
+        line-height: 42rpx;
         text-align: center;
         font-weight: bold;
-        font-size: 34upx;
+        font-size: 34rpx;
         color: #333;
     }
 
     .service {
-        margin-top: 10upx;
-        line-height: 36upx;
+        margin-top: 10rpx;
+        line-height: 36rpx;
         font-weight: normal;
-        font-size: 28upx;
+        font-size: 28rpx;
         color: #666;
     }
 
     .m_button {
         width: 100%;
-        height: 95upx;
-        line-height: 95upx;
-        padding: 0 30upx;
+        height: 95rpx;
+        line-height: 95rpx;
+        padding: 0 30rpx;
         border: none;
-        font-size: 34upx;
+        font-size: 34rpx;
         color: $text-color;
     }
     .tabs {
-        // padding: 10upx 30upx;
+        // padding: 10rpx 30rpx;
         justify-content: space-around;
-        line-height: 38upx;
+        line-height: 38rpx;
         text-align: center;
         color: $text-color;
     }
     .tab {
         width: 36%;
-        padding: 30upx;
+        padding: 30rpx;
     }
     .icon {
-        width: 48upx;
-        height: 48upx;
-        margin: 0 auto 10upx;
+        width: 48rpx;
+        height: 48rpx;
+        margin: 0 auto 10rpx;
     }
 }
 .split {
     width: 100%;
-    height: 18upx;
+    height: 18rpx;
     background-color: #eee;
 }
 .bd {
     .cell {
-        height: 108upx;
-        padding: 0 30upx;
-        line-height: 108upx;
-        font-size: 33upx;
-        border-bottom: 1upx solid $border-color;
+        height: 108rpx;
+        padding: 0 30rpx;
+        line-height: 108rpx;
+        font-size: 33rpx;
+        border-bottom: 1rpx solid $border-color;
         color: $text-color;
 
         &_fd {
-            font-size: 25upx;
+            font-size: 25rpx;
             color: $text-color-inverse;
         }
     }
@@ -477,22 +477,22 @@ export default {
 }
 .cells {
     padding: 0 1.6em 0.8em;
-    font-size: 30upx;
+    font-size: 30rpx;
     color: $text-color;
     .cell {
-        padding: 10upx 0;
+        padding: 10rpx 0;
     }
     .label {
-        padding-right: 10upx;
+        padding-right: 10rpx;
     }
     input {
         width: 100%;
-        height: 60upx;
-        line-height: 60upx;
+        height: 60rpx;
+        line-height: 60rpx;
         text-align: left;
     }
     .btn_code {
-        margin-left: 10upx;
+        margin-left: 10rpx;
     }
 }
 </style>

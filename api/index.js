@@ -29,7 +29,7 @@ export default {
         return ajax('/api/area_street/getAllList', data)
     },
     getAreaFlag(data = {}) {
-        return ajax('/api/area_flag/getAllList', data)
+        return ajax('/api/area_flag/getAllList', data, { noToken: true })
     },
     getStreet(data = {}) {
         return ajax('/api/area_jiedao/getlist', data, { noToken: true, noAlert: true })

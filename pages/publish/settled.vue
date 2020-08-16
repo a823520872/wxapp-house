@@ -202,77 +202,77 @@ export default {
     background-color: #e9f9f9;
 }
 .hd {
-    padding: 0 92upx;
+    padding: 0 92rpx;
     background-color: #e9f9f9;
     .bg {
-        width: 566upx;
-        height: 362upx;
+        width: 566rpx;
+        height: 362rpx;
     }
 }
 .bd {
-    margin: 0 30upx;
-    padding: 50upx 30upx;
+    margin: 0 30rpx;
+    padding: 50rpx 30rpx;
     background-color: #fff;
 
     .cells {
-        font-size: 30upx;
+        font-size: 30rpx;
     }
 
     .cell {
-        height: 90upx;
-        line-height: 90upx;
-        border-bottom: 1upx solid $border-color;
+        height: 90rpx;
+        line-height: 90rpx;
+        border-bottom: 1rpx solid $border-color;
     }
 
     .label {
-        min-width: 148upx;
-        padding-right: 20upx;
+        min-width: 148rpx;
+        padding-right: 20rpx;
     }
 
     input {
-        font-size: 30upx;
+        font-size: 30rpx;
     }
 
     .tips {
-        font-size: 25upx;
+        font-size: 25rpx;
     }
 
     .btn {
         &_code {
-            min-width: 140upx;
-            margin-left: 20upx;
-            padding: 8upx 28upx;
-            border-radius: 22upx;
+            min-width: 140rpx;
+            margin-left: 20rpx;
+            padding: 8rpx 28rpx;
+            border-radius: 22rpx;
             text-align: center;
         }
         &_confirm {
             width: 100%;
-            height: 66upx;
-            margin: 91upx 0 16upx;
+            height: 66rpx;
+            margin: 91rpx 0 16rpx;
             padding: 0;
-            line-height: 64upx;
+            line-height: 64rpx;
             text-align: center;
-            border-radius: 7upx;
-            font-size: 33upx;
+            border-radius: 7rpx;
+            font-size: 33rpx;
         }
     }
 }
 .fd {
-    height: 158upx;
+    height: 158rpx;
     background-color: #e9f9f9;
 }
 .addr {
     &_picker {
         height: 100%;
-        padding-right: 30upx;
+        padding-right: 30rpx;
     }
     &_item {
-        // width: 100upx;
+        // width: 100rpx;
     }
     &_pull {
-        width: 14upx;
-        height: 14upx;
-        margin-left: 10upx;
+        width: 14rpx;
+        height: 14rpx;
+        margin-left: 10rpx;
     }
 }
 </style>

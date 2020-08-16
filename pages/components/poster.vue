@@ -89,24 +89,24 @@ export default {
         overflow-y: auto;
     }
     &_contain {
-        padding: 30upx 99upx 30upx;
+        padding: 30rpx 99rpx 30rpx;
 
         .btn_save {
             display: block;
-            height: 95upx;
-            margin-top: 30upx;
+            height: 95rpx;
+            margin-top: 30rpx;
             padding: 0;
-            line-height: 93upx;
+            line-height: 93rpx;
             text-align: center;
-            font-size: 33upx;
+            font-size: 33rpx;
             border-radius: 0;
         }
     }
     &_box {
-        box-shadow: 10upx 10upx 20upx rgba(148, 148, 148, 0.2),
-            -10upx -10upx 20upx rgba(148, 148, 148, 0.2),
-            10upx -10upx 20upx rgba(148, 148, 148, 0.2),
-            -10upx 10upx 20upx rgba(148, 148, 148, 0.2);
+        box-shadow: 10rpx 10rpx 20rpx rgba(148, 148, 148, 0.2),
+            -10rpx -10rpx 20rpx rgba(148, 148, 148, 0.2),
+            10rpx -10rpx 20rpx rgba(148, 148, 148, 0.2),
+            -10rpx 10rpx 20rpx rgba(148, 148, 148, 0.2);
     }
 }
 // .poster {
@@ -116,49 +116,49 @@ export default {
 //         right: 0;
 //         bottom: 0;
 //         left: 0;
-//         font-size: 30upx;
-//         line-height: 42upx;
+//         font-size: 30rpx;
+//         line-height: 42rpx;
 //         z-index: 999;
 //         color: #fff;
 //         overflow-y: auto;
 
 //         .tips {
-//             width: 374upx;
+//             width: 374rpx;
 //             margin: 0 auto;
-//             padding-top: 125upx;
+//             padding-top: 125rpx;
 //             text-align: center;
 //         }
 
 //         .strong {
-//             padding-right: 14upx;
+//             padding-right: 14rpx;
 //             color: $primary-color;
 //         }
 
 //         .btn_save {
 //             display: block;
 //             width: 40%;
-//             margin: 20upx auto 0;
-//             padding: 16upx 0;
+//             margin: 20rpx auto 0;
+//             padding: 16rpx 0;
 //             text-align: center;
 //         }
 //     }
 //     &_contain {
 //         position: relative;
-//         padding: 45upx 108upx;
+//         padding: 45rpx 108rpx;
 //         .icon_close {
 //             position: absolute;
 //             top: 0;
 //             right: 0;
-//             width: 44upx;
-//             height: 44upx;
-//             margin-top: -20upx;
-//             margin-right: 50upx;
-//             padding: 20upx;
+//             width: 44rpx;
+//             height: 44rpx;
+//             margin-top: -20rpx;
+//             margin-right: 50rpx;
+//             padding: 20rpx;
 //         }
 //     }
 //     &_box {
-//         width: 534upx;
-//         // height: 948upx;
+//         width: 534rpx;
+//         // height: 948rpx;
 //     }
 // }
 </style>

@@ -196,32 +196,32 @@ export default {
 <style lang="scss" scoped>
 .not_landlord {
     .bd {
-        width: 750upx;
-        // height: 2228upx;
-        padding-top: 70upx;
+        width: 750rpx;
+        // height: 2228rpx;
+        padding-top: 70rpx;
         text-align: center;
-        line-height: 40upx;
+        line-height: 40rpx;
         overflow: hidden;
     }
 
     .fd {
-        margin: 30upx 0;
+        margin: 30rpx 0;
         text-decoration: underline;
         text-align: center;
         color: #0404ff;
 
         .m_button {
-            padding: 16upx 30upx;
+            padding: 16rpx 30rpx;
             border-radius: 0;
         }
     }
     .btn_add {
         display: flex;
         position: fixed;
-        right: 20upx;
-        bottom: 100upx;
-        width: 120upx;
-        height: 120upx;
+        right: 20rpx;
+        bottom: 100rpx;
+        width: 120rpx;
+        height: 120rpx;
         line-height: 1.2;
         background-color: $main-color;
         color: #fff;
@@ -230,49 +230,49 @@ export default {
     }
 }
 .is_landlord {
-    padding: 0 30upx;
+    padding: 0 30rpx;
 
     .hd {
-        font-size: 30upx;
+        font-size: 30rpx;
         line-height: 1.7;
 
         .title {
-            padding: 57upx 0 23upx;
-            font-size: 37upx;
+            padding: 57rpx 0 23rpx;
+            font-size: 37rpx;
             color: $primary-color;
         }
     }
 
     .bd {
-        padding: 20upx 0 0;
+        padding: 20rpx 0 0;
         line-height: 1.77;
-        font-size: 26upx;
+        font-size: 26rpx;
 
         .cell {
-            padding: 27upx 0 28upx;
+            padding: 27rpx 0 28rpx;
         }
 
         .img {
-            width: 85upx;
-            height: 85upx;
-            padding-left: 24upx;
-            padding-right: 40upx;
+            width: 85rpx;
+            height: 85rpx;
+            padding-left: 24rpx;
+            padding-right: 40rpx;
         }
     }
 
     .fd {
         width: 100%;
-        height: 100upx;
-        margin: 30upx 0;
+        height: 100rpx;
+        margin: 30rpx 0;
         padding: 0;
         text-align: center;
-        line-height: 100upx;
-        font-size: 33upx;
+        line-height: 100rpx;
+        font-size: 33rpx;
     }
 }
 
 .modal {
     padding: 0 1.6em 0.8em;
-    font-size: 30upx;
+    font-size: 30rpx;
 }
 </style>

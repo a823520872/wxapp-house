@@ -12,20 +12,20 @@ export default {}
 <style lang="scss" scoped>
 .auth_content {
     position: relative;
-    width: 146upx;
-    height: 38upx;
+    width: 146rpx;
+    height: 38rpx;
     background-color: $primary-color;
-    line-height: 38upx;
-    border-radius: 6upx;
+    line-height: 38rpx;
+    border-radius: 6rpx;
     text-align: center;
-    font-size: 24upx;
+    font-size: 24rpx;
     color: #fff;
     overflow: hidden;
 
     .img_auth {
-        width: 26upx;
-        height: 26upx;
-        margin-right: 4upx;
+        width: 26rpx;
+        height: 26rpx;
+        margin-right: 4rpx;
     }
 }
 </style>

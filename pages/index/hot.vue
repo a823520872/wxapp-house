@@ -40,21 +40,21 @@ export default {
     overflow: hidden;
     text-align: center;
     .logo {
-        width: 132upx;
-        height: 132upx;
-        margin: 164upx auto 0;
+        width: 132rpx;
+        height: 132rpx;
+        margin: 164rpx auto 0;
     }
     .title {
-        margin-top: 30upx;
-        font-size: 37upx;
+        margin-top: 30rpx;
+        font-size: 37rpx;
     }
     .slogan {
-        margin-top: 37upx;
-        font-size: 31upx;
+        margin-top: 37rpx;
+        font-size: 31rpx;
         color: $text-color-inverse;
     }
     // .strong {
-    //     font-size: 41upx;
+    //     font-size: 41rpx;
     //     color: $primary-color;
     // }
 }
@@ -63,28 +63,28 @@ export default {
     overflow: hidden;
     text-align: center;
     .m_button {
-        width: 280upx;
-        height: 80upx;
+        width: 280rpx;
+        height: 80rpx;
         padding: 0;
-        margin-top: 163upx;
-        line-height: 78upx;
-        border-radius: 12upx;
-        font-size: 30upx;
+        margin-top: 163rpx;
+        line-height: 78rpx;
+        border-radius: 12rpx;
+        font-size: 30rpx;
     }
     .slogan {
-        margin-top: 37upx;
-        font-size: 31upx;
+        margin-top: 37rpx;
+        font-size: 31rpx;
         color: $text-color-inverse;
     }
 }
 .fd {
     text-align: center;
-    font-size: 30upx;
+    font-size: 30rpx;
     color: $primary-color;
     .qrcode {
-        width: 300upx;
-        height: 300upx;
-        margin: 94upx auto 0;
+        width: 300rpx;
+        height: 300rpx;
+        margin: 94rpx auto 0;
     }
 }
 </style>

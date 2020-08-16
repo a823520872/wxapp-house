@@ -10,44 +10,6 @@
         <view class="m_sticky">
             <view class="cells">
                 <index-select @change="selectChange" :selectType="selectType" :params="params"></index-select>
-                <!-- <view class="cells_hd m_flex_middle m_flex_justify">
-                    <view class="title">房东直租</view>
-                    <view class="m_flex_middle">
-                        <view class="addr_icon">
-                            <image src="/static/image/index/addr.png" mode="aspectFit"></image>
-                        </view>
-                        <view class="addr_box m_flex">
-                            <picker :range="address_street" @change="pickerChange" @columnchange="columnChange" :value="addrVal" mode="multiSelector">
-                                <view class="m_flex_middle" v-if="addrVal && addrVal.length && (address_city || params.address_street || params.area_id)">
-                                    <view class="addr_picker m_flex_middle">
-                                        <view class="addr_item m_textover">{{ address_street[0][addrVal[0]] }}</view>
-                                        <view class="addr_pull">
-                                            <image src="/static/image/index/pull.png" mode="aspectFit"></image>
-                                        </view>
-                                    </view>
-                                    <view class="addr_picker m_flex_middle" :class="{ last: !params.address_street }" v-if="!address_city">
-                                        <view class="addr_item m_textover">{{ address_street[1][addrVal[1]] }}</view>
-                                        <view class="addr_pull">
-                                            <image src="/static/image/index/pull.png" mode="aspectFit"></image>
-                                        </view>
-                                    </view>
-                                    <view class="addr_picker last m_flex_middle" v-if="params.address_street">
-                                        <view class="addr_item m_textover">{{ params.address_street }}</view>
-                                        <view class="addr_pull">
-                                            <image src="/static/image/index/pull.png" mode="aspectFit"></image>
-                                        </view>
-                                    </view>
-                                </view>
-                                <view class="addr_picker last m_flex_middle" v-else>
-                                    <view class="addr_item m_textover">选择村</view>
-                                    <view class="addr_pull">
-                                        <image src="/static/image/index/pull.png" mode="aspectFit"></image>
-                                    </view>
-                                </view>
-                            </picker>
-                        </view>
-                    </view>
-                </view> -->
                 <view class="cells_bd m_flex_justify">
                     <view class="filter_title" v-for="(li, i) in houseParam" :key="i" @tap="showModal(li.key, li.title)">
                         <text class="title">{{ li.title }}</text>
@@ -58,7 +20,7 @@
                     <scroll-view class="scroll_view" :scroll-x="true" v-if="activeItems && activeItems.length">
                         <view class="m_flex_middle">
                             <view class="house_type" v-for="li in activeItems" :key="li.value">
-                                <view class="btn active">{{ li.label || li.value }}</view>
+                                <view class="btn active">{{ li.value }}</view>
                                 <view class="del_btn" @tap="delParams(li)">
                                     <image src="/static/image/index/close.png" mode="aspectFit"></image>
                                 </view>
@@ -89,7 +51,7 @@
                         <view class="modal_title m_flex_middle" v-if="lis.title">{{ lis.title }}</view>
                         <view class="modal_list m_flex_wrap">
                             <block v-for="(li, j) in lis.list" :key="j">
-                                <view class="modal_item" :class="['m_button', 'grey', { main: li.tmpActive }]" @tap="toggleList(li, i, j)">{{ li.label || li.value || li }}</view>
+                                <view class="modal_item" :class="['m_button', 'grey', { main: li.tmpActive }]" @tap="toggleList(li, i, j)">{{ li.value || li }}</view>
                             </block>
                         </view>
                     </block>
@@ -117,6 +79,7 @@ const houseParammappings = new Map([
             value: [
                 { key: 'config_base', title: '房源配置' },
                 { key: 'floor', title: '房源楼层' },
+                { key: 'deposit', title: '押金' },
                 { key: 'config_lightspot', title: '其他' },
             ],
         },
@@ -148,29 +111,11 @@ export default {
         price() {
             return (this.config.price || []).map(li => li.value)
         },
-        house_type_active() {
-            return (this.config.house_type || []).filter(v => v.active)
-        },
-        price_active() {
-            return (this.config.price || []).filter(v => v.active)
-        },
-        road_distance_active() {
-            return (this.config.road_distance || []).filter(v => v.active)
-        },
-        config_base_active() {
-            return (this.config.config_base || []).filter(v => v.active)
-        },
-        floor_active() {
-            return (this.config.floor || []).filter(v => v.active)
-        },
-        config_lightspot_active() {
-            return (this.config.config_lightspot || []).filter(v => v.active)
-        },
-        sort_active() {
-            return (this.config.sort || []).filter(v => v.active)
-        },
         activeItems() {
-            return [...this.house_type_active, ...this.price_active, ...this.road_distance_active, ...this.config_base_active, ...this.floor_active, ...this.config_lightspot_active, ...this.sort_active]
+            return Object.keys(this.config).reduce((arr, key) => {
+                arr.push(...(this.config[key] || []).filter(v => v.active))
+                return arr
+            }, [])
         },
     },
     data() {
@@ -180,7 +125,8 @@ export default {
             params: {
                 area_id: '',
                 address_street_id: '',
-                address_street: '',
+                // address_street: '',
+                address_flag_id: '',
                 house_type_id: '',
                 // house_type: "",
                 road_distance_ids: '',
@@ -189,13 +135,13 @@ export default {
                 config_base_ids: '',
                 // config_base: "",
                 config_lightspot_ids: '',
+                deposit: '',
                 floor_number: '',
                 // config_lightspot: "",
                 lat: '',
                 lng: '',
                 map_distance: '',
                 metro_id: '',
-                metro: '',
                 sort: '',
             },
             list: [],
@@ -232,6 +178,13 @@ export default {
                         tmpActive: false,
                     },
                     {
+                        rental_begin: 1200,
+                        rental_end: 1500,
+                        value: '1200-1500',
+                        active: false,
+                        tmpActive: false,
+                    },
+                    {
                         rental_begin: 1500,
                         rental_end: '',
                         value: '1500以上',
@@ -244,6 +197,7 @@ export default {
                 address_flag: null,
                 config_base: null,
                 config_lightspot: null,
+                deposit: null,
                 sort: [
                     {
                         label: '发布从新到旧',
@@ -306,16 +260,16 @@ export default {
             if (i === -1) return
             reloadPage.splice(i, 1)
             this.$store.commit('setVal', { key: 'reloadPage', val: reloadPage })
-            this.init()
+            this.getData()
             this.getDataDefer.done(() => {
-                this.getData()
+                this.init()
             })
         }
     },
     onReady() {
-        this.init()
+        this.getData()
         this.getDataDefer.done(() => {
-            this.getData()
+            this.init()
         })
     },
     onShareAppMessage() {
@@ -328,16 +282,15 @@ export default {
     methods: {
         ...mapActions(['login', 'getInfo']),
         init(n) {
-            const self = this
             this.filterParams()
             this.$refs.page &&
                 this.$refs.page.init({
                     url: 'getHouseList',
-                    params: self.params,
+                    params: this.params,
                     n,
                     fn: null,
-                }).then(() => {
-                    this.getDataDefer.resolve()
+                // }).then(() => {
+                //     this.getDataDefer.resolve()
                 })
         },
         getData() {
@@ -347,12 +300,13 @@ export default {
                         if (!obj[item.type]) {
                             obj[item.type] = []
                         }
-                        item.active = false
-                        item.tmpActive = false
+                        item.active = item.is_active && item.is_active === 1
+                        item.tmpActive = item.is_active && item.is_active === 1
                         obj[item.type].push(item)
                         return obj
                     }, {})
                     this.config = { ...this.config, ...config }
+                    this.getDataDefer.resolve()
                 }
             })
         },
@@ -361,21 +315,30 @@ export default {
         },
         filterParams() {
             const house_type = (this.config.house_type || []).filter(item => item.active)
-            const price = this.config.price.find(item => item.active)
+            const price = (this.config.price || []).find(item => item.active)
             const road_distance = (this.config.road_distance || []).filter(item => item.active)
             const config_base = (this.config.config_base || []).filter(item => item.active)
             const config_lightspot = (this.config.config_lightspot || []).filter(item => item.active)
+            const deposit = (this.config.deposit || []).filter(item => item.active)
             const floor = (this.config.floor || []).filter(item => item.active)
             const sort = (this.config.sort || []).find(item => item.active)
-            let { rental_begin = '', rental_end = '' } = price || {}
+            let [rental_begin = '', rental_end = ''] = []
+            if (price) {
+                if (price.key) {
+                    [rental_begin = '', rental_end = ''] = price.key.split(',')
+                } else if (price.value) {
+                    [rental_begin = '', rental_end = ''] = price.value.split('-')
+                }
+            }
             this.params.rental_begin = rental_begin
             this.params.house_type_id = house_type.map(item => item.id).join(',')
             this.params.rental_end = rental_end
             this.params.road_distance_ids = road_distance.map(item => item.id).join(',')
             this.params.config_base_ids = config_base.map(item => item.id).join(',')
+            this.params.deposit = deposit.map(item => item.id).join(',')
             this.params.floor_number = floor.map(item => item.key).join(',')
             this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
-            this.params.sort = sort ? sort.value : ''
+            this.params.sort = sort ? sort.key : ''
         },
         selectChange(obj) {
             if (obj) {
@@ -384,6 +347,9 @@ export default {
                 Object.keys(obj.params).map(key => {
                     this.params[key] = obj.params[key]
                 })
+                if (!this.params.map_distance) {
+                    this.params.map_distance = 5000
+                }
                 this.init()
             }
         },
@@ -440,20 +406,34 @@ export default {
             this.init()
         },
         toggleList(li, i, j) {
-            const key = this.filterType(this.modalType)
-            key.map(item => {
-                if (item === 'price' || item === 'sort') {
-                    this.config[item].map((it, k) => {
+            let t = li.type
+            if (Object.prototype.hasOwnProperty.call(null, li, 'is_multi')) {
+                if (li.is_multi) {
+                    li.tmpActive = !(li.tmpActive || false)
+                } else {
+                    this.config[t].map((it, k) => {
                         if (j === k) {
                             li.tmpActive = !(li.tmpActive || false)
                         } else {
-                            this.config[item][k].tmpActive = false
+                            // this.config[t][k].tmpActive = false
+                            this.$set(this.config[t][k], 'tmpActive', false)
+                        }
+                    })
+                }
+            } else {
+                if (t === 'price' || t === 'sort') {
+                    this.config[t].map((it, k) => {
+                        if (j === k) {
+                            li.tmpActive = !(li.tmpActive || false)
+                        } else {
+                            // this.config[t][k].tmpActive = false
+                            this.$set(this.config[t][k], 'tmpActive', false)
                         }
                     })
                     return
                 }
                 li.tmpActive = !(li.tmpActive || false)
-            })
+            }
         },
     },
 }
@@ -461,17 +441,18 @@ export default {
 
 <style lang="scss">
 .content.min_height {
-    min-height: calc(100vh + 360upx);
+    min-height: calc(100vh + 360rpx);
+    min-height: 100vh;
 }
 .swiper {
-    height: 330upx;
-    padding: 30upx 30upx 0;
+    height: 330rpx;
+    padding: 30rpx 30rpx 0;
     background-color: #fff;
     .swiper-item {
         position: relative;
         width: 100%;
         height: 100%;
-        border-radius: 20upx;
+        border-radius: 20rpx;
         overflow: hidden;
     }
     image {
@@ -482,27 +463,27 @@ export default {
 .cells {
     background-color: #eee;
     &_hd {
-        height: 80upx;
-        line-height: 80upx;
-        padding: 0 30upx;
+        height: 80rpx;
+        line-height: 80rpx;
+        padding: 0 30rpx;
         background-color: #fff;
-        font-size: 25upx;
+        font-size: 25rpx;
         color: $text-color-inverse;
         .title {
-            font-size: 34upx;
+            font-size: 34rpx;
             color: $main-color;
         }
         .addr {
             &_icon {
-                width: 24upx;
-                height: 31upx;
+                width: 24rpx;
+                height: 31rpx;
             }
             &_box {
-                margin-left: 10upx;
+                margin-left: 10rpx;
             }
             &_picker {
                 position: relative;
-                padding: 0 20upx;
+                padding: 0 20rpx;
                 &.last {
                     padding-right: 0;
                     &::after {
@@ -518,8 +499,8 @@ export default {
                     top: 50%;
                     left: 0;
                     width: 0;
-                    height: 14upx;
-                    border-right: 1upx solid #eee;
+                    height: 14rpx;
+                    border-right: 1rpx solid #eee;
                     transform: translateY(-50%);
                 }
                 &::after {
@@ -528,63 +509,63 @@ export default {
                     top: 50%;
                     right: 0;
                     width: 0;
-                    height: 12upx;
-                    border-right: 2upx solid $border-color;
+                    height: 12rpx;
+                    border-right: 2rpx solid $border-color;
                     transform: translateY(-50%);
                 }
             }
             &_item {
-                width: 80upx;
-                min-width: 40upx;
+                width: 80rpx;
+                min-width: 40rpx;
             }
             &_pull {
-                width: 16upx;
-                height: 10upx;
-                margin-left: 16upx;
+                width: 16rpx;
+                height: 10rpx;
+                margin-left: 16rpx;
             }
         }
     }
     &_bd {
-        height: 80upx;
-        margin-top: 20upx;
-        padding: 0 30upx;
-        line-height: 80upx;
+        height: 80rpx;
+        margin-top: 20rpx;
+        padding: 0 30rpx;
+        line-height: 80rpx;
         background-color: #fff;
-        border-bottom: 1upx solid #eee;
+        border-bottom: 1rpx solid #eee;
 
         .filter_title {
-            padding: 0 16upx;
+            padding: 0 16rpx;
         }
 
         .title {
-            padding: 0 12upx;
+            padding: 0 12rpx;
         }
     }
     &_fd {
     }
 }
 .scroll_view {
-    padding: 0 30upx;
+    padding: 0 30rpx;
     line-height: 1;
     box-sizing: border-box;
     background-color: #fff;
     font-size: 0;
     .house_type {
         position: relative;
-        // width: 200upx;
-        margin-right: 16upx;
-        padding: 18upx 20upx 12upx 0;
+        // width: 200rpx;
+        margin-right: 16rpx;
+        padding: 18rpx 20rpx 12rpx 0;
         font-size: 0;
     }
     .btn {
-        // width: 200upx;
-        // height: 56upx;
-        padding: 8upx 30upx;
-        line-height: 34upx;
-        border-radius: 8upx;
+        // width: 200rpx;
+        // height: 56rpx;
+        padding: 8rpx 30rpx;
+        line-height: 34rpx;
+        border-radius: 8rpx;
         background-color: #fff;
         text-align: center;
-        font-size: 26upx;
+        font-size: 26rpx;
         white-space: nowrap;
         color: $main-color;
     }
@@ -596,77 +577,77 @@ export default {
         position: absolute;
         top: 0;
         right: 0;
-        width: 24upx;
-        height: 24upx;
-        padding: 10upx;
+        width: 24rpx;
+        height: 24rpx;
+        padding: 10rpx;
     }
 }
 // .list {
-//     margin-top: 22upx;
+//     margin-top: 22rpx;
 // }
 .fix_right_icon {
     position: fixed;
-    right: 40upx;
-    bottom: 120upx;
-    // width: 143upx;
-    // height: 143upx;
-    width: 120upx;
-    height: 120upx;
-    line-height: 40upx;
+    right: 40rpx;
+    bottom: 120rpx;
+    // width: 143rpx;
+    // height: 143rpx;
+    width: 120rpx;
+    height: 120rpx;
+    line-height: 40rpx;
     // background: linear-gradient(to bottom, #ffffbe, rgba(255, 255, 190, 0.75));
     background: linear-gradient(137deg, rgba(255, 137, 71, 1) 0%, rgba(254, 98, 10, 1) 100%);
-    box-shadow: 0 2upx 30upx 0 rgba(254, 98, 10, 0.2);
-    text-shadow: 0 2upx 30upx rgba(254, 98, 10, 0.2);
+    box-shadow: 0 2rpx 30rpx 0 rgba(254, 98, 10, 0.2);
+    text-shadow: 0 2rpx 30rpx rgba(254, 98, 10, 0.2);
     border-radius: 50%;
-    font-size: 32upx;
+    font-size: 32rpx;
     overflow: hidden;
     color: #fff;
 }
 .modal {
-    font-size: 30upx;
+    font-size: 30rpx;
     .modal_title {
-        padding: 0 30upx 20upx;
-        line-height: 40upx;
+        padding: 0 30rpx 20rpx;
+        line-height: 40rpx;
         font-weight: bold;
-        font-size: 32upx;
+        font-size: 32rpx;
         color: #333;
 
         &::before {
             content: ' ';
             display: inline-block;
-            width: 8upx;
-            height: 30upx;
-            margin-right: 10upx;
+            width: 8rpx;
+            height: 30rpx;
+            margin-right: 10rpx;
             background-color: $main-color;
-            border-radius: 4upx;
+            border-radius: 4rpx;
         }
 
         & ~ .modal_title {
-            padding-top: 20upx;
+            padding-top: 20rpx;
         }
     }
     .modal_list {
-        padding: 0 10upx 12upx 30upx;
+        padding: 0 10rpx 12rpx 30rpx;
     }
     .modal_item {
-        min-width: 140upx;
-        margin-top: 10upx;
-        margin-right: 20upx;
-        margin-bottom: 10upx;
+        min-width: 140rpx;
+        margin-top: 10rpx;
+        margin-right: 20rpx;
+        margin-bottom: 10rpx;
         text-align: center;
-        line-height: 38upx;
-        padding: 10upx;
-        font-size: 30upx;
-        border-radius: 8upx;
+        line-height: 38rpx;
+        padding: 10rpx;
+        font-size: 30rpx;
+        border-radius: 8rpx;
         overflow: hidden;
     }
     .modal_btn {
         display: block;
-        height: 88upx;
-        margin: 30upx 30upx 50upx;
+        height: 88rpx;
+        margin: 30rpx 30rpx 50rpx;
         padding: 0;
-        line-height: 86upx;
-        border-radius: 44upx;
+        line-height: 86rpx;
+        border-radius: 44rpx;
     }
 }
 </style>

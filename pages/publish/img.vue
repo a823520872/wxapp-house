@@ -145,48 +145,48 @@ export default {
 <style lang="scss" scoped>
 .hd {
     position: relative;
-    padding-bottom: 30upx;
+    padding-bottom: 30rpx;
     background-color: #fff;
     .banner {
         width: 100%;
-        height: 479upx;
+        height: 479rpx;
     }
     .close {
         position: absolute;
         top: 0;
         right: 0;
-        width: 46upx;
-        height: 46upx;
-        padding: 10upx;
+        width: 46rpx;
+        height: 46rpx;
+        padding: 10rpx;
     }
     .intro {
         position: absolute;
         right: 0;
         bottom: 0;
         left: 0;
-        height: 75upx;
-        margin-bottom: 30upx;
+        height: 75rpx;
+        margin-bottom: 30rpx;
         background-color: rgba(0, 0, 0, 0.3);
-        line-height: 75upx;
+        line-height: 75rpx;
         text-align: center;
-        font-size: 30upx;
+        font-size: 30rpx;
         color: #fff;
     }
 }
 .bd {
-    margin-top: 18upx;
-    padding: 30upx 10upx 20upx;
+    margin-top: 18rpx;
+    padding: 30rpx 10rpx 20rpx;
     background-color: #fff;
 
     &.m_flex_wrap {
-        margin-right: -10upx;
+        margin-right: -10rpx;
 
         .item {
             position: relative;
-            width: 237upx;
-            height: 177upx;
-            margin-right: 10upx;
-            margin-bottom: 10upx;
+            width: 237rpx;
+            height: 177rpx;
+            margin-right: 10rpx;
+            margin-bottom: 10rpx;
             background-color: #dfdfdf;
         }
 
@@ -199,13 +199,13 @@ export default {
             position: absolute;
             top: 0;
             right: 0;
-            width: 46upx;
-            height: 46upx;
-            padding: 10upx;
+            width: 46rpx;
+            height: 46rpx;
+            padding: 10rpx;
         }
         .photo {
-            width: 86upx;
-            height: 65upx;
+            width: 86rpx;
+            height: 65rpx;
         }
     }
 }
@@ -220,13 +220,13 @@ export default {
 
     .btn {
         width: 100%;
-        height: 100upx;
+        height: 100rpx;
         padding: 0;
-        line-height: 100upx;
+        line-height: 100rpx;
         background-color: $primary-color;
         border-radius: 0;
         text-align: center;
-        font-size: 33upx;
+        font-size: 33rpx;
         color: #fff;
     }
 }

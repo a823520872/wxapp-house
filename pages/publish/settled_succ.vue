@@ -35,7 +35,7 @@ export default {};
 
 <style lang="scss" scoped>
 .title {
-    font-size: 33upx;
+    font-size: 33rpx;
 }
 .hd {
     width: 100%;
@@ -44,15 +44,15 @@ export default {};
     overflow: hidden;
 
     .icon {
-        width: 110upx;
-        height: 110upx;
-        margin: 135upx auto 50upx;
+        width: 110rpx;
+        height: 110rpx;
+        margin: 135rpx auto 50rpx;
     }
 
     .tips {
-        margin: 90upx auto;
-        font-size: 25upx;
-        line-height: 42upx;
+        margin: 90rpx auto;
+        font-size: 25rpx;
+        line-height: 42rpx;
     }
 
     .strong {
@@ -61,29 +61,29 @@ export default {};
 }
 
 .bd {
-    padding-bottom: 40upx;
+    padding-bottom: 40rpx;
 
     .title {
-        padding-top: 100upx;
+        padding-top: 100rpx;
         text-align: center;
     }
 
     .cells {
-        margin-top: 24upx;
-        line-height: 50upx;
+        margin-top: 24rpx;
+        line-height: 50rpx;
     }
 
     .label {
         display: inline-block;
-        width: 180upx;
+        width: 180rpx;
         text-align: right;
         color: $text-color-inverse;
     }
 
     .model {
         display: inline-block;
-        width: 220upx;
-        font-size: 30upx;
+        width: 220rpx;
+        font-size: 30rpx;
         text-decoration: underline;
         color: #368aff;
     }

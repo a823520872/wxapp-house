@@ -31,7 +31,7 @@ export default {
             this.empty()
             obj.fn = obj.fn || ((data = []) => data)
             this.obj = obj
-            return this.getData(obj.page ? obj.page : -1)
+            return this.getData(obj.n ? obj.n : -1)
         },
         reload(page) {
             return this.getData(page)
@@ -94,8 +94,8 @@ export default {
 <style lang="scss">
 .m_listloading {
     text-align: center;
-    line-height: 80upx;
+    line-height: 80rpx;
     color: #ccc;
-    font-size: 25upx;
+    font-size: 25rpx;
 }
 </style>

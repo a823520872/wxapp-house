@@ -106,15 +106,15 @@ export default {
     position: fixed;
     z-index: 5000;
     width: 80%;
-    max-width: 600upx;
+    max-width: 600rpx;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
     background-color: $uni-bg-color;
     text-align: center;
-    border-radius: 6upx;
+    border-radius: 6rpx;
     overflow: hidden;
-    font-size: 32upx;
+    font-size: 32rpx;
 
     &.width-91 {
         width: 91%;
@@ -141,16 +141,16 @@ export default {
     &__title {
         line-height: 1.6;
         font-weight: 400;
-        font-size: 36upx;
+        font-size: 36rpx;
     }
 
     &__bd {
         width: 100%;
-        min-height: 80upx;
-        max-height: 700upx;
+        min-height: 80rpx;
+        max-height: 700rpx;
         overflow: auto;
         box-sizing: border-box;
-        font-size: 30upx;
+        font-size: 30rpx;
         line-height: 1.3;
         word-wrap: break-word;
         word-break: break-all;
@@ -158,15 +158,15 @@ export default {
     }
 
     &__bd:first-child {
-        padding: 2.7em 40upx 1.7em;
+        padding: 2.7em 40rpx 1.7em;
         color: #353535;
     }
 
     &__ft {
         position: relative;
-        // height: 96upx;
-        line-height: 96upx;
-        font-size: 36upx;
+        // height: 96rpx;
+        line-height: 96rpx;
+        font-size: 36rpx;
         display: -webkit-box;
         display: -webkit-flex;
         display: flex;
@@ -178,8 +178,8 @@ export default {
         left: 0;
         top: 0;
         right: 0;
-        height: 1upx;
-        border-top: 1upx solid $border-color;
+        height: 1rpx;
+        border-top: 1rpx solid $border-color;
         color: $border-color;
     }
 
@@ -194,8 +194,8 @@ export default {
         position: relative;
 
         button {
-            line-height: 96upx;
-            font-size: 36upx;
+            line-height: 96rpx;
+            font-size: 36rpx;
             padding: 0;
         }
     }
@@ -209,9 +209,9 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
-        width: 1upx;
+        width: 1rpx;
         bottom: 0;
-        border-left: 1upx solid $border-color;
+        border-left: 1rpx solid $border-color;
         color: $border-color;
     }
 

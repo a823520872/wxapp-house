@@ -23,7 +23,7 @@ export default {
 <style lang="scss" scoped>
 .modal {
     padding: 0 1.6em 0.8em;
-    font-size: 30upx;
+    font-size: 30rpx;
     .tips {
         color: #999;
     }

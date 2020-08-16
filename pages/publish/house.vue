@@ -683,15 +683,15 @@ export default {
 <style lang="scss" scoped>
 .hd {
     .tips {
-        padding: 13upx 24upx;
+        padding: 13rpx 24rpx;
         background-color: #0e868f;
-        font-size: 26upx;
-        line-height: 34upx;
+        font-size: 26rpx;
+        line-height: 34rpx;
         color: #fff;
     }
 }
 .upload {
-    padding: 10upx 0 40upx;
+    padding: 10rpx 0 40rpx;
     text-align: center;
     .tips {
         position: absolute;
@@ -703,15 +703,15 @@ export default {
     }
     .upload_box {
         position: relative;
-        width: 335upx;
-        height: 252upx;
+        width: 335rpx;
+        height: 252rpx;
         background-color: #f2f2f2;
         overflow: hidden;
     }
     .upload_icon {
         position: relative;
-        width: 81upx;
-        height: 81upx;
+        width: 81rpx;
+        height: 81rpx;
         &::before,
         &::after {
             content: ' ';
@@ -720,8 +720,8 @@ export default {
             left: 50%;
             width: 0;
             height: 100%;
-            border-left: 10upx solid #d8d8d8;
-            border-radius: 5upx;
+            border-left: 10rpx solid #d8d8d8;
+            border-radius: 5rpx;
             transform: translateX(-50%);
         }
         &::after {
@@ -730,58 +730,58 @@ export default {
         }
     }
     .upload_info {
-        margin-top: 21upx;
-        line-height: 34upx;
-        font-size: 26upx;
+        margin-top: 21rpx;
+        line-height: 34rpx;
+        font-size: 26rpx;
         color: #666;
     }
     .upload_img {
-        width: 66upx;
-        height: 66upx;
+        width: 66rpx;
+        height: 66rpx;
     }
     .vdo {
         width: 100%;
         height: 100%;
     }
     .btn {
-        width: 250upx;
-        height: 60upx;
-        margin-top: 32upx;
+        width: 250rpx;
+        height: 60rpx;
+        margin-top: 32rpx;
         padding: 0;
-        line-height: 60upx;
+        line-height: 60rpx;
         text-align: center;
         background-color: #e9fbfb;
-        border-radius: 30upx;
-        font-size: 26upx;
+        border-radius: 30rpx;
+        font-size: 26rpx;
         color: #0e868f;
     }
 }
 .hd,
 .bd {
     .cells {
-        padding: 0 30upx;
+        padding: 0 30rpx;
         background-color: #fff;
 
         & + .cells {
-            margin-top: 18upx;
+            margin-top: 18rpx;
         }
 
         &_title {
-            // height: 90upx;
-            padding: 30upx 0 20upx;
-            line-height: 40upx;
+            // height: 90rpx;
+            padding: 30rpx 0 20rpx;
+            line-height: 40rpx;
             font-weight: bold;
-            font-size: 32upx;
+            font-size: 32rpx;
             color: #333;
 
             &::before {
                 content: ' ';
                 display: inline-block;
-                width: 8upx;
-                height: 30upx;
-                margin-right: 10upx;
+                width: 8rpx;
+                height: 30rpx;
+                margin-right: 10rpx;
                 background-color: $main-color;
-                border-radius: 4upx;
+                border-radius: 4rpx;
             }
 
             & + .cell {
@@ -790,28 +790,28 @@ export default {
         }
     }
     .cell {
-        height: 132upx;
-        border-top: 1upx solid $border-color;
+        height: 132rpx;
+        border-top: 1rpx solid $border-color;
 
         // &_box {
         //     height: 100%;
         // }
 
         &_hd {
-            font-size: 33upx;
-            padding-bottom: 5upx;
+            font-size: 33rpx;
+            padding-bottom: 5rpx;
         }
 
         &_bd {
-            height: 52upx;
-            line-height: 52upx;
-            font-size: 30upx;
+            height: 52rpx;
+            line-height: 52rpx;
+            font-size: 30rpx;
             color: $text-color-inverse;
         }
     }
 }
 .bd {
-    margin-top: 20upx;
+    margin-top: 20rpx;
     text-align: center;
 
     .picker_box {
@@ -822,8 +822,8 @@ export default {
             top: 50%;
             left: 0;
             width: 0;
-            height: 69upx;
-            border-left: 1upx solid #a8a8a8;
+            height: 69rpx;
+            border-left: 1rpx solid #a8a8a8;
             transform: translateY(-50%);
         }
     }
@@ -834,65 +834,65 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 10;
-    padding: 15upx 30upx;
+    padding: 15rpx 30rpx;
     background-color: #fff;
     font-size: 0;
 
     .btn {
         width: 100%;
-        height: 90upx;
+        height: 90rpx;
         padding: 0;
-        line-height: 90upx;
+        line-height: 90rpx;
         background-color: $main-color;
-        border-radius: 45upx;
+        border-radius: 45rpx;
         text-align: center;
-        font-size: 33upx;
+        font-size: 33rpx;
         color: #fff;
     }
 }
 
 .next {
     .cells {
-        margin-bottom: 20upx;
-        padding: 0 30upx;
+        margin-bottom: 20rpx;
+        padding: 0 30rpx;
         background-color: #fff;
         &_title {
-            padding: 30upx 0;
-            line-height: 40upx;
+            padding: 30rpx 0;
+            line-height: 40rpx;
             font-weight: bold;
-            font-size: 32upx;
+            font-size: 32rpx;
             color: #333;
 
             &::before {
                 content: ' ';
                 display: inline-block;
-                width: 8upx;
-                height: 30upx;
-                margin-right: 10upx;
+                width: 8rpx;
+                height: 30rpx;
+                margin-right: 10rpx;
                 background-color: $main-color;
-                border-radius: 4upx;
+                border-radius: 4rpx;
             }
         }
     }
     .cell {
-        padding-bottom: 20upx;
+        padding-bottom: 20rpx;
         + .cells_title {
             padding-top: 0;
         }
         &.m_flex_wrap {
-            margin-right: -20upx;
+            margin-right: -20rpx;
         }
     }
     .info_item {
-        // height: 56upx;
-        margin-right: 20upx;
-        margin-bottom: 20upx;
-        padding: 10upx 40upx;
-        // min-width: 80upx;
-        line-height: 38upx;
+        // height: 56rpx;
+        margin-right: 20rpx;
+        margin-bottom: 20rpx;
+        padding: 10rpx 40rpx;
+        // min-width: 80rpx;
+        line-height: 38rpx;
         background-color: #f5f5f5;
-        border-radius: 29upx;
-        font-size: 30upx;
+        border-radius: 29rpx;
+        font-size: 30rpx;
         text-align: center;
         color: #666;
         &.active {
@@ -903,13 +903,13 @@ export default {
     }
     .txta {
         width: 100%;
-        padding: 20upx;
-        margin-bottom: 100upx;
+        padding: 20rpx;
+        margin-bottom: 100rpx;
         box-sizing: border-box;
-        border-radius: 10upx;
+        border-radius: 10rpx;
         background-color: #f2f2f2;
-        line-height: 38upx;
-        font-size: 30upx;
+        line-height: 38rpx;
+        font-size: 30rpx;
         color: #666;
     }
     // .fd {
@@ -919,17 +919,17 @@ export default {
     // }
 }
 .empty {
-    height: 150upx;
+    height: 150rpx;
     &.ipx {
-        height: 218upx;
+        height: 218rpx;
     }
 }
 .modal {
-    padding: 16upx 72upx 40upx 96upx;
+    padding: 16rpx 72rpx 40rpx 96rpx;
     background-color: #f2f2f2;
-    font-size: 24upx;
+    font-size: 24rpx;
     .modal_input {
-        font-size: 24upx;
+        font-size: 24rpx;
     }
 }
 </style>

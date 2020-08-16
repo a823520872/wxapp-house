@@ -110,6 +110,10 @@
                                 <template v-else>{{ detail.address_flag + '附近' }}</template>
                             </text>
                         </view>
+                        <view class="addr_item" v-if="detail.traffic_metro">
+                            <text>附近地铁：</text>
+                            <text>{{ detail.traffic_metro }}</text>
+                        </view>
                         <!-- <view class="addr_item">
                             <text>路边距离：</text>
                             <text>{{ detail.road_distance }}</text>
@@ -381,8 +385,8 @@ export default {
 
 <style lang="scss" scoped>
 .swiper {
-    width: 750upx;
-    height: 348upx;
+    width: 750rpx;
+    height: 348rpx;
     &-item {
         width: 100%;
         height: 100%;
@@ -390,36 +394,36 @@ export default {
 }
 .hd {
     position: relative;
-    padding: 40upx 30upx 0;
+    padding: 40rpx 30rpx 0;
     background-color: #fff;
     overflow: hidden;
     .title {
-        line-height: 50upx;
+        line-height: 50rpx;
         font-weight: bold;
-        font-size: 40upx;
+        font-size: 40rpx;
         color: #333;
     }
     .read_number {
-        margin-left: 30upx;
-        line-height: 38upx;
-        font-size: 24upx;
+        margin-left: 30rpx;
+        line-height: 38rpx;
+        font-size: 24rpx;
         color: #999;
     }
     .cells {
         position: relative;
         overflow: hidden;
         width: 100%;
-        margin-top: 20upx;
+        margin-top: 20rpx;
     }
     .cell {
-        border-top: 1upx solid #f2f2f2;
+        border-top: 1rpx solid #f2f2f2;
         &:first-child {
             border-top: none;
         }
     }
     .cell_item {
         position: relative;
-        padding: 10upx 0 10upx 40upx;
+        padding: 10rpx 0 10rpx 40rpx;
         // text-align: center;
         &:first-child {
             padding-left: 0;
@@ -430,167 +434,167 @@ export default {
         &::before {
             content: ' ';
             position: absolute;
-            top: 25upx;
-            bottom: 25upx;
+            top: 25rpx;
+            bottom: 25rpx;
             left: 0;
             width: 0;
-            border-left: 2upx solid #f2f2f2;
+            border-left: 2rpx solid #f2f2f2;
         }
         &.line {
-            padding: 12upx 0 12upx 20upx;
+            padding: 12rpx 0 12rpx 20rpx;
             &:first-child {
                 padding-left: 0;
             }
             &::before {
-                top: 15upx;
-                bottom: 15upx;
+                top: 15rpx;
+                bottom: 15rpx;
             }
             .value {
-                margin-left: 10upx;
+                margin-left: 10rpx;
                 margin-bottom: 0;
-                line-height: 36upx;
+                line-height: 36rpx;
                 font-weight: normal;
-                font-size: 28upx;
-                font-size: 24upx;
+                font-size: 28rpx;
+                font-size: 24rpx;
                 color: #333;
             }
         }
     }
     .value {
-        margin-bottom: 6upx;
-        line-height: 42upx;
+        margin-bottom: 6rpx;
+        line-height: 42rpx;
         font-weight: bold;
-        font-size: 34upx;
+        font-size: 34rpx;
         color: #0e868f;
     }
     .price {
         color: #fe620a;
     }
     .label {
-        line-height: 32upx;
-        font-size: 24upx;
+        line-height: 32rpx;
+        font-size: 24rpx;
         color: #999;
     }
     .lightspot {
         position: relative;
-        padding-top: 20upx;
-        margin: 0 -10upx -22upx;
+        padding-top: 20rpx;
+        margin: 0 -10rpx -22rpx;
         overflow: hidden;
     }
 
     .lightspot_cell {
-        margin: 0 10upx 22upx;
+        margin: 0 10rpx 22rpx;
         flex-shrink: 0;
-        line-height: 34upx;
-        padding: 1upx 10upx;
-        border-radius: 4upx;
-        border: 1upx solid #999;
+        line-height: 34rpx;
+        padding: 1rpx 10rpx;
+        border-radius: 4rpx;
+        border: 1rpx solid #999;
         color: #666;
     }
 }
 .bd {
     .cells {
-        padding: 0 30upx;
+        padding: 0 30rpx;
         background-color: #fff;
         &:last-child {
-            padding-bottom: 40upx;
+            padding-bottom: 40rpx;
         }
     }
     .cell_title {
-        padding: 40upx 0 30upx;
-        line-height: 40upx;
+        padding: 40rpx 0 30rpx;
+        line-height: 40rpx;
         font-weight: bold;
-        font-size: 32upx;
+        font-size: 32rpx;
         color: #333;
 
         &::before {
             content: ' ';
             display: inline-block;
-            width: 8upx;
-            height: 30upx;
-            margin-right: 10upx;
+            width: 8rpx;
+            height: 30rpx;
+            margin-right: 10rpx;
             background-color: $main-color;
-            border-radius: 4upx;
+            border-radius: 4rpx;
         }
     }
     .cell {
         position: relative;
-        padding-bottom: 20upx;
+        padding-bottom: 20rpx;
         overflow: hidden;
-        border-bottom: 1upx solid #f2f2f2;
+        border-bottom: 1rpx solid #f2f2f2;
     }
     .vdo {
-        width: 690upx;
-        height: 450upx;
-        margin-bottom: 20upx;
+        width: 690rpx;
+        height: 450rpx;
+        margin-bottom: 20rpx;
     }
     .img {
-        margin-bottom: 20upx;
+        margin-bottom: 20rpx;
         &:last-child {
             margin-bottom: 0;
         }
     }
     .base {
         position: relative;
-        margin: 0 -21upx -24upx;
+        margin: 0 -21rpx -24rpx;
         overflow: hidden;
         text-align: center;
-        line-height: 32upx;
-        font-size: 24upx;
+        line-height: 32rpx;
+        font-size: 24rpx;
         color: #666;
     }
     .base_cell {
-        margin: 0 21upx 24upx;
+        margin: 0 21rpx 24rpx;
     }
     .base_img {
-        width: 80upx;
-        height: 80upx;
-        margin-bottom: 4upx;
+        width: 80rpx;
+        height: 80rpx;
+        margin-bottom: 4rpx;
     }
     .avatar {
-        width: 100upx;
-        height: 100upx;
-        margin-right: 30upx;
+        width: 100rpx;
+        height: 100rpx;
+        margin-right: 30rpx;
         border-radius: 50%;
         overflow: hidden;
     }
     .name {
-        max-width: 180upx;
-        line-height: 38upx;
-        font-size: 30upx;
+        max-width: 180rpx;
+        line-height: 38rpx;
+        font-size: 30rpx;
         color: $text-color;
     }
     .avatar_auth {
-        margin-left: 20upx;
+        margin-left: 20rpx;
     }
     .time {
-        padding-top: 10upx;
-        line-height: 32upx;
-        font-size: 24upx;
+        padding-top: 10rpx;
+        line-height: 32rpx;
+        font-size: 24rpx;
         color: #999;
     }
     .his {
-        width: 160upx;
+        width: 160rpx;
         color: $text-color-inverse;
 
         .right_icon {
-            width: 12upx;
-            height: 12upx;
-            margin-left: 10upx;
-            border-width: 1upx;
+            width: 12rpx;
+            height: 12rpx;
+            margin-left: 10rpx;
+            border-width: 1rpx;
             border-color: $text-color-inverse;
         }
     }
     .remark {
-        margin-top: 20upx;
-        line-height: 40upx;
-        font-size: 28upx;
+        margin-top: 20rpx;
+        line-height: 40rpx;
+        font-size: 28rpx;
         color: #666;
     }
     .more {
         position: relative;
-        line-height: 36upx;
-        font-size: 28upx;
+        line-height: 36rpx;
+        font-size: 28rpx;
         color: #0e868f;
 
         &::before {
@@ -600,37 +604,37 @@ export default {
             right: 0;
             bottom: 0;
             width: 100%;
-            height: 200upx;
-            margin-top: -200upx;
+            height: 200rpx;
+            margin-top: -200rpx;
             z-index: 1;
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
         }
     }
     .img_more {
-        margin-left: 10upx;
-        width: 28upx;
-        height: 28upx;
+        margin-left: 10rpx;
+        width: 28rpx;
+        height: 28rpx;
     }
     .addr_item {
-        padding-bottom: 10upx;
-        line-height: 36upx;
-        font-size: 28upx;
+        padding-bottom: 10rpx;
+        line-height: 36rpx;
+        font-size: 28rpx;
         color: #666;
     }
     .map {
-        width: 690upx;
-        height: 280upx;
-        margin-top: 20upx;
+        width: 690rpx;
+        height: 280rpx;
+        margin-top: 20rpx;
     }
 }
 // .empty {
-//     height: 150upx;
+//     height: 150rpx;
 
 //     &.ipx {
-//         height: 218upx;
+//         height: 218rpx;
 
 //         + .fd {
-//             padding-bottom: 68upx;
+//             padding-bottom: 68rpx;
 //         }
 //     }
 // }
@@ -640,19 +644,19 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 10;
-    padding: 0 30upx 0 10upx;
-    height: 120upx;
+    padding: 0 30rpx 0 10rpx;
+    height: 120rpx;
     background-color: #fff;
-    line-height: 32upx;
-    font-size: 24upx;
+    line-height: 32rpx;
+    font-size: 24rpx;
     .collection {
-        width: 68upx;
-        padding: 0 10upx 4upx;
+        width: 68rpx;
+        padding: 0 10rpx 4rpx;
         // background-color: #f5f5f5;
         text-align: center;
         border: none;
-        line-height: 32upx;
-        font-size: 24upx;
+        line-height: 32rpx;
+        font-size: 24rpx;
         color: $text-color-inverse;
     }
     .gift {
@@ -661,26 +665,26 @@ export default {
         border: none;
         line-height: 1.2;
         background-color: $primary-color;
-        font-size: 20upx;
+        font-size: 20rpx;
         color: #fff;
     }
     .link {
-        width: 426upx;
-        padding: 25upx 0;
+        width: 426rpx;
+        padding: 25rpx 0;
         background-color: $main-color;
-        border-radius: 45upx;
-        line-height: 40upx;
+        border-radius: 45rpx;
+        line-height: 40rpx;
         font-weight: bold;
-        font-size: 32upx;
+        font-size: 32rpx;
         color: #fff;
     }
     .img {
-        width: 48upx;
-        height: 48upx;
-        margin-bottom: 6upx;
+        width: 48rpx;
+        height: 48rpx;
+        margin-bottom: 6rpx;
     }
 }
 official-account {
-    bottom: 100upx;
+    bottom: 100rpx;
 }
 </style>

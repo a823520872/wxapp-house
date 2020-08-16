@@ -197,29 +197,29 @@ export default {
 <style lang="scss" scoped>
 .item {
     position: relative;
-    margin-bottom: 18upx;
-    padding: 30upx 30upx 0;
+    margin-bottom: 18rpx;
+    padding: 30rpx 30rpx 0;
     background-color: #fff;
     overflow: hidden;
 }
 .bd {
-    padding-bottom: 20upx;
-    border-bottom: 1upx solid $border-color;
+    padding-bottom: 20rpx;
+    border-bottom: 1rpx solid $border-color;
     .img {
         position: relative;
-        width: 277upx;
-        height: 180upx;
+        width: 277rpx;
+        height: 180rpx;
     }
     .has_video::before {
         content: '有视频';
         position: absolute;
         top: 0;
         left: 0;
-        padding: 6upx 12upx;
+        padding: 6rpx 12rpx;
         background-color: $primary-color;
-        border-radius: 4upx 0 8upx 0;
-        line-height: 24upx;
-        font-size: 22upx;
+        border-radius: 4rpx 0 8rpx 0;
+        line-height: 24rpx;
+        font-size: 22rpx;
         color: #fff;
         z-index: 1;
     }
@@ -228,59 +228,59 @@ export default {
         right: 0;
         bottom: 0;
         left: 0;
-        height: 41upx;
-        padding-left: 40upx;
-        line-height: 41upx;
+        height: 41rpx;
+        padding-left: 40rpx;
+        line-height: 41rpx;
         background-color: rgba(0, 0, 0, 0.3);
         color: $primary-color;
     }
     .intro {
-        margin-left: 30upx;
-        line-height: 34upx;
-        font-size: 26upx;
+        margin-left: 30rpx;
+        line-height: 34rpx;
+        font-size: 26rpx;
         color: #666;
 
         // &_cell {
         //     line-height: 1.2;
-        //     padding: 6upx 0;
+        //     padding: 6rpx 0;
         // }
     }
     .name {
-        // max-width: 160upx;
-        line-height: 40upx;
+        // max-width: 160rpx;
+        line-height: 40rpx;
         font-weight: bold;
-        font-size: 32upx;
+        font-size: 32rpx;
         color: #333;
     }
     .price {
-        // max-width: 160upx;
-        margin-top: 10upx;
-        line-height: 38upx;
-        font-size: 30upx;
+        // max-width: 160rpx;
+        margin-top: 10rpx;
+        line-height: 38rpx;
+        font-size: 30rpx;
         color: $primary-color;
     }
     .addr {
         display: -webkit-box;
-        height: 68upx;
+        height: 68rpx;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         word-break: break-all;
         overflow: hidden;
-        margin-top: 10upx;
-        margin-bottom: 14upx;
+        margin-top: 10rpx;
+        margin-bottom: 14rpx;
         // image {
-        //     width: 21upx;
-        //     height: 31upx;
-        //     padding-right: 6upx;
+        //     width: 21rpx;
+        //     height: 31rpx;
+        //     padding-right: 6rpx;
         // }
     }
 }
 .fd {
-    padding: 20upx 0 30upx;
+    padding: 20rpx 0 30rpx;
     .btn {
-        min-width: 97upx;
-        margin-left: 20upx;
-        border-radius: 4upx;
+        min-width: 97rpx;
+        margin-left: 20rpx;
+        border-radius: 4rpx;
         &.plain::after {
             border: 1px solid $text-color-inverse;
         }
@@ -288,9 +288,9 @@ export default {
 }
 .modal {
     padding: 0 1.6em 0.8em;
-    font-size: 30upx;
+    font-size: 30rpx;
     radio {
-        margin-right: 10upx;
+        margin-right: 10rpx;
         vertical-align: top;
     }
 }

@@ -402,61 +402,61 @@ export default {
 <style lang="scss" scoped>
 // .cells {
 //     .cell {
-//         margin: 60upx 30upx 0;
+//         margin: 60rpx 30rpx 0;
 //         background-color: #fff;
-//         border-radius: 10upx;
-//         line-height: 40upx;
+//         border-radius: 10rpx;
+//         line-height: 40rpx;
 //         font-weight: bold;
-//         font-size: 32upx;
+//         font-size: 32rpx;
 //         color: #333;
 //     }
 //     .cell_hd {
-//         padding: 50upx;
+//         padding: 50rpx;
 //     }
 //     .avatar {
-//         width: 120upx;
-//         height: 120upx;
-//         margin-right: 30upx;
+//         width: 120rpx;
+//         height: 120rpx;
+//         margin-right: 30rpx;
 //         border-radius: 50%;
 //     }
 //     .cell_bd {
-//         padding: 0 50upx;
+//         padding: 0 50rpx;
 //     }
 //     .qrcode {
-//         width: 590upx;
-//         height: 590upx;
+//         width: 590rpx;
+//         height: 590rpx;
 //     }
 //     .cell_fd {
-//         padding: 50upx;
+//         padding: 50rpx;
 //     }
 // }
 // .btns {
-//     margin: 60upx 30upx;
+//     margin: 60rpx 30rpx;
 //     .btn {
-//         padding: 25upx 0;
-//         line-height: 40upx;
-//         border-radius: 45upx;
-//         font-size: 32upx;
+//         padding: 25rpx 0;
+//         line-height: 40rpx;
+//         border-radius: 45rpx;
+//         font-size: 32rpx;
 //     }
 // }
 .hd {
     position: relative;
-    margin: 30upx;
+    margin: 30rpx;
     overflow: hidden;
-    border-radius: 10upx;
+    border-radius: 10rpx;
     background-color: #d5efef;
     .title {
-        padding: 20upx 0;
+        padding: 20rpx 0;
         text-align: center;
-        line-height: 32upx;
-        font-size: 24upx;
+        line-height: 32rpx;
+        font-size: 24rpx;
         color: #0e868f;
     }
     .main {
-        margin: 0 20upx 20upx;
-        padding: 30upx;
+        margin: 0 20rpx 20rpx;
+        padding: 30rpx;
         background-color: #fff;
-        border-radius: 20upx;
+        border-radius: 20rpx;
     }
 
     .info {
@@ -464,43 +464,43 @@ export default {
     }
 
     .avatar {
-        width: 120upx;
-        height: 120upx;
-        margin: 10upx;
+        width: 120rpx;
+        height: 120rpx;
+        margin: 10rpx;
         border-radius: 50%;
     }
 
     .name {
-        line-height: 40upx;
+        line-height: 40rpx;
         // font-weight: bold;
-        font-size: 32upx;
+        font-size: 32rpx;
         color: #333;
     }
 
     .addr {
-        margin-top: 10upx;
-        line-height: 34upx;
-        font-size: 26upx;
+        margin-top: 10rpx;
+        line-height: 34rpx;
+        font-size: 26rpx;
         color: #666;
     }
 
     .num {
-        padding: 35upx 0;
-        line-height: 68upx;
+        padding: 35rpx 0;
+        line-height: 68rpx;
         // font-weight: bold;
-        font-size: 60upx;
+        font-size: 60rpx;
         color: #0e868f;
     }
 
     .house {
-        padding: 20upx 40upx;
+        padding: 20rpx 40rpx;
         background-color: #f6fbfb;
-        line-height: 38upx;
-        font-size: 30upx;
+        line-height: 38rpx;
+        font-size: 30rpx;
     }
 
     .house_info {
-        margin-top: 16upx;
+        margin-top: 16rpx;
         &:first-child {
             margin-top: 0;
         }
@@ -513,26 +513,26 @@ export default {
         color: #333;
     }
     .point {
-        margin-bottom: 30upx;
-        padding: 30upx;
-        border-bottom: 1upx solid #f2f2f2;
+        margin-bottom: 30rpx;
+        padding: 30rpx;
+        border-bottom: 1rpx solid #f2f2f2;
         text-align: center;
-        line-height: 34upx;
-        font-size: 26upx;
+        line-height: 34rpx;
+        font-size: 26rpx;
         color: #999;
     }
 
     .qrcode {
-        width: 200upx;
-        height: 200upx;
-        border-radius: 10upx;
+        width: 200rpx;
+        height: 200rpx;
+        border-radius: 10rpx;
     }
 
     .intro {
-        margin-left: 50upx;
-        line-height: 40upx;
+        margin-left: 50rpx;
+        line-height: 40rpx;
         // font-weight: bold;
-        font-size: 32upx;
+        font-size: 32rpx;
         color: #0e868f;
     }
 }
@@ -542,31 +542,31 @@ export default {
 
     .canvas {
         position: fixed;
-        top: -10000upx;
+        top: -10000rpx;
         right: 0;
         left: 0;
-        width: 690upx;
-        height: 1026upx;
+        width: 690rpx;
+        height: 1026rpx;
     }
 }
 .empty {
-    height: 120upx;
+    height: 120rpx;
 }
 .fd {
     position: fixed;
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 15upx 30upx;
+    padding: 15rpx 30rpx;
     background-color: #fff;
     z-index: 999;
     .btn {
         display: block;
-        height: 90upx;
+        height: 90rpx;
         padding: 0;
-        line-height: 88upx;
-        font-size: 32upx;
-        border-radius: 45upx;
+        line-height: 88rpx;
+        font-size: 32rpx;
+        border-radius: 45rpx;
     }
 }
 </style>

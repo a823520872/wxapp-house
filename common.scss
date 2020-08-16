@@ -35,7 +35,7 @@ image {
     vertical-align: top;
 }
 .content {
-    font-size: 25upx;
+    font-size: 25rpx;
     color: $text-color;
 }
 .content_bg_ff {
@@ -93,8 +93,8 @@ image {
 }
 .m_button {
     display: inline-block;
-    padding: 10upx 14upx;
-    font-size: 28upx;
+    padding: 10rpx 14rpx;
+    font-size: 28rpx;
     line-height: 1;
     border-radius: none;
     box-sizing: border-box;
@@ -106,19 +106,19 @@ image {
 
     &.grey {
         background-color: #f2f2f2;
-        border: 1upx solid #f2f2f2;
+        border: 1rpx solid #f2f2f2;
         color: #666666;
     }
 
     &.primary {
         background-color: $primary-color;
-        border: 1upx solid $primary-color;
+        border: 1rpx solid $primary-color;
         color: #fff;
     }
 
     &.main {
         background-color: $main-color;
-        border: 1upx solid $main-color;
+        border: 1rpx solid $main-color;
         color: #fff;
     }
 
@@ -149,55 +149,55 @@ image {
 
 .bottom_icon {
     display: inline-block;
-    width: 14upx;
-    height: 14upx;
-    border-left: 2upx solid $text-color;
-    border-bottom: 2upx solid $text-color;
+    width: 14rpx;
+    height: 14rpx;
+    border-left: 2rpx solid $text-color;
+    border-bottom: 2rpx solid $text-color;
     transform: rotate(-45deg);
-    vertical-align: 6upx;
+    vertical-align: 6rpx;
 }
 
 .right_icon {
-    width: 20upx;
-    height: 20upx;
-    border-right: 4upx solid $text-color;
-    border-bottom: 4upx solid $text-color;
+    width: 20rpx;
+    height: 20rpx;
+    border-right: 4rpx solid $text-color;
+    border-bottom: 4rpx solid $text-color;
     transform: rotate(-45deg);
 }
 .triangle_down_icon {
     display: inline-block;
     width: 0;
     height: 0;
-    border: 10upx solid transparent;
+    border: 10rpx solid transparent;
     border-top-color: rgb(178, 178, 178);
-    vertical-align: -6upx;
+    vertical-align: -6rpx;
 }
 .empty {
-    height: 100upx;
+    height: 100rpx;
 
     &.ipx {
-        height: 168upx;
+        height: 168rpx;
 
         + .fd {
-            padding-bottom: 68upx;
+            padding-bottom: 68rpx;
         }
     }
 }
 .modal {
     .link {
-        padding: 10upx 0;
-        line-height: 56upx;
+        padding: 10rpx 0;
+        line-height: 56rpx;
     }
     .tips {
-        margin-top: 20upx;
+        margin-top: 20rpx;
         line-height: 1.2;
         text-align: left;
-        font-size: 25upx;
+        font-size: 25rpx;
         color: #ccc;
     }
 }
 .official-account {
-    height: 84upx;
+    height: 84rpx;
 }
 official-account {
     position: fixed;

@@ -82,45 +82,45 @@ export default {
 <style lang="scss" scoped>
 .hd {
     text-align: center;
-    font-size: 33upx;
+    font-size: 33rpx;
     .icon {
-        width: 198upx;
-        height: 198upx;
-        margin: 132upx auto 26upx;
+        width: 198rpx;
+        height: 198rpx;
+        margin: 132rpx auto 26rpx;
     }
 }
 .bd {
     position: relative;
-    width: 450upx;
-    margin: 140upx auto 0;
-    line-height: 40upx;
-    font-size: 30upx;
+    width: 450rpx;
+    margin: 140rpx auto 0;
+    line-height: 40rpx;
+    font-size: 30rpx;
     &::before {
         content: " ";
         position: absolute;
         top: 0;
         left: 0;
-        margin-top: 16upx;
-        margin-left: -25upx;
-        width: 13upx;
-        height: 13upx;
+        margin-top: 16rpx;
+        margin-left: -25rpx;
+        width: 13rpx;
+        height: 13rpx;
         border-radius: 50%;
         background-color: $text-color-inverse;
     }
 }
 .fd {
-    margin: 107upx 30upx;
+    margin: 107rpx 30rpx;
     text-align: center;
-    // border-radius: 8upx;
+    // border-radius: 8rpx;
     // color: #fff;
 
     .m_button {
         display: block;
-        // height: 100upx;
-        margin-bottom: 30upx;
-        border-radius: 8upx;
-        line-height: 80upx;
-        font-size: 30upx;
+        // height: 100rpx;
+        margin-bottom: 30rpx;
+        border-radius: 8rpx;
+        line-height: 80rpx;
+        font-size: 30rpx;
     }
 }
 .none {

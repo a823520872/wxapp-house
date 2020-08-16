@@ -348,9 +348,9 @@ export default {
     .m_button {
         display: block;
         width: 100%;
-        font-size: 36upx;
-        line-height: 96upx;
-        font-size: 36upx;
+        font-size: 36rpx;
+        line-height: 96rpx;
+        font-size: 36rpx;
         padding: 0;
         color: $main-color;
     }

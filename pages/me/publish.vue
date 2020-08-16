@@ -166,38 +166,38 @@ export default {
 
 <style lang="scss" scoped>
 .tips {
-    padding: 10upx 30upx;
+    padding: 10rpx 30rpx;
     background-color: #f0fffc;
-    line-height: 34upx;
-    font-size: 26upx;
+    line-height: 34rpx;
+    font-size: 26rpx;
     color: #0e868f;
 }
 .hd {
-    // height: 358upx;
-    padding: 60upx 0 30upx;
+    // height: 358rpx;
+    padding: 60rpx 0 30rpx;
     background-color: $main-color;
     text-align: center;
     overflow: hidden;
     .avatar {
         position: relative;
-        width: 130upx;
-        height: 130upx;
+        width: 130rpx;
+        height: 130rpx;
         margin: 0 auto;
     }
     .img_avatar {
         position: relative;
-        width: 126upx;
-        height: 126upx;
+        width: 126rpx;
+        height: 126rpx;
         border-radius: 50%;
         // background-color: $uni-bg-color;
         overflow: hidden;
-        border: 2upx solid #fff;
+        border: 2rpx solid #fff;
     }
     .avatar_auth {
         position: absolute;
         bottom: 0;
         right: 0;
-        padding: 3upx;
+        padding: 3rpx;
         background-color: $primary-color;
         line-height: 1;
         border-radius: 50%;
@@ -205,17 +205,17 @@ export default {
     }
 
     .img_auth {
-        width: 26upx;
-        height: 26upx;
+        width: 26rpx;
+        height: 26rpx;
     }
 
     .name {
-        margin-top: 38upx;
-        font-size: 34upx;
+        margin-top: 38rpx;
+        font-size: 34rpx;
         color: #033a42;
     }
     // .tips {
-    //     margin-top: 6upx;
+    //     margin-top: 6rpx;
     //     color: $primary-color;
     // }
 }
@@ -223,7 +223,7 @@ export default {
     position: relative;
     background-color: #fff;
     text-align: center;
-    border-bottom: 1upx solid $border-color;
+    border-bottom: 1rpx solid $border-color;
 
     // &::after {
     //     content: ' ';
@@ -237,9 +237,9 @@ export default {
     // }
     .tab {
         position: relative;
-        padding: 30upx 0;
-        line-height: 40upx;
-        font-size: 34upx;
+        padding: 30rpx 0;
+        line-height: 40rpx;
+        font-size: 34rpx;
         color: #666;
     }
     .active {
@@ -250,12 +250,12 @@ export default {
             // right: 0;
             bottom: 0;
             left: 50%;
-            width: 100upx;
+            width: 100rpx;
             height: 0;
-            border-bottom: 8upx solid $main-color;
+            border-bottom: 8rpx solid $main-color;
             z-index: 10;
             transform: translateX(-50%);
-            border-radius: 4upx;
+            border-radius: 4rpx;
         }
     }
 }

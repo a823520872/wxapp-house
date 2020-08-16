@@ -115,58 +115,58 @@ export default {
 <style lang="scss" scoped>
 .list {
     .cell {
-        padding: 30upx;
-        margin-bottom: 20upx;
+        padding: 30rpx;
+        margin-bottom: 20rpx;
         background-color: #fff;
     }
 
     // .hd {
-    //     padding-top: 12upx;
+    //     padding-top: 12rpx;
     // }
 
     .title {
         width: 50%;
         // font-weight: bold;
-        font-size: 34upx;
+        font-size: 34rpx;
         color: #333;
     }
 
     .price {
         // align-self: flex-end;
         color: $primary-color;
-        font-size: 30upx;
+        font-size: 30rpx;
     }
 
     .num {
-        // font-size: 25upx;
+        // font-size: 25rpx;
         font-weight: bold;
     }
 
     .unit {
-        // font-size: 15upx;
+        // font-size: 15rpx;
     }
 
     .m_button {
-        width: 200upx;
-        height: 56upx;
-        padding: 0 7upx;
-        line-height: 54upx;
+        width: 200rpx;
+        height: 56rpx;
+        padding: 0 7rpx;
+        line-height: 54rpx;
     }
 
     .intro {
-        padding: 20upx 0 0;
-        font-size: 28upx;
-        line-height: 36upx;
+        padding: 20rpx 0 0;
+        font-size: 28rpx;
+        line-height: 36rpx;
         color: #666;
     }
 
     .intro_cell + .intro_cell {
-        margin-left: 30upx;
+        margin-left: 30rpx;
     }
 
     .lightspot {
         position: relative;
-        margin-top: 20upx;
+        margin-top: 20rpx;
         overflow: hidden;
         flex-wrap: nowrap;
         &::after {
@@ -176,36 +176,36 @@ export default {
             right: 0;
             bottom: 0;
             z-index: 0;
-            width: 80upx;
+            width: 80rpx;
             background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
         }
     }
 
     .lightspot_cell {
         flex-shrink: 0;
-        line-height: 34upx;
-        padding: 1upx 10upx;
-        border-radius: 4upx;
-        border: 1upx solid #0e868f;
+        line-height: 34rpx;
+        padding: 1rpx 10rpx;
+        border-radius: 4rpx;
+        border: 1rpx solid #0e868f;
         color: #0e868f;
         & + .lightspot_cell {
-            margin-left: 12upx;
+            margin-left: 12rpx;
         }
     }
 
     .bd {
-        padding-top: 20upx;
-        padding-bottom: 10upx;
-        margin-right: -15upx;
+        padding-top: 20rpx;
+        padding-bottom: 10rpx;
+        margin-right: -15rpx;
     }
 
     .img_box {
         position: relative;
-        width: 220upx;
-        height: 165upx;
-        margin-right: 15upx;
+        width: 220rpx;
+        height: 165rpx;
+        margin-right: 15rpx;
         background-color: $uni-bg-color-grey;
-        border-radius: 4upx;
+        border-radius: 4rpx;
         overflow: hidden;
     }
 
@@ -214,11 +214,11 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        padding: 6upx 12upx;
+        padding: 6rpx 12rpx;
         background-color: $primary-color;
-        border-radius: 4upx 0 8upx 0;
-        line-height: 24upx;
-        font-size: 22upx;
+        border-radius: 4rpx 0 8rpx 0;
+        line-height: 24rpx;
+        font-size: 22rpx;
         color: #fff;
         z-index: 1;
     }
@@ -237,7 +237,7 @@ export default {
             justify-content: center;
             align-items: center;
             background-color: rgba(14, 35, 35, 0.6);
-            font-size: 24upx;
+            font-size: 24rpx;
             color: #fff;
         }
     }

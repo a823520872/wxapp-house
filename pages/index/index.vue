@@ -200,26 +200,26 @@ export default {
                 deposit: null,
                 sort: [
                     {
-                        label: '发布从新到旧',
-                        value: 'public_new',
+                        value: '发布从新到旧',
+                        key: 'public_new',
                         active: false,
                         tmpActive: false,
                     },
                     {
-                        label: '距离从近到远',
-                        value: 'distance_near',
+                        value: '距离从近到远',
+                        key: 'distance_near',
                         active: false,
                         tmpActive: false,
                     },
                     {
-                        label: '价格从低到高',
-                        value: 'price_low',
+                        value: '价格从低到高',
+                        key: 'price_low',
                         active: false,
                         tmpActive: false,
                     },
                     {
-                        label: '价格从高到低',
-                        value: 'price_high',
+                        value: '价格从高到低',
+                        key: 'price_high',
                         active: false,
                         tmpActive: false,
                     },
@@ -407,7 +407,7 @@ export default {
         },
         toggleList(li, i, j) {
             let t = li.type
-            if (Object.prototype.hasOwnProperty.call(null, li, 'is_multi')) {
+            if (Object.prototype.hasOwnProperty.call(li, 'is_multi')) {
                 if (li.is_multi) {
                     li.tmpActive = !(li.tmpActive || false)
                 } else {

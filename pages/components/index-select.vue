@@ -124,7 +124,7 @@ export default {
         },
         isLine() {
             if (this.selectType === 3 && metro && metro.length) {
-                return metro.find(v => v.id === this.params.metro_id && v.level === 1)
+                return !!metro.find(v => v.id === this.params.metro_id && v.level === 1)
             }
             return false
         },
@@ -462,7 +462,7 @@ export default {
         },
         getMetroArea(id) {
             if (metro) {
-                let v = metro.find(v => v.id === id)
+                let v = metro.find(v => v.id === id && v.level === 2)
                 return v ? v.name : ''
             }
             return '广州地铁'
@@ -471,8 +471,12 @@ export default {
             if (metro) {
                 let s = metro.find(v => v.id === id)
                 if (s) {
-                    let v = metro.find(v => v.id === s.parent_id)
-                    return v ? v.name : ''
+                    if (s.level === 1) {
+                        return s.name
+                    } else if (s.level === 2) {
+                        let v = metro.find(v => v.id === s.parent_id)
+                        return v ? v.name : ''
+                    }
                 }
             }
             return '广州地铁'

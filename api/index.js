@@ -26,7 +26,7 @@ export default {
         return ajax('/api/area/getAllList', data, { noToken: true })
     },
     getAreaStreet(data = {}) {
-        return ajax('/api/area_street/getAllList', data)
+        return ajax('/api/area_street/getAllList', data, { noToken: true })
     },
     getAreaFlag(data = {}) {
         return ajax('/api/area_flag/getAllList', data, { noToken: true })
@@ -104,7 +104,7 @@ export default {
         return ajax('/api/upload/uploadImage', data, { type: 'post', upload: true, noToken: true })
     },
     getQRCode(data = {}) {
-        return ajax('/api/House_Resource/getPoster', data, { type: 'post' })
+        return ajax('/api/House_Resource/getPoster2', data, { type: 'post' })
     },
     getPublishQRCode(data = {}) {
         return ajax('/api/qrcode/createWxappQrcode', data, { loading: true })

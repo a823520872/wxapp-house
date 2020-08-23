@@ -380,9 +380,8 @@ export default {
             })
         },
         getAddrChildren(id) {
-            return this.$request.getStreet({ pid: id }).then(res => {
-                let { data } = res.data || {}
-                data = data.map((v, i) => ({ ...v, on: false }))
+            return this.$request.getAreaStreet({ pid_area_district: id }).then(res => {
+                let data = (res.data || []).map((v, i) => ({ ...v, on: false }))
                 this.addr = addr = [...this.addr, ...data]
                 return data
             })

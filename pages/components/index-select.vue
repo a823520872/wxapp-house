@@ -17,9 +17,9 @@
                     </view>
                     <template v-else-if="selectType === 4 || selectType === 5">
                         <view class="name">
-                            <text>{{params.address_street_id | getAddrCity(params.area_id)}}</text>
+                            <text :class="{'m_cmain': params.address_street_id && !params.address_flag_id}">{{params.address_street_id | getAddrCity(params.area_id)}}</text>
                             <text class="flag m_cmain" @tap.stop="getAddrFlag" v-if="params.address_flag_id">{{params.address_flag_id | getFlag}}</text>
-                            <text class="flag" @tap.stop="getAddrFlag" v-else>标志建筑</text>
+                            <text class="p_l_20" @tap.stop="getAddrFlag" v-else-if="params.address_street_id">标志建筑</text>
                         </view>
                     </template>
                     <view v-else>区域定位</view>
@@ -411,14 +411,17 @@ export default {
         calculate() {
             const query = uni.createSelectorQuery().in(this)
             query.select('#addr').boundingClientRect(data => {
-                // console.log(1, data.top, TopScroll);
                 if (data.top > 0 && data.top <= TopScroll) {
                     uni.pageScrollTo({
                         scrollTop: TopScroll,
                         duration: 50
                     })
                 }
-                this.h = uni.getSystemInfoSync().windowHeight - data.height - 10
+                uni.getSystemInfo({
+                    success: (obj) => {
+                        this.h = obj.windowHeight - data.height - 10
+                    }
+                })
             }).exec()
         },
         showModal(e) {
@@ -523,6 +526,7 @@ export default {
         line-height: 80rpx;
         padding: 0 30rpx;
         background-color: #fff;
+        font-size: 28rpx;
     }
     .select_item {
         position: relative;
@@ -542,6 +546,16 @@ export default {
     }
     .flag {
         padding-left: 10rpx;
+    }
+    .p_l_20 {
+        padding-left: 20rpx;
+    }
+    .p_r_20 {
+        padding-right: 20rpx;
+    }
+    .p_h_20 {
+        padding-left: 20rpx;
+        padding-right: 20rpx;
     }
     .select_modal {
         position: absolute;

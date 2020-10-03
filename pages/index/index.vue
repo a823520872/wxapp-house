@@ -150,46 +150,58 @@ export default {
                 floor: null,
                 price: [
                     {
+                        type: 'price',
                         rental_begin: 0,
                         rental_end: 500,
                         value: '500以下',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'price',
                         rental_begin: 500,
                         rental_end: 700,
                         value: '500-700',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'price',
                         rental_begin: 700,
                         rental_end: 900,
                         value: '700-900',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'price',
                         rental_begin: 900,
                         rental_end: 1200,
                         value: '900-1200',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'price',
                         rental_begin: 1200,
                         rental_end: 1500,
                         value: '1200-1500',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'price',
                         rental_begin: 1500,
                         rental_end: '',
                         value: '1500以上',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                 ],
                 road_distance: null,
@@ -200,28 +212,36 @@ export default {
                 deposit: null,
                 sort: [
                     {
+                        type: 'sort',
                         value: '发布从新到旧',
                         key: 'public_new',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'sort',
                         value: '距离从近到远',
                         key: 'distance_near',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'sort',
                         value: '价格从低到高',
                         key: 'price_low',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                     {
+                        type: 'sort',
                         value: '价格从高到低',
                         key: 'price_high',
                         active: false,
                         tmpActive: false,
+                        is_multi: false,
                     },
                 ],
             },
@@ -283,10 +303,14 @@ export default {
         ...mapActions(['login', 'getInfo']),
         init(n) {
             this.filterParams()
+            let obj = { ...this.params }
+            if (!obj.map_distance && this.selectType !== 1) {
+                obj.map_distance = 5000
+            }
             this.$refs.page &&
                 this.$refs.page.init({
                     url: 'getHouseList',
-                    params: this.params,
+                    params: obj,
                     n,
                     fn: null,
                 // }).then(() => {
@@ -335,7 +359,7 @@ export default {
             this.params.rental_end = rental_end
             this.params.road_distance_ids = road_distance.map(item => item.id).join(',')
             this.params.config_base_ids = config_base.map(item => item.id).join(',')
-            this.params.deposit = deposit.map(item => item.id).join(',')
+            this.params.deposit = deposit.map(item => item.value).join(',')
             this.params.floor_number = floor.map(item => item.key).join(',')
             this.params.config_lightspot_ids = config_lightspot.map(item => item.id).join(',')
             this.params.sort = sort ? sort.key : ''
@@ -347,9 +371,6 @@ export default {
                 Object.keys(obj.params).map(key => {
                     this.params[key] = obj.params[key]
                 })
-                if (!this.params.map_distance) {
-                    this.params.map_distance = 5000
-                }
                 this.init()
             }
         },
@@ -407,32 +428,16 @@ export default {
         },
         toggleList(li, i, j) {
             let t = li.type
-            if (Object.prototype.hasOwnProperty.call(li, 'is_multi')) {
-                if (li.is_multi) {
-                    li.tmpActive = !(li.tmpActive || false)
-                } else {
-                    this.config[t].map((it, k) => {
-                        if (j === k) {
-                            li.tmpActive = !(li.tmpActive || false)
-                        } else {
-                            // this.config[t][k].tmpActive = false
-                            this.$set(this.config[t][k], 'tmpActive', false)
-                        }
-                    })
-                }
-            } else {
-                if (t === 'price' || t === 'sort') {
-                    this.config[t].map((it, k) => {
-                        if (j === k) {
-                            li.tmpActive = !(li.tmpActive || false)
-                        } else {
-                            // this.config[t][k].tmpActive = false
-                            this.$set(this.config[t][k], 'tmpActive', false)
-                        }
-                    })
-                    return
-                }
+            if (li.is_multi) {
                 li.tmpActive = !(li.tmpActive || false)
+            } else {
+                this.config[t].map((it, k) => {
+                    if (j === k) {
+                        li.tmpActive = !(li.tmpActive || false)
+                    } else {
+                        this.$set(this.config[t][k], 'tmpActive', false)
+                    }
+                })
             }
         },
     },
@@ -442,7 +447,6 @@ export default {
 <style lang="scss">
 .content.min_height {
     min-height: calc(100vh + 360rpx);
-    min-height: 100vh;
 }
 .swiper {
     height: 330rpx;
